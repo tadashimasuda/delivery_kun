@@ -1,57 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_config/flutter_config.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:async';
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
 
-void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'delivery-kun',
+      home: MapSample(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
+class MapSample extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MapSample> createState() => MapSampleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  String _location = "no data";
+class MapSampleState extends State<MapSample> {
+  Completer<GoogleMapController> _controller = Completer();
 
-  getLocation() async {
+  late LatLng _initialPosition;
+  late bool _loading;
+
+  void _getUserLocation() async {
     final hasPermission = await _handlePermission();
 
     if (!hasPermission) {
       return;
     }
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
-
-    print(position);
-    print("緯度: " + position.latitude.toString());
-    // 東経がプラス、西経がマイナス
-    print("経度: " + position.longitude.toString());
-    // 高度
-    print("高度: " + position.altitude.toString());
+        desiredAccuracy: LocationAccuracy.high);
     setState(() {
-      _location = position.toString();
+      _initialPosition = LatLng(position.latitude, position.longitude);
+      _loading = false;
     });
   }
 
@@ -86,34 +78,41 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    getLocation();
     super.initState();
+    _loading = true;
+    _getUserLocation();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_location),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              '_location',
+    return new Scaffold(
+      appBar: AppBar(title: Text('delivery-kun')),
+      body: _loading
+          ? CircularProgressIndicator()
+          : SafeArea(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: _initialPosition,
+                      zoom: 14.4746,
+                    ),
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
+                    // markers: _createMarker(),
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: true,
+                    mapToolbarEnabled: false,
+                    buildingsEnabled: true,
+                    onTap: (LatLng latLang) {
+                      print('Clicked: $latLang');
+                    },
+                  ),
+                ],
+              ),
             ),
-            Text(
-              '$_location',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: getLocation, child: Icon(Icons.location_on)),
     );
   }
 }
