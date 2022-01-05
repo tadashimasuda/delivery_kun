@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -88,6 +89,21 @@ class MapSampleState extends State<MapSample> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      floatingActionButton: FloatingActionButton(
+        elevation: 20,
+        onPressed: () {},
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border.all(color: Colors.blue,width:3),
+              borderRadius:BorderRadius.circular(30),
+              image:DecorationImage(
+                image:NetworkImage("https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
+            )
+          ),
+        ),
+      ),
       body: SlidingSheet(
         elevation: 8,
         cornerRadius: 16,
@@ -129,6 +145,7 @@ class MapSampleState extends State<MapSample> {
                   ),
                 ),
         ),
+
         builder: (context, state) {
           return Container(
             height: 200,
@@ -247,7 +264,8 @@ class MapSampleState extends State<MapSample> {
             ),
           );
         },
-      ),
+
+      ), 
     );
   }
 }
