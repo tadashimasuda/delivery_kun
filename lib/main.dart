@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+import 'package:sliding_sheet/sliding_sheet.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -85,34 +86,168 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: AppBar(title: Text('delivery-kun')),
-      body: _loading
-          ? CircularProgressIndicator()
-          : SafeArea(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: _initialPosition,
-                      zoom: 14.4746,
-                    ),
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
-                    // markers: _createMarker(),
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
-                    mapToolbarEnabled: false,
-                    buildingsEnabled: true,
-                    onTap: (LatLng latLang) {
-                      print('Clicked: $latLang');
-                    },
+    return Scaffold(
+      backgroundColor: Colors.grey.shade200,
+      body: SlidingSheet(
+        elevation: 8,
+        cornerRadius: 16,
+        snapSpec: const SnapSpec(
+            // Enable snapping. This is true by default.
+            snap: true,
+            // Set custom snapping points.
+            snappings: [0.5, 0.7, 1.0],
+            // Define to what the snappings relate to. In this case,
+            // the total available space that the sheet can expand to.
+            positioning: SnapPositioning.relativeToSheetHeight),
+        // The body widget will be displayed under the SlidingSheet
+        // and a parallax effect can be applied to it.
+        body: Center(
+          child: _loading
+              ? CircularProgressIndicator()
+              : Container(
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: _initialPosition,
+                          zoom: 14.4746,
+                        ),
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                        // markers: _createMarker(),
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: true,
+                        mapToolbarEnabled: false,
+                        buildingsEnabled: true,
+                        onTap: (LatLng latLang) {
+                          print('Clicked: $latLang');
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+        ),
+        builder: (context, state) {
+          return Container(
+            height: 200,
+            child: Column(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      MaterialButton(
+                        padding: EdgeInsets.all(30),
+                        onPressed: () {},
+                        color: Colors.red[50],
+                        shape: CircleBorder(), //丸
+                        child: const Text(
+                          '×1.0',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        padding: EdgeInsets.all(30),
+                        onPressed: () {},
+                        color: Colors.red[100],
+                        shape: CircleBorder(), //丸
+                        child: const Text(
+                          '×1.1',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        padding: EdgeInsets.all(30),
+                        onPressed: () {},
+                        color: Colors.red[200],
+                        shape: CircleBorder(), //丸
+                        child: Text(
+                          '×1.2',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        padding: EdgeInsets.all(30),
+                        onPressed: () {},
+                        color: Colors.red[300],
+                        shape: CircleBorder(), //丸
+                        child: Text(
+                          '×1.3',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        padding: EdgeInsets.all(30),
+                        onPressed: () {},
+                        color: Colors.red[400],
+                        shape: CircleBorder(), //丸
+                        child: Text(
+                          '×1.4',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        padding: EdgeInsets.all(30),
+                        onPressed: () {},
+                        color: Colors.red[500],
+                        shape: CircleBorder(), //丸
+                        child: Text(
+                          '×1.0',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Spacer(
+                  flex: 5,
+                ),
+                SizedBox(
+                  width: 300, //横幅
+                  height: 50, //高さ
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text('配達を開始する'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red, //ボタンの背景色
+                    ),
+                  ),
+                ),
+                Spacer(
+                  flex: 5,
+                ),
+              ],
             ),
+          );
+        },
+      ),
     );
   }
 }
