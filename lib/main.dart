@@ -6,6 +6,7 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:sliding_sheet/sliding_sheet.dart';
+import 'main_drawer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,19 +89,27 @@ class MapSampleState extends State<MapSample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerEnableOpenDragGesture: false,
+      drawer: Drawer(
+        child: mainDrawer(),
+      ),
       backgroundColor: Colors.grey.shade200,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      floatingActionButton: FloatingActionButton(
-        elevation: 20,
-        onPressed: () {},
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(color: Colors.blue,width:3),
-              borderRadius:BorderRadius.circular(30),
-              image:DecorationImage(
-                image:NetworkImage("https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
-            )
+      floatingActionButton: Builder(
+        builder: (context) => FloatingActionButton(
+          elevation: 20,
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: Colors.blue, width: 3),
+                borderRadius: BorderRadius.circular(30),
+                image: DecorationImage(
+                  image: NetworkImage(
+                      "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
+                )),
           ),
         ),
       ),
@@ -264,8 +273,7 @@ class MapSampleState extends State<MapSample> {
             ),
           );
         },
-
-      ), 
+      ),
     );
   }
 }
