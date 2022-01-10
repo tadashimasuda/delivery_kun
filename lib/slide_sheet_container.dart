@@ -7,8 +7,8 @@ class slideSheet extends StatelessWidget {
       height: 200,
       child: Column(
         children: [
-          const Spacer(
-            flex: 3,
+          SizedBox(
+            height: 10,
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -77,7 +77,7 @@ class slideSheet extends StatelessWidget {
               ],
             ),
           ),
-          const Spacer(flex: 3),
+          const SizedBox(height: 10),
           SizedBox(
             width: 300, //横幅
             height: 50, //高さ
@@ -89,9 +89,7 @@ class slideSheet extends StatelessWidget {
               ),
             ),
           ),
-          const Spacer(
-            flex: 5,
-          ),
+          const SizedBox(height: 10),
         ],
       ),
     );
