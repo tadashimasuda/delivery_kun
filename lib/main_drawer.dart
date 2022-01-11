@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import './screens/login_screen.dart';
 
 class mainDrawer extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -20,12 +20,16 @@ class mainDrawer extends StatelessWidget {
           ),
         ]),
         ListTile(
-          title: const Text('Item 1'),
+          title: const Text('Login'),
           onTap: () {
             // Update the state of the app
             // ...
             // Then close the drawer
-            Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SignInForm(),
+                ));
           },
         ),
         ListTile(
