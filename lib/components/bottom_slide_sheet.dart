@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:delivery_kun/constants.dart';
 
 class BottomSlideSheet extends StatefulWidget {
   const BottomSlideSheet({Key? key}) : super(key: key);
@@ -8,28 +9,40 @@ class BottomSlideSheet extends StatefulWidget {
 }
 
 class _BottomSlideSheetState extends State<BottomSlideSheet> {
-  double selectedIncentive = 1.0;
+  bool isPressed = false;
+  bool isFirstPressed = false;
+  double selectedIncentive = 0.0;
+
+  dynamic incentiveColor(double num){
+    if(isFirstPressed){
+      return Colors.grey;
+    }else{
+      return kincentive[num.toStringAsFixed(1)];
+    }
+  }
 
   ButtonBar incentiveBtn(){
     List<ElevatedButton> incentiveBtns = [];
 
-    for (double i = 1.0; i <= 3.0; i+=0.1) {
-      var newItem = ElevatedButton(
-        onPressed: (){
-          setState(() {
-            selectedIncentive = i;
-          });
-        },
-        child: Text(i.toStringAsFixed(1).toString()),
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(20),
-          primary: Colors.red[200],
-          onPrimary: Colors.black,
-          shape: const CircleBorder(),
-        ),
-      );
-      incentiveBtns.add(newItem);
-    }
+    for(double index = 1.0;index <= 3.1;index+=0.1){
+        var newItem = ElevatedButton(
+          onPressed: (){
+            setState(() {
+              selectedIncentive = double.parse(index.toStringAsFixed(1));
+              this.isPressed = !this.isPressed;
+              this.isFirstPressed = true;
+            });
+          },
+          child: Text('×${index.toStringAsFixed(1)}'),
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.all(20),
+            primary:selectedIncentive == double.parse(index.toStringAsFixed(1)) ? kincentive[index.toStringAsFixed(1)] : incentiveColor(index),
+            onPrimary: Colors.black,
+            shape: const CircleBorder(),
+          ),
+        );
+        incentiveBtns.add(newItem);
+      }
 
     return ButtonBar(
       children: incentiveBtns,
@@ -59,7 +72,7 @@ class _BottomSlideSheetState extends State<BottomSlideSheet> {
               },
               child: Text('配達を開始する'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.white30, //ボタンの背景色
+                primary: selectedIncentive == 0.0 ? Colors.grey : Colors.green, //ボタンの背景色
               ),
             ),
           ),
@@ -69,67 +82,3 @@ class _BottomSlideSheetState extends State<BottomSlideSheet> {
     );
   }
 }
-
-
-// [
-// ElevatedButton(
-// child: const Text('×1.0'),
-// style: ElevatedButton.styleFrom(
-// padding: const EdgeInsets.all(20),
-// primary: Colors.red[50],
-// onPrimary: Colors.black,
-// shape: const CircleBorder(),
-// ),
-// onPressed: () {},
-// ),
-// ElevatedButton(
-// child: const Text('×1.1'),
-// style: ElevatedButton.styleFrom(
-// padding: const EdgeInsets.all(20),
-// primary: Colors.red[100],
-// onPrimary: Colors.black,
-// shape: const CircleBorder(),
-// ),
-// onPressed: () {},
-// ),
-// ElevatedButton(
-// child: const Text('×1.2'),
-// style: ElevatedButton.styleFrom(
-// padding: const EdgeInsets.all(20),
-// primary: Colors.red[200],
-// onPrimary: Colors.black,
-// shape: const CircleBorder(),
-// ),
-// onPressed: () {},
-// ),
-// ElevatedButton(
-// child: const Text('×1.3'),
-// style: ElevatedButton.styleFrom(
-// padding: const EdgeInsets.all(20),
-// primary: Colors.red[300],
-// onPrimary: Colors.black,
-// shape: const CircleBorder(),
-// ),
-// onPressed: () {},
-// ),
-// ElevatedButton(
-// child: const Text('×1.4'),
-// style: ElevatedButton.styleFrom(
-// padding: const EdgeInsets.all(20),
-// primary: Colors.red[400],
-// onPrimary: Colors.black,
-// shape: const CircleBorder(),
-// ),
-// onPressed: () {},
-// ),
-// ElevatedButton(
-// child: const Text('×1.5'),
-// style: ElevatedButton.styleFrom(
-// padding: const EdgeInsets.all(20),
-// primary: Colors.red[500],
-// onPrimary: Colors.black,
-// shape: const CircleBorder(),
-// ),
-// onPressed: () {},
-// ),
-// ],
