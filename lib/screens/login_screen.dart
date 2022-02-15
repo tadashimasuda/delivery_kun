@@ -1,68 +1,86 @@
 import 'package:flutter/material.dart';
 
-class SignInForm extends StatelessWidget {
+class SignInForm extends StatefulWidget {
+  const SignInForm({Key? key}) : super(key: key);
+
+  @override
+  _SignInFormState createState() => _SignInFormState();
+}
+
+class _SignInFormState extends State<SignInForm> {
+  String mail='';
+  String password='';
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             Image.network(
                 'https://media.istockphoto.com/photos/food-delivery-drivers-are-driving-to-deliver-products-to-customers-picture-id1277194125?s=612x612'),
-            Column(
-              children: [
-                SizedBox(
-                  height: 30,
-                ),
-                Text('ログイン'),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  width: size.width * 0.75,
-                  height: 45,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      labelText: 'メールアドレス',
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: size.width * 0.75,
-                  height: 45,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      labelText: 'パスワード',
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
+            Form(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 30,),
+                  Text('ログイン'),
+                  const SizedBox(height: 30,),
+                  Container(
                     width: size.width * 0.75,
                     height: 45,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text('ログイン'),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
+                    child: TextField(
+                      onChanged: (value){
+                        mail = value;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50.0),
                         ),
+                        labelText: 'メールアドレス',
                       ),
-                    ))
-              ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: size.width * 0.75,
+                    height: 45,
+                    child: TextField(
+                      onChanged: (value){
+                        password = value;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                        labelText: 'パスワード',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                      height: 20
+                  ),
+                  Container(
+                      width: size.width * 0.75,
+                      height: 45,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          print(mail);
+                          print(password);
+                        },
+                        child: Text('ログイン'),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                      ))
+                ],
+              ),
             ),
             Container(
               margin: EdgeInsets.symmetric(vertical: size.height * 0.02),
