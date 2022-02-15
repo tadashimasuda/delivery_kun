@@ -52,7 +52,7 @@ class _BottomSlideSheetState extends State<BottomSlideSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height: 210,
       child: Column(
         children: [
           SizedBox(
