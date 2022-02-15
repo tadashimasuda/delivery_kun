@@ -5,7 +5,7 @@ import 'package:sliding_sheet/sliding_sheet.dart';
 import 'dart:async';
 
 import 'package:delivery_kun/components/main_drawer.dart';
-import 'package:delivery_kun/components/slide_sheet_container.dart';
+import 'package:delivery_kun/components/bottom_slide_sheet.dart';
 
 
 class MapScreen extends StatefulWidget {
