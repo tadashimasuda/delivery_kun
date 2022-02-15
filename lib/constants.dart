@@ -1,0 +1,25 @@
+import 'package:flutter/material.dart';
+
+const kincentive = {
+  '1.0':Color(0xFFFFEBEE),
+  '1.1':Color(0xFFFFEBEE),
+  '1.2':Color(0xFFFFEBEE),
+  '1.3':Color(0xFFFFCDD2),
+  '1.4':Color(0xFFFFCDD2),
+  '1.5':Color(0xFFFFCDD2),
+  '1.6':Color(0xFFEF9A9A),
+  '1.7':Color(0xFFEF9A9A),
+  '1.8':Color(0xFFEF9A9A),
+  '1.9':Color(0xFFE57373),
+  '2.0':Color(0xFFE57373),
+  '2.1':Color(0xFFE57373),
+  '2.2':Color(0xFFEF5350),
+  '2.3':Color(0xFFEF5350),
+  '2.4':Color(0xFFEF5350),
+  '2.5':Color(0xFFF44336),
+  '2.6':Color(0xFFF44336),
+  '2.7':Color(0xFFF44336),
+  '2.8':Color(0xFFB71C1C),
+  '2.9':Color(0xFFB71C1C),
+  '3.0':Color(0xFFB71C1C),
+};
