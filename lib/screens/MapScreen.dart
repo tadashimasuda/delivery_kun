@@ -142,7 +142,7 @@ class _MapScreenState extends State<MapScreen> {
         ),
 
         builder: (context, state) {
-          return slideSheet();
+          return BottomSlideSheet();
         },
       ),
     );
