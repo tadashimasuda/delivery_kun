@@ -11,32 +11,25 @@ class BottomSlideSheet extends StatefulWidget {
 class _BottomSlideSheetState extends State<BottomSlideSheet> {
   bool isPressed = false;
   bool isFirstPressed = false;
-  double selectedIncentive = 0.0;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 210,
-      child: Column(
+      height: 180,
+      alignment: Alignment.topCenter,
+      child:Column(
         children: [
-          SizedBox(
-            height: 10,
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: 300, //横幅
-            height: 50, //高さ
-            child: ElevatedButton(
-              onPressed: () {
-                print(selectedIncentive);
-              },
-              child: Text('受注する'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.red, //ボタンの背景色
-              ),
+          SizedBox(height: 30,),
+          ElevatedButton(
+            onPressed: () {
+              print('ok');
+            },
+            child: Text('受注する'),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.red,
+              padding: EdgeInsets.only(left:100,right: 100,top: 20,bottom: 20),
             ),
           ),
-          const SizedBox(height: 10),
         ],
       ),
     );
