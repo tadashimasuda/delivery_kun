@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:delivery_kun/components/main_drawer.dart';
 import 'package:delivery_kun/components/bottom_slide_sheet.dart';
 
-
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
 
@@ -64,6 +63,25 @@ class _MapScreenState extends State<MapScreen> {
     return true;
   }
 
+  void _currentLocation() async {
+    final GoogleMapController controller = await _controller.future;
+    final hasPermission = await _handlePermission();
+
+    if (!hasPermission) {
+      return;
+    }
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 14.4746,
+      ),
+    ));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -81,29 +99,28 @@ class _MapScreenState extends State<MapScreen> {
       backgroundColor: Colors.grey.shade200,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Builder(
-        builder: (context) =>
-            FloatingActionButton(
-              elevation: 20,
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(color: Colors.blue, width: 3),
-                    borderRadius: BorderRadius.circular(30),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
-                    )),
-              ),
-            ),
+        builder: (context) => FloatingActionButton(
+          elevation: 20,
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(color: Colors.blue, width: 3),
+                borderRadius: BorderRadius.circular(30),
+                image: DecorationImage(
+                  image: NetworkImage(
+                      "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
+                )),
+          ),
+        ),
       ),
       body: SlidingSheet(
         elevation: 8,
         cornerRadius: 16,
         snapSpec: const SnapSpec(
-          // Enable snapping. This is true by default.
+            // Enable snapping. This is true by default.
             snap: true,
             // Set custom snapping points.
             snappings: [0.7, 0.8, 1.0],
@@ -116,29 +133,37 @@ class _MapScreenState extends State<MapScreen> {
           child: _loading
               ? CircularProgressIndicator()
               : Container(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: _initialPosition,
-                    zoom: 14.4746,
+                  child: Stack(
+                    // fit: StackFit.expand,
+                    children: <Widget>[
+                      GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: _initialPosition,
+                          zoom: 14.4746,
+                        ),
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                        // markers: _createMarker(),
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        mapToolbarEnabled: false,
+                        buildingsEnabled: true,
+                        onTap: (LatLng latLang) {
+                          print('Clicked: $latLang');
+                        },
+                      ),
+                      Positioned(
+                        right:15,
+                        bottom: 150,
+                        child: FloatingActionButton(
+                          onPressed: _currentLocation,
+                          child: Icon(Icons.location_on),
+                        ),
+                      )
+                    ],
                   ),
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
-                  // markers: _createMarker(),
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: false,
-                  mapToolbarEnabled: false,
-                  buildingsEnabled: true,
-                  onTap: (LatLng latLang) {
-                    print('Clicked: $latLang');
-                  },
                 ),
-              ],
-            ),
-          ),
         ),
 
         builder: (context, state) {
