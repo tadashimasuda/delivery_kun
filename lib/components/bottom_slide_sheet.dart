@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:delivery_kun/constants.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io' show Platform;
 
 class BottomSlideSheet extends StatefulWidget {
   const BottomSlideSheet({Key? key}) : super(key: key);
@@ -9,74 +10,84 @@ class BottomSlideSheet extends StatefulWidget {
 }
 
 class _BottomSlideSheetState extends State<BottomSlideSheet> {
-  bool isPressed = false;
-  bool isFirstPressed = false;
-  double selectedIncentive = 0.0;
 
-  dynamic incentiveColor(double num){
-    if(isFirstPressed){
-      return Colors.grey;
-    }else{
-      return kincentive[num.toStringAsFixed(1)];
-    }
+  Widget getTimeText(){
+    var now = DateTime.now();
+    return Text('記録時間：${now.hour}時${now.minute}分');
   }
 
-  ButtonBar incentiveBtn(){
-    List<ElevatedButton> incentiveBtns = [];
-
-    for(double index = 1.0;index <= 3.1;index+=0.1){
-        var newItem = ElevatedButton(
-          onPressed: (){
-            setState(() {
-              selectedIncentive = double.parse(index.toStringAsFixed(1));
-              this.isPressed = !this.isPressed;
-              this.isFirstPressed = true;
-            });
-          },
-          child: Text('×${index.toStringAsFixed(1)}'),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.all(20),
-            primary:selectedIncentive == double.parse(index.toStringAsFixed(1)) ? kincentive[index.toStringAsFixed(1)] : incentiveColor(index),
-            onPrimary: Colors.black,
-            shape: const CircleBorder(),
+  Future<dynamic> IOSDialog(){
+    return showCupertinoDialog(context: context, builder: (context){
+      return CupertinoAlertDialog(
+        title: Text('記録しますか？'),
+        content: getTimeText(),
+        actions: [
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            child: Text('キャンセル'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-        );
-        incentiveBtns.add(newItem);
-      }
+          CupertinoDialogAction(
+            child: Text('記録する'),
+            onPressed: () {
+              Navigator.pop(context);
+              print(DateTime.now());
+            },
+          ),
+        ],
+     );
+    });
+  }
 
-    return ButtonBar(
-      children: incentiveBtns,
+  dynamic AndroidDialog(){
+    showDialog(
+      barrierColor: Colors.black.withOpacity(0.5),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('記録しますか？'),
+          content: getTimeText(),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                print(DateTime.now());
+              },
+              child: Text('キャンセル'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                print(DateTime.now());
+              },
+              child: Text('記録する'),
+            ),
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 210,
-      child: Column(
+      height: 180,
+      alignment: Alignment.topCenter,
+      child:Column(
         children: [
-          SizedBox(
-            height: 10,
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: incentiveBtn(),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: 300, //横幅
-            height: 50, //高さ
-            child: ElevatedButton(
-              onPressed: () {
-                print(selectedIncentive);
-              },
-              child: Text('配達を開始する'),
-              style: ElevatedButton.styleFrom(
-                primary: selectedIncentive == 0.0 ? Colors.grey : Colors.green, //ボタンの背景色
-              ),
+          SizedBox(height: 30,),
+          ElevatedButton(
+            onPressed: () {
+              Platform.isIOS ? IOSDialog() : AndroidDialog();
+            },
+            child: Text('受注記録'),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.red,
+              padding: EdgeInsets.only(left:100,right: 100,top: 20,bottom: 20),
             ),
           ),
-          const SizedBox(height: 10),
         ],
       ),
     );
