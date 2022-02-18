@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class OrderRecord extends StatefulWidget {
-  const OrderRecord({Key? key}) : super(key: key);
+import 'order_list.dart';
+
+class UserStatus extends StatefulWidget {
+  const UserStatus({Key? key}) : super(key: key);
 
   @override
-  _OrderRecordState createState() => _OrderRecordState();
+  _UserStatusState createState() => _UserStatusState();
 }
 
-class _OrderRecordState extends State<OrderRecord> {
+class _UserStatusState extends State<UserStatus> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,7 +157,13 @@ class _OrderRecordState extends State<OrderRecord> {
                     ]),
                   ]),
                   ElevatedButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderList(),
+                          ));
+                    },
                     child: Text('受注履歴を見る',),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.grey,
