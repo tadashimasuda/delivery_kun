@@ -46,12 +46,21 @@ class _OrderRecordState extends State<OrderRecord> {
                       children: [
                         TableRow(
                             children: [
-                          Text('オンライン'),
-                          Text('受注数')
+                          Text('オンライン',style: TextStyle(
+                            color: Colors.grey
+                          ),),
+                          Text('受注数',style: TextStyle(
+                              color: Colors.grey
+                          ))
                         ]),
                         TableRow(children: [
-                          Text('8時間24分'),
-                          Text('21')
+                          Text('8時間24分',style: TextStyle(
+                            fontSize: 20,
+                          ),),
+                          Text('21',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),)
                     ]),
                   ]),
                 ],
