@@ -3,7 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 import 'dart:async';
+
 import 'package:delivery_kun/screens/MapScreen.dart';
+import 'package:delivery_kun/screens/order_record.dart';
 
 class MapScreenBottomBtn extends StatefulWidget {
   const MapScreenBottomBtn({Key? key}) : super(key: key);
@@ -84,7 +86,13 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OrderRecord(),
+                      ));
+                },
                 child: Icon(Icons.list_alt,color: Colors.grey,),
                 style: ElevatedButton.styleFrom(
                   shape: const CircleBorder(),
