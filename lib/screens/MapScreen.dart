@@ -1,11 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
 import 'dart:async';
 
 import 'package:delivery_kun/components/main_drawer.dart';
-import 'package:delivery_kun/components/bottom_slide_sheet.dart';
+import 'package:delivery_kun/components/MapScreen_bottom_btn.dart';
+
+
+Completer<GoogleMapController> _controller = Completer();
+
+void currentLocation() async {
+  final GoogleMapController controller = await _controller.future;
+  final hasPermission = await _handlePermission();
+
+  if (!hasPermission) {
+    return;
+  }
+  Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+
+  controller.animateCamera(CameraUpdate.newCameraPosition(
+    CameraPosition(
+      bearing: 0,
+      target: LatLng(position.latitude, position.longitude),
+      zoom: 14.4746,
+    ),
+  ));
+}
+
+Future<bool> _handlePermission() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Test if location services are enabled.
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // do stuff
+    return false;
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // do stuff
+      return false;
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately.
+    // do stuff
+
+    return false;
+  }
+  return true;
+}
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -15,7 +65,6 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  Completer<GoogleMapController> _controller = Completer();
 
   late LatLng _initialPosition;
   late bool _loading;
@@ -32,54 +81,6 @@ class _MapScreenState extends State<MapScreen> {
       _initialPosition = LatLng(position.latitude, position.longitude);
       _loading = false;
     });
-  }
-
-  Future<bool> _handlePermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // do stuff
-      return false;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // do stuff
-        return false;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      // do stuff
-
-      return false;
-    }
-    return true;
-  }
-
-  void _currentLocation() async {
-    final GoogleMapController controller = await _controller.future;
-    final hasPermission = await _handlePermission();
-
-    if (!hasPermission) {
-      return;
-    }
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        bearing: 0,
-        target: LatLng(position.latitude, position.longitude),
-        zoom: 14.4746,
-      ),
-    ));
   }
 
   @override
@@ -116,25 +117,11 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
       ),
-      body: SlidingSheet(
-        elevation: 8,
-        cornerRadius: 16,
-        snapSpec: const SnapSpec(
-            // Enable snapping. This is true by default.
-            snap: true,
-            // Set custom snapping points.
-            snappings: [0.7, 0.8, 1.0],
-            // Define to what the snappings relate to. In this case,
-            // the total available space that the sheet can expand to.
-            positioning: SnapPositioning.relativeToSheetHeight),
-        // The body widget will be displayed under the SlidingSheet
-        // and a parallax effect can be applied to it.
-        body: Center(
+      body: Center(
           child: _loading
               ? CircularProgressIndicator()
               : Container(
                   child: Stack(
-                    // fit: StackFit.expand,
                     children: <Widget>[
                       GoogleMap(
                         initialCameraPosition: CameraPosition(
@@ -153,22 +140,13 @@ class _MapScreenState extends State<MapScreen> {
                           print('Clicked: $latLang');
                         },
                       ),
-                      Positioned(
-                        right:15,
-                        bottom: 150,
-                        child: FloatingActionButton(
-                          onPressed: _currentLocation,
-                          child: Icon(Icons.location_on),
-                        ),
-                      )
+                      const Positioned(
+                          child:  MapScreenBottomBtn(),
+                          bottom: 60,
+                      ),
                     ],
-                  ),
                 ),
         ),
-
-        builder: (context, state) {
-          return BottomSlideSheet();
-        },
       ),
     );
   }
