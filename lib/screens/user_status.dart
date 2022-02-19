@@ -162,6 +162,7 @@ class _UserStatusState extends State<UserStatus> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => OrderList(),
+                            fullscreenDialog: true,
                           ));
                     },
                     child: Text('受注履歴を見る',),
