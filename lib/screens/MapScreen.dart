@@ -1,3 +1,4 @@
+import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,6 +6,7 @@ import 'dart:async';
 
 import 'package:delivery_kun/components/main_drawer.dart';
 import 'package:delivery_kun/components/MapScreen_bottom_btn.dart';
+import 'package:provider/provider.dart';
 
 
 Completer<GoogleMapController> _controller = Completer();
@@ -95,7 +97,19 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       drawerEnableOpenDragGesture: false,
       drawer: Drawer(
-        child: mainDrawer(),
+        child: Consumer<Auth>(builder: (context,auth,child){
+          if(! auth.authenticated){
+            return ListView(
+              children: [
+                ListTile(
+                  title: Text('not loggedIn'),
+                  onTap: (){},
+                ),
+              ],
+            );
+          }else{
+            return mainDrawer();
+          }}),
       ),
       backgroundColor: Colors.grey.shade200,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
