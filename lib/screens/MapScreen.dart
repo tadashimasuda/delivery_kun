@@ -1,3 +1,4 @@
+import 'package:delivery_kun/screens/sign_up_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -117,7 +118,19 @@ class _MapScreenState extends State<MapScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => SignInForm(),
-                    ));
+                        )
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Sign Up'),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUpForm(),
+                        )
+                    );
                   },
                 ),
               ],

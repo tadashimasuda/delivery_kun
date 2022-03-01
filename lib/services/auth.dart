@@ -43,6 +43,18 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 
+  void register({required Map creds}) async{
+    try{
+      Dio.Response response= await dio().post('/register',data:creds);
+      String token = response.data['data']['access_token'].toString();
+      this.tryToken(token);
+    }catch(e){
+      print(e);
+    }
+
+    notifyListeners();
+  }
+
   Future storeToken(String token) async {
     await storage.write(key: 'token', value: token);
   }

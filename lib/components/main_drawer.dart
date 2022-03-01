@@ -1,3 +1,4 @@
+import 'package:delivery_kun/screens/sign_up_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,10 +39,12 @@ class _mainDrawerState extends State<mainDrawer> {
           ListTile(
             title: const Text('Item 2'),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignUpForm(),
+                  )
+              );
             },
           ),
         ],
