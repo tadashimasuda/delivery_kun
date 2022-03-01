@@ -1,8 +1,6 @@
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import '../screens/login_screen.dart';
 
 class mainDrawer extends StatefulWidget {
   const mainDrawer({Key? key}) : super(key: key);
@@ -32,16 +30,9 @@ class _mainDrawerState extends State<mainDrawer> {
             ),
           ]),
           ListTile(
-            title: const Text('Login'),
+            title: const Text('Logout'),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SignInForm(),
-                  ));
+              Provider.of<Auth>(context, listen: false).logout();
             },
           ),
           ListTile(

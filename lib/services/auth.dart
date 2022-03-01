@@ -44,16 +44,18 @@ class Auth extends ChangeNotifier {
   }
 
   Future storeToken(String token) async {
-    print(token);
     await storage.write(key: 'token', value: token);
   }
 
   void logout() async {
     try {
-      // Dio.Response response = await dio().get('/user/revoke',
-      //     options: Dio.Options(headers: {'Authorization': 'Bearer $_token'}));
+      Dio.Response response = await dio().get('/logout', options: Dio.Options(headers: {'Authorization': 'Bearer $_token'}));
 
-      // cleanUp();
+      // this._user = null;
+      this._isLoggedIn = false;
+      // this._token = null;
+      await storage.delete(key: 'token');
+
       notifyListeners();
     } catch (e) {
       print(e);
