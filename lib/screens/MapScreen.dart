@@ -1,5 +1,6 @@
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
@@ -7,7 +8,7 @@ import 'dart:async';
 import 'package:delivery_kun/components/main_drawer.dart';
 import 'package:delivery_kun/components/MapScreen_bottom_btn.dart';
 import 'package:provider/provider.dart';
-
+import 'login_screen.dart';
 
 Completer<GoogleMapController> _controller = Completer();
 
@@ -71,14 +72,14 @@ class _MapScreenState extends State<MapScreen> {
   late LatLng _initialPosition;
   late bool _loading;
 
+
   void _getUserLocation() async {
     final hasPermission = await _handlePermission();
 
     if (!hasPermission) {
       return;
     }
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _initialPosition = LatLng(position.latitude, position.longitude);
       _loading = false;
@@ -90,6 +91,14 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     _loading = true;
     _getUserLocation();
+    readToken();
+  }
+
+  final storage = new FlutterSecureStorage();
+
+  Future<String?>  readToken() async {
+    String? token = await storage.read(key: 'token');
+    Provider.of<Auth>(context, listen: false).tryToken(token);
   }
 
   @override
@@ -102,8 +111,14 @@ class _MapScreenState extends State<MapScreen> {
             return ListView(
               children: [
                 ListTile(
-                  title: Text('not loggedIn'),
-                  onTap: (){},
+                  title: Text('not login'),
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignInForm(),
+                    ));
+                  },
                 ),
               ],
             );

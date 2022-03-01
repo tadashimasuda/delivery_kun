@@ -1,4 +1,6 @@
+import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key}) : super(key: key);
@@ -68,8 +70,12 @@ class _SignInFormState extends State<SignInForm> {
                       height: 45,
                       child: ElevatedButton(
                         onPressed: () {
-                          print(mail);
-                          print(password);
+                          Map creds = {
+                            'email': mail,
+                            'password': password
+                          };
+                          Provider.of<Auth>(context, listen: false).login(creds: creds);
+                          Navigator.pop(context);
                         },
                         child: Text('ログイン'),
                         style: ElevatedButton.styleFrom(
