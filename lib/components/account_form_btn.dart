@@ -17,7 +17,7 @@ class account_btn extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: 50,
           child: Text(
-            'アカウント登録',
+            title,
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),

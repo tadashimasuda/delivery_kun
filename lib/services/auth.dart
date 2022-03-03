@@ -61,7 +61,7 @@ class Auth extends ChangeNotifier {
 
   void logout() async {
     try {
-      Dio.Response response = await dio().get('/logout', options: Dio.Options(headers: {'Authorization': 'Bearer $_token'}));
+      Dio.Response response = await dio().post('/logout', options: Dio.Options(headers: {'Authorization': 'Bearer $_token'}));
 
       // this._user = null;
       this._isLoggedIn = false;

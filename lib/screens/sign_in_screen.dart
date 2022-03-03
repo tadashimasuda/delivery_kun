@@ -2,6 +2,9 @@ import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:delivery_kun/components/account_text_field.dart';
+import 'package:delivery_kun/components/account_form_btn.dart';
+
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key}) : super(key: key);
 
@@ -10,131 +13,85 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
-  String mail='';
+  String email='';
   String password='';
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Image.network(
-                'https://media.istockphoto.com/photos/food-delivery-drivers-are-driving-to-deliver-products-to-customers-picture-id1277194125?s=612x612'),
-            Form(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: 30,),
-                  Text('ログイン'),
-                  const SizedBox(height: 30,),
-                  Container(
-                    width: size.width * 0.75,
-                    height: 45,
-                    child: TextField(
-                      onChanged: (value){
-                        mail = value;
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                        ),
-                        labelText: 'メールアドレス',
-                      ),
-                    ),
+      body: SafeArea(
+        child:Padding(
+          padding: EdgeInsets.fromLTRB(24, 40, 24, 0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 50,
+              ),
+              Text(
+                'おかえりなさい！',
+                style: TextStyle(
+                    color: Colors.lightBlue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                'ログイン',
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Form(
+                child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  AccountTextField(
+                    obscureText: false,
+                    title: 'メールアドレス',
+                    icon: Icons.mail,
+                    onChange: (value) {
+                      email = value;
+                    },
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    width: size.width * 0.75,
-                    height: 45,
-                    child: TextField(
-                      onChanged: (value){
-                        password = value;
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                        ),
-                        labelText: 'パスワード',
-                      ),
-                    ),
+                  AccountTextField(
+                    obscureText: true,
+                    title: 'パスワード',
+                    icon: Icons.remove_red_eye_outlined,
+                    onChange: (value) {
+                      password = value;
+                    },
                   ),
-                  const SizedBox(
-                      height: 20
+                  SizedBox(
+                    height: 20,
                   ),
-                  Container(
-                      width: size.width * 0.75,
-                      height: 45,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Map creds = {
-                            'email': mail,
-                            'password': password
-                          };
-                          Provider.of<Auth>(context, listen: false).login(creds: creds);
-                          Navigator.pop(context);
-                        },
-                        child: Text('ログイン'),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                      ))
-                ],
+                  SizedBox(
+                    height: 40,
+                  ),
+                ]),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: size.height * 0.02),
-              width: size.width * 0.8,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Divider(
-                      color: Color(0xFFD9D9D9),
-                      height: 1.5,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    child: Text(
-                      "OR",
-                      style: TextStyle(
-                        color: Color(0xFFD9D9D9),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: Color(0xFFD9D9D9),
-                      height: 1.5,
-                    ),
-                  ),
-                ],
+              account_btn(
+                title: 'ログイン',
+                color: Colors.lightBlue,
+                onTap: () {
+                  Map creds = {
+                    'email': email,
+                    'password': password,
+                  };
+                  Provider.of<Auth>(context, listen: false).login(creds: creds);
+                  Navigator.pop(context);
+                },
               ),
-            ),
-            Container(
-                width: size.width * 0.75,
-                height: 45,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Googleでログイン'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                ))
-          ],
-        ),
+              SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
+        )
       ),
     );
   }
