@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:delivery_kun/components/account_text_field.dart';
 import 'package:delivery_kun/components/account_form_btn.dart';
+import 'package:delivery_kun/components/account_google_btn.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key}) : super(key: key);
@@ -13,14 +14,15 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
-  String email='';
-  String password='';
+  String email = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child:Padding(
+    return Consumer<Auth>(builder: (context, auth, child) {
+      return Scaffold(
+        body: SafeArea(
+            child: Padding(
           padding: EdgeInsets.fromLTRB(24, 40, 24, 0),
           child: Column(
             children: [
@@ -45,34 +47,37 @@ class _SignInFormState extends State<SignInForm> {
                 height: 20,
               ),
               Form(
-                child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  AccountTextField(
-                    obscureText: false,
-                    title: 'メールアドレス',
-                    icon: Icons.mail,
-                    onChange: (value) {
-                      email = value;
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  AccountTextField(
-                    obscureText: true,
-                    title: 'パスワード',
-                    icon: Icons.remove_red_eye_outlined,
-                    onChange: (value) {
-                      password = value;
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                ]),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AccountTextField(
+                        obscureText: false,
+                        title: 'メールアドレス',
+                        icon: Icons.mail,
+                        onChange: (value) {
+                          email = value;
+                        },
+                      ),
+                      if (auth.validate_message?['errors']['email'] != null) Text('${auth.validate_message?['errors']['email'][0]}',style: TextStyle(color: Colors.red),),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      AccountTextField(
+                        obscureText: true,
+                        title: 'パスワード',
+                        icon: Icons.remove_red_eye_outlined,
+                        onChange: (value) {
+                          password = value;
+                        },
+                      ),
+                      if (auth.validate_message?['errors']['password'] != null) Text('${auth.validate_message?['errors']['password'][0]}',style: TextStyle(color: Colors.red),),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                    ]),
               ),
               account_btn(
                 title: 'ログイン',
@@ -83,16 +88,26 @@ class _SignInFormState extends State<SignInForm> {
                     'password': password,
                   };
                   Provider.of<Auth>(context, listen: false).login(creds: creds);
-                  Navigator.pop(context);
+                  if(auth.authenticated){
+                    Navigator.pop(context);
+                  }
                 },
               ),
               SizedBox(
                 height: 20,
               ),
+              SizedBox(
+                height: 15,
+              ),
+              Text('or', textAlign: TextAlign.center),
+              SizedBox(
+                height: 15,
+              ),
+              GoogleAuthButton(title: 'Googleでログイン',),
             ],
           ),
-        )
-      ),
-    );
+        )),
+      );
+    });
   }
 }
