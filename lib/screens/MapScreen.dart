@@ -99,7 +99,9 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<String?>  readToken() async {
     String? token = await storage.read(key: 'token');
-    Provider.of<Auth>(context, listen: false).tryToken(token);
+    if(token != null){
+      Provider.of<Auth>(context, listen: false).tryToken(token);
+    }
   }
 
   @override
