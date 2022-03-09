@@ -2,9 +2,9 @@ class User{
   final String name;
   final String email;
 
-  User({required this.name,required this.email});
+  User(this.name,this.email);
 
   User.fromJson(Map<String,dynamic> json)
-      : name=json['data']['name'],
-        email=json['data']['email'];
+      : name=json['data']['name'] ?? '',
+        email=json['data']['email'] ?? '';
 }
