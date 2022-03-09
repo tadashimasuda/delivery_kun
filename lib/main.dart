@@ -1,4 +1,6 @@
+import 'package:delivery_kun/models/user_status.dart';
 import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'screens/MapScreen.dart';
@@ -12,6 +14,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => Auth()),
+        ChangeNotifierProvider(create: (context) => Status()),
       ],
       child: MyApp(),
     ),

@@ -90,7 +90,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => UserStatus(),
+                        builder: (context) => UserStatusScreen(),
                       ));
                 },
                 child: Icon(Icons.list_alt,color: Colors.grey,),
