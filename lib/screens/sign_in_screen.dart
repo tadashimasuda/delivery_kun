@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:delivery_kun/components/account_text_field.dart';
 import 'package:delivery_kun/components/account_form_btn.dart';
 import 'package:delivery_kun/components/account_google_btn.dart';
+import 'package:delivery_kun/mixins/validate_text.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key}) : super(key: key);
@@ -15,42 +16,10 @@ class SignInForm extends StatefulWidget {
   _SignInFormState createState() => _SignInFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _SignInFormState extends State<SignInForm> with ValidateText {
   String email = '';
   String password = '';
   
-  List<Widget> isValidateEmail(Validate? validate) {
-    var email_messages = validate?.email;
-
-    List<Widget> messages = [];
-    if (email_messages != null) {
-      email_messages.forEach((message) {
-        messages.add(Text(
-          message,
-          style: TextStyle(color: Colors.redAccent),
-        ));
-      });
-      return messages;
-    }
-    return messages;
-  }
-
-  List<Widget> isValidatePassword(Validate? validate) {
-    var password_messages = validate?.password;
-
-    List<Widget> messages = [];
-    if (password_messages != null) {
-      password_messages.forEach((message) {
-        messages.add(Text(
-          message,
-          style: TextStyle(color: Colors.redAccent),
-        ));
-      });
-      return messages;
-    }
-    return messages;
-  }
-
   @override
   Widget build(BuildContext context) {
     // return Consumer<Auth>(builder: (context, auth, child) {
@@ -94,7 +63,7 @@ class _SignInFormState extends State<SignInForm> {
                           },
                         ),
                         Column(
-                          children: isValidateEmail(auth.validate_message),
+                          children: ValidateEmail(auth.validate_message),
                         ),
                         SizedBox(
                           height: 20,
@@ -108,7 +77,7 @@ class _SignInFormState extends State<SignInForm> {
                           },
                         ),
                         Column(
-                          children: isValidatePassword(auth.validate_message),
+                          children: ValidatePassword(auth.validate_message),
                         ),
                         SizedBox(
                           height: 20,

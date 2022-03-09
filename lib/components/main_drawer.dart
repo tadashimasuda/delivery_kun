@@ -20,15 +20,16 @@ class _mainDrawerState extends State<mainDrawer> {
         padding: EdgeInsets.only(top: 50.0),
         children: [
           Column(children: [
-            UserAccountsDrawerHeader(
-              accountName: Text(auth.user.name),
-              accountEmail: Text(auth.user.email),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: NetworkImage(
-                    "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
+              UserAccountsDrawerHeader(
+                accountName: Text(auth.user.name),
+                accountEmail: Text(auth.user.email),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  backgroundImage: NetworkImage(
+                      "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
+                  ),
+                ),
               ),
-            ),
           ]),
           ListTile(
             title: const Text('Logout'),
@@ -37,7 +38,7 @@ class _mainDrawerState extends State<mainDrawer> {
             },
           ),
           ListTile(
-            title: const Text('Item 2'),
+            title: const Text('Sign up'),
             onTap: () {
               Navigator.push(
                   context,

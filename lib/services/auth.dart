@@ -42,7 +42,6 @@ class Auth extends ChangeNotifier {
       Dio.Response response = await dio().post('/login', data: creds);
       String token = response.data['data']['access_token'].toString();
       tryToken(token);
-
       notifyListeners();
 
       return true;
@@ -62,16 +61,28 @@ class Auth extends ChangeNotifier {
     }
   }
 
-  void register({required Map creds}) async {
+  Future<bool> register({required Map creds}) async {
     try {
       Dio.Response response = await dio().post('/register', data: creds);
       String token = response.data['data']['access_token'].toString();
       tryToken(token);
-    } catch (e) {
-      print(e);
-    }
+      notifyListeners();
 
-    notifyListeners();
+      return true;
+    } on Dio.DioError catch (e) {
+      if (e.response?.statusCode == 422) {
+        var response = e.response?.data;
+        _validate_message = Validate.fromJson(response);
+        notifyListeners();
+
+        return false;
+      }else{
+        _validate_message = Validate(['メールアドレスとパスワードが一致しませんでした。'],['']);
+        notifyListeners();
+
+        return false;
+      }
+    }
   }
 
   Future storeToken(String token) async {
