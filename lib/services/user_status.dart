@@ -7,17 +7,35 @@ import 'dio.dart';
 
 class Status extends ChangeNotifier {
   UserStatus? _userStatus;
+  DateTime _date = DateTime.now();
 
   UserStatus? get status => _userStatus;
+  DateTime get date => _date;
 
-  String getDate() {
-    return DateFormat('yyyyMMdd').format(DateTime.now()).toString();
+  void getStatusBeforeDate(int user_id){
+    _date = _date.add(Duration(days:-1));
+    String date = DateFormat('yyyyMMdd').format(_date).toString();
+
+    return getStatus(user_id,date);
   }
 
-  void getStatus(int user_id) async {
-    try {
-      String date = getDate();
+  void getStatusNextDate(int user_id){
+    if(DateFormat('yyyy年M月d日').format(DateTime.now()).toString() != DateFormat('yyyy年M月d日').format(date)){
+      _date = _date.add(Duration(days:1));
+      String date = DateFormat('yyyyMMdd').format(_date).toString();
 
+      return getStatus(user_id,date);
+    }
+  }
+
+  void getStatusToday(int user_id) {
+    String date = DateFormat('yyyyMMdd').format(DateTime.now()).toString();
+
+    return getStatus(user_id,date);
+  }
+
+  void getStatus(int user_id,String date) async {
+    try {
       Dio.Response response = await dio()
           .get('/status', queryParameters: {'date': date, 'user_id': user_id});
 

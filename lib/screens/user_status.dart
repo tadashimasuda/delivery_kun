@@ -50,7 +50,7 @@ class LoggedInUserStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<Status>().getStatus(user_id);
+    context.read<Status>().getStatusToday(user_id);
     return Container(
       child: Consumer<Status>(
         builder: (context, status, child) => Column(
@@ -58,10 +58,32 @@ class LoggedInUserStatus extends StatelessWidget {
             Container(
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(top: 20),
-                child: Text(
-                  DateFormat('yyyy年M月d日').format(DateTime.now()),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                        onPressed: (){
+                          Provider.of<Status>(context,listen: false).getStatusBeforeDate(user_id);
+                        },
+                        child: Icon(Icons.chevron_left)
+                    ),
+                    Text(
+                      DateFormat('yyyy年M月d日').format(status.date),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
+                    DateFormat('yyyy年M月d日').format(DateTime.now()).toString() != DateFormat('yyyy年M月d日').format(status.date) ? TextButton(
+                        onPressed: (){
+                          Provider.of<Status>(context,listen: false).getStatusNextDate(user_id);
+                        },
+                        child: Icon(Icons.chevron_right)
+                    ) : TextButton(
+                        onPressed: (){
+                        },
+                        child:Text('')
+                    ),
+                  ],
                 )),
             Container(
               height: 250,
