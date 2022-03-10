@@ -13,9 +13,9 @@ class UserStatus {
       required this.vehicleModel});
 
   UserStatus.fromJson(Map<String, dynamic> json)
-      : onlineTime = json['data']['summary']['onlineTime'],
-        daysEarningsTotal = json['data']['summary']['daysEarningsTotal'],
-        actualCost = json['data']['summary']['actualCost'],
-        daysEarningsQty = json['data']['summary']['daysEarningsQty'],
-        vehicleModel = json['data']['user']['vehicleModel'];
+      : onlineTime = json['data']['summary']['onlineTime'] ?? '',
+        daysEarningsTotal = json['data']['summary']['daysEarningsTotal'] ?? '',
+        actualCost = json['data']['summary']['actualCost'] ?? '',
+        daysEarningsQty = json['data']['summary']['daysEarningsQty'] ?? '',
+        vehicleModel = json['data']['user']['vehicleModel'] ?? '';
 }

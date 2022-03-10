@@ -98,7 +98,7 @@ class LoggedInUserStatus extends StatelessWidget {
                               child: SizedBox(
                                 height: 50,
                                 child: Text(
-                                  status.status.onlineTime,
+                                  status.status?.onlineTime ?? 'a',
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
@@ -109,7 +109,7 @@ class LoggedInUserStatus extends StatelessWidget {
                               child: SizedBox(
                                 height: 50,
                                 child: Text(
-                                  status.status.daysEarningsQty.toString(),
+                                  status.status?.daysEarningsQty.toString()?? 'a',
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
@@ -136,7 +136,7 @@ class LoggedInUserStatus extends StatelessWidget {
                             fontSize: 20,
                           ),
                         ),
-                        Text(status.status.daysEarningsTotal.toString(),
+                        Text(status.status?.daysEarningsTotal.toString()?? 'a',
                             textAlign: TextAlign.right,
                             style: TextStyle(
                               color: Colors.black,
@@ -159,7 +159,7 @@ class LoggedInUserStatus extends StatelessWidget {
                           child: SizedBox(
                             height: 50,
                             child: Text(
-                              status.status.actualCost.toString(),
+                              status.status?.actualCost.toString()?? 'a',
                               textAlign: TextAlign.right,
                               style: TextStyle(
                                 fontSize: 20,
@@ -168,33 +168,33 @@ class LoggedInUserStatus extends StatelessWidget {
                           ),
                         ),
                       ]),
-                      TableRow(children: [
-                        TableCell(
-                          child: SizedBox(
-                            height: 50,
-                            child: Text(
-                              '利益',
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                        TableCell(
-                          child: SizedBox(
-                            height: 50,
-                            child: Text(
-                              (status.status.daysEarningsTotal -
-                                      status.status.actualCost)
-                                  .toString(),
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ]),
+                      // TableRow(children: [
+                      //   TableCell(
+                      //     child: SizedBox(
+                      //       height: 50,
+                      //       child: Text(
+                      //         '利益',
+                      //         style: TextStyle(
+                      //           fontSize: 20,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      //   TableCell(
+                      //     child: SizedBox(
+                      //       height: 50,
+                      //       child: Text(
+                      //         (status.status!.daysEarningsTotal -
+                      //                 status.status!.actualCost)
+                      //             .toString(),
+                      //         textAlign: TextAlign.right,
+                      //         style: TextStyle(
+                      //           fontSize: 20,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ]),
                     ]),
                     ElevatedButton(
                       onPressed: () {
@@ -217,7 +217,7 @@ class LoggedInUserStatus extends StatelessWidget {
                 ))
           ],
         ),
-      ),
+      ) ,
     );
   }
 }
