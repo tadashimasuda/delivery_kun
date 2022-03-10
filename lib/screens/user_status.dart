@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'order_list.dart';
 import 'package:delivery_kun/services/auth.dart';
@@ -58,37 +59,33 @@ class LoggedInUserStatus extends StatelessWidget {
             Container(
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(top: 20),
-
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                        onPressed: (){
-                          Provider.of<Status>(context,listen: false).getStatusBeforeDate(user_id);
+                        onPressed: () {
+                          Provider.of<Status>(context, listen: false)
+                              .getStatusBeforeDate(user_id);
                         },
-                        child: Icon(Icons.chevron_left)
-                    ),
+                        child: Icon(Icons.chevron_left)),
                     Text(
                       DateFormat('yyyy年M月d日').format(status.date),
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
-                    DateFormat('yyyy年M月d日').format(DateTime.now()).toString() != DateFormat('yyyy年M月d日').format(status.date) ? TextButton(
-                        onPressed: (){
-                          Provider.of<Status>(context,listen: false).getStatusNextDate(user_id);
-                        },
-                        child: Icon(Icons.chevron_right)
-                    ) : TextButton(
-                        onPressed: (){
-                        },
-                        child:Text('')
-                    ),
+                    DateFormat('yyyy年M月d日').format(DateTime.now()).toString() !=
+                            DateFormat('yyyy年M月d日').format(status.date)
+                        ? TextButton(
+                            onPressed: () {
+                              Provider.of<Status>(context, listen: false)
+                                  .getStatusNextDate(user_id);
+                            },
+                            child: Icon(Icons.chevron_right))
+                        : TextButton(onPressed: () {}, child: Text('')),
                   ],
                 )),
-            Container(
-              height: 250,
-              color: Colors.grey,
-            ),
+            DayStatusBarChart(list: status.status!.hourQty),
             Container(
                 margin: EdgeInsets.only(right: 15, left: 15),
                 child: Column(
@@ -131,7 +128,8 @@ class LoggedInUserStatus extends StatelessWidget {
                               child: SizedBox(
                                 height: 50,
                                 child: Text(
-                                  status.status?.daysEarningsQty.toString()?? 'a',
+                                  status.status?.daysEarningsQty.toString() ??
+                                      'a',
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
@@ -158,7 +156,7 @@ class LoggedInUserStatus extends StatelessWidget {
                             fontSize: 20,
                           ),
                         ),
-                        Text(status.status?.daysEarningsTotal.toString()?? 'a',
+                        Text(status.status?.daysEarningsTotal.toString() ?? 'a',
                             textAlign: TextAlign.right,
                             style: TextStyle(
                               color: Colors.black,
@@ -181,7 +179,7 @@ class LoggedInUserStatus extends StatelessWidget {
                           child: SizedBox(
                             height: 50,
                             child: Text(
-                              status.status?.actualCost.toString()?? 'a',
+                              status.status?.actualCost.toString() ?? 'a',
                               textAlign: TextAlign.right,
                               style: TextStyle(
                                 fontSize: 20,
@@ -190,33 +188,33 @@ class LoggedInUserStatus extends StatelessWidget {
                           ),
                         ),
                       ]),
-                      // TableRow(children: [
-                      //   TableCell(
-                      //     child: SizedBox(
-                      //       height: 50,
-                      //       child: Text(
-                      //         '利益',
-                      //         style: TextStyle(
-                      //           fontSize: 20,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      //   TableCell(
-                      //     child: SizedBox(
-                      //       height: 50,
-                      //       child: Text(
-                      //         (status.status!.daysEarningsTotal -
-                      //                 status.status!.actualCost)
-                      //             .toString(),
-                      //         textAlign: TextAlign.right,
-                      //         style: TextStyle(
-                      //           fontSize: 20,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ]),
+                      TableRow(children: [
+                        TableCell(
+                          child: SizedBox(
+                            height: 50,
+                            child: Text(
+                              '利益',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                        TableCell(
+                          child: SizedBox(
+                            height: 50,
+                            child: Text(
+                              (status.status!.daysEarningsTotal -
+                                      status.status!.actualCost)
+                                  .toString(),
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]),
                     ]),
                     ElevatedButton(
                       onPressed: () {
@@ -239,7 +237,45 @@ class LoggedInUserStatus extends StatelessWidget {
                 ))
           ],
         ),
-      ) ,
+      ),
     );
   }
+}
+
+class DayStatusBarChart extends StatelessWidget {
+  DayStatusBarChart({required this.list});
+
+  List<dynamic> list;
+
+  @override
+  Widget build(BuildContext context) {
+    List<hourQty> desktopDalsesData = [];
+
+    list.forEach((val) {
+      desktopDalsesData
+          .add(hourQty(hour: val['hour'].toString(), qty: val['count']));
+    });
+
+    List<charts.Series<dynamic, String>> seriesList = [
+      charts.Series<hourQty, String>(
+        id: 'Sales',
+        domainFn: (hourQty hourqty, _) => hourqty.hour,
+        measureFn: (hourQty hourqty, _) => hourqty.qty,
+        data: desktopDalsesData,
+        labelAccessorFn: (hourQty hourqty, _) => '\$${hourqty.qty.toString()}',
+      )
+    ];
+
+    return Container(
+      height: 250,
+      child: charts.BarChart(seriesList, animate: true, vertical: true),
+    );
+  }
+}
+
+class hourQty {
+  hourQty({required this.hour, required this.qty});
+
+  final String hour;
+  final int qty;
 }

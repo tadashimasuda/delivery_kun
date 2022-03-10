@@ -40,12 +40,15 @@ class Status extends ChangeNotifier {
           .get('/status', queryParameters: {'date': date, 'user_id': user_id});
 
       if (response.statusCode == 204) {
+
         _userStatus = UserStatus(
             onlineTime: 'データがありません',
             actualCost: 0,
             daysEarningsQty: 0,
             daysEarningsTotal: 0,
-            vehicleModel: '不明');
+            vehicleModel: '不明',
+            hourQty:[]
+        );
 
         notifyListeners();
 
@@ -57,11 +60,13 @@ class Status extends ChangeNotifier {
       notifyListeners();
     } on Dio.DioError catch (e) {
       _userStatus = UserStatus(
-          onlineTime: 'エラー:${e.response!.statusCode}',
-          actualCost: 0,
-          daysEarningsQty: 0,
-          daysEarningsTotal: 0,
-          vehicleModel: '不明');
+        onlineTime: 'エラー:${e.response!.statusCode}',
+        actualCost: 0,
+        daysEarningsQty: 0,
+        daysEarningsTotal: 0,
+        vehicleModel: '不明',
+        hourQty: []
+      );
 
       notifyListeners();
     }
