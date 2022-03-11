@@ -66,8 +66,8 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
             ),
             TextButton(
               onPressed: () {
+                OrderList().postOrder();
                 Navigator.pop(context);
-                print(DateTime.now());
               },
               child: Text('記録する'),
             ),
