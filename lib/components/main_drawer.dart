@@ -21,7 +21,7 @@ class _mainDrawerState extends State<mainDrawer> {
           Column(children: [
             UserAccountsDrawerHeader(
               accountName: Text(auth.user.name),
-              accountEmail: Text(auth.user.email),
+              accountEmail: Text(''),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 backgroundImage: NetworkImage(
