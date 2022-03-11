@@ -1,10 +1,11 @@
+import 'package:delivery_kun/services/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 import 'dart:async';
 
-import 'package:delivery_kun/screens/MapScreen.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/screens/user_status.dart';
 
 class MapScreenBottomBtn extends StatefulWidget {
@@ -15,7 +16,6 @@ class MapScreenBottomBtn extends StatefulWidget {
 }
 
 class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
-
   Widget getTimeText() {
     var now = DateTime.now();
     return Text('記録時間：${now.hour}時${now.minute}分');
@@ -39,8 +39,8 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
               CupertinoDialogAction(
                 child: Text('記録する'),
                 onPressed: () {
+                  OrderList().postOrder();
                   Navigator.pop(context);
-                  print(DateTime.now());
                 },
               ),
             ],
@@ -66,8 +66,8 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
             ),
             TextButton(
               onPressed: () {
+                OrderList().postOrder();
                 Navigator.pop(context);
-                print(DateTime.now());
               },
               child: Text('記録する'),
             ),
@@ -85,45 +85,56 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserStatusScreen(),
-                      ));
-                },
-                child: Icon(Icons.list_alt,color: Colors.grey,),
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  primary: Colors.white,
-                  minimumSize: Size(65, 65),
-                  elevation: 15,
-                ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserStatusScreen(),
+                  ));
+            },
+            child: Icon(
+              Icons.list_alt,
+              color: Colors.grey,
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              primary: Colors.white,
+              minimumSize: Size(65, 65),
+              elevation: 15,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Platform.isIOS ? IOSDialog() : AndroidDialog();
+            },
+            child: Text(
+              '受注',
+              style: TextStyle(
+                  fontSize: 25,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Platform.isIOS ? IOSDialog() : AndroidDialog();
-                },
-                child: Text('受注'),
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  primary: Colors.red,
-                  minimumSize: Size(90, 90),
-                  elevation: 15,
-                ),
-              ),
-              ElevatedButton(
-                onPressed:currentLocation,
-                child: Icon(Icons.location_on,color: Colors.grey,),
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  primary: Colors.white,
-                  minimumSize: Size(65, 65),
-                  elevation: 15,
-                ),
-              ),
-          ],
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              primary: Colors.red,
+              minimumSize: Size(90, 90),
+              elevation: 15,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: MapScreen.currentLocation,
+            child: Icon(
+              Icons.location_on,
+              color: Colors.grey,
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              primary: Colors.white,
+              minimumSize: Size(65, 65),
+              elevation: 15,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -3,7 +3,7 @@ import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'screens/MapScreen.dart';
+import 'screens/map_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
