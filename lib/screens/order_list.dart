@@ -1,76 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:delivery_kun/services/order.dart';
 
-class OrderList extends StatefulWidget {
-  const OrderList({Key? key}) : super(key: key);
+class OrderListScreen extends StatefulWidget {
+  OrderListScreen({required this.userId, required this.date});
+
+  final int userId;
+  final String date;
 
   @override
-  _OrderListState createState() => _OrderListState();
+  _OrderListScreenState createState() => _OrderListScreenState();
 }
 
-class _OrderListState extends State<OrderList> {
+class _OrderListScreenState extends State<OrderListScreen> {
+  late int userId;
 
-  List _order = [
-    {
-      'time':'12時20分',
-      'incentive':'1.5',
-    },
-    {
-      'time':'13時20分',
-      'incentive':'1.2',
-    },
-    {
-      'time':'14時20分',
-      'incentive':'1.2',
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<OrderList>(context, listen: false)
+        .getOrders(widget.userId, '20220310');
     return Scaffold(
-      appBar: AppBar(
-        title: Text('2月20日(土)'),
-      ),
-      body: Container(
-        margin:EdgeInsets.only(top: 30),
-        child: ListView.builder(
-          itemCount: _order.length,
-          itemBuilder: (BuildContext context,int index){
-            return Container(
-              height:65,
-              child: _orderItem(index),
-            );
-          }
+        appBar: AppBar(
+          title: Text(widget.date),
         ),
-      ),
-    );
+        body: Consumer<OrderList>(
+          builder: (context, orderList, _) {
+            return Container(
+              margin: EdgeInsets.only(top: 30),
+              child: orderList == null
+                  ? Text('a')
+                  : ListView.builder(
+                      itemCount: orderList.orders.length,
+                      itemBuilder: (context, int index) {
+                        return Container(
+                          height: 65,
+                          child: _orderItem(orderList.orders[index], index),
+                        );
+                      }),
+            );
+          },
+        ));
   }
 
-  Widget _orderItem(int index){
-    String get_order_time =_order[index]['time'];
-    String order_incentive = _order[index]['incentive'];
-    double get_pay = double.parse(order_incentive) * 715;
+  Widget _orderItem(var order, int index) {
+    int earnings_total = order['earnings_total'];
+    String created_at = order['created_at'];
 
     return InkWell(
-      onTap: (){
+      onTap: () {
         print('Tap now');
       },
       child: Row(
         children: [
           Expanded(
-            child:Container(
-                child: Text('${index + 1}',textAlign: TextAlign.center,)
-            ),
+            child: Container(
+                child: Text(
+              '${index + 1}',
+              textAlign: TextAlign.center,
+            )),
           ),
           Expanded(
-            child:Container(
-                child: Text('$get_order_time',textAlign: TextAlign.center)
-            ),
+            child: Container(
+                child: Text('$created_at', textAlign: TextAlign.center)),
           ),
           Expanded(
-            child:Text('×$order_incentive',textAlign: TextAlign.center),
+            child: Text('×$earnings_total', textAlign: TextAlign.center),
           ),
           Expanded(
-            child:Text('¥${get_pay.floor()}',textAlign: TextAlign.center),
+            child: Text('¥${earnings_total}', textAlign: TextAlign.center),
           ),
         ],
       ),

@@ -44,14 +44,19 @@ class NotLoginUserstatus extends StatelessWidget {
   }
 }
 
-class LoggedInUserStatus extends StatelessWidget {
+class LoggedInUserStatus extends StatefulWidget {
   LoggedInUserStatus({required this.user_id});
 
   int user_id;
 
   @override
+  _LoggedInUserStatusState createState() => _LoggedInUserStatusState();
+}
+
+class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
+  @override
   Widget build(BuildContext context) {
-    context.read<Status>().getStatusToday(user_id);
+    context.read<Status>().getStatusToday(widget.user_id);
     return Container(
       child: Consumer<Status>(
         builder: (context, status, child) => Column(
@@ -65,7 +70,7 @@ class LoggedInUserStatus extends StatelessWidget {
                     TextButton(
                         onPressed: () {
                           Provider.of<Status>(context, listen: false)
-                              .getStatusBeforeDate(user_id);
+                              .getStatusBeforeDate(widget.user_id);
                         },
                         child: Icon(Icons.chevron_left)),
                     Text(
@@ -79,7 +84,7 @@ class LoggedInUserStatus extends StatelessWidget {
                         ? TextButton(
                             onPressed: () {
                               Provider.of<Status>(context, listen: false)
-                                  .getStatusNextDate(user_id);
+                                  .getStatusNextDate(widget.user_id);
                             },
                             child: Icon(Icons.chevron_right))
                         : TextButton(onPressed: () {}, child: Text('')),
@@ -221,9 +226,16 @@ class LoggedInUserStatus extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => OrderList(),
+                              builder: (context) => OrderListScreen(
+                                  userId: 1,
+                                  date: DateFormat('yyyy年M月d日')
+                                      .format(status.date)
+                                      .toString()),
                               fullscreenDialog: true,
-                            ));
+                            )).then((val) {
+                          Provider.of<Status>(context, listen: false)
+                              .getStatusDate(widget.user_id);
+                        });
                       },
                       child: Text(
                         '受注履歴を見る',

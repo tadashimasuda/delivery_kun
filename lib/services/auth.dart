@@ -12,8 +12,12 @@ class Auth extends ChangeNotifier {
   Validate? _validate_message;
 
   bool get authenticated => _isLoggedIn;
+
   User get user => _user!;
+
   Validate? get validate_message => _validate_message;
+
+  String? get token => _token;
 
   final storage = new FlutterSecureStorage();
 
@@ -23,8 +27,7 @@ class Auth extends ChangeNotifier {
     } else {
       try {
         Dio.Response response = await dio().get('/user',
-            options: Dio.Options(headers: {'Authorization': 'Bearer $token'})
-        );
+            options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
         _isLoggedIn = true;
         _user = User.fromJson(response.data);
         _validate_message = null;
@@ -52,8 +55,8 @@ class Auth extends ChangeNotifier {
         notifyListeners();
 
         return false;
-      }else{
-        _validate_message = Validate(['メールアドレスとパスワードが一致しませんでした。'],['']);
+      } else {
+        _validate_message = Validate(['メールアドレスとパスワードが一致しませんでした。'], ['']);
         notifyListeners();
 
         return false;
@@ -76,13 +79,18 @@ class Auth extends ChangeNotifier {
         notifyListeners();
 
         return false;
-      }else{
-        _validate_message = Validate(['メールアドレスとパスワードが一致しませんでした。'],['']);
+      } else {
+        _validate_message = Validate(['メールアドレスとパスワードが一致しませんでした。'], ['']);
         notifyListeners();
 
         return false;
       }
     }
+  }
+
+  Future<String?> getToken() async {
+    String? _token = await storage.read(key: 'token');
+    return _token;
   }
 
   Future storeToken(String token) async {
@@ -91,7 +99,8 @@ class Auth extends ChangeNotifier {
 
   void logout() async {
     try {
-      await dio().post('/logout', options: Dio.Options(headers: {'Authorization': 'Bearer $_token'}));
+      await dio().post('/logout',
+          options: Dio.Options(headers: {'Authorization': 'Bearer $_token'}));
 
       _user = null;
       _isLoggedIn = false;

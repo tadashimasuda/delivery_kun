@@ -1,5 +1,5 @@
-import 'package:delivery_kun/models/user_status.dart';
 import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
@@ -15,6 +15,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => Auth()),
         ChangeNotifierProvider(create: (context) => Status()),
+        ChangeNotifierProvider(create: (context) => OrderList()),
       ],
       child: MyApp(),
     ),
