@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 
 import 'package:delivery_kun/components/main_drawer.dart';
-import 'package:delivery_kun/components/MapScreen_bottom_btn.dart';
+import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
 import 'package:provider/provider.dart';
 import 'sign_in_screen.dart';
 
@@ -34,7 +34,6 @@ class MapScreen extends StatefulWidget {
       ),
     ));
   }
-
 
   static Future<bool> handlePermission() async {
     bool serviceEnabled;
@@ -70,12 +69,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-
   late LatLng _initialPosition;
   late bool _loading;
-
-
-
 
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
@@ -83,7 +78,8 @@ class _MapScreenState extends State<MapScreen> {
     if (!hasPermission) {
       return;
     }
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _initialPosition = LatLng(position.latitude, position.longitude);
       _loading = false;
@@ -100,9 +96,9 @@ class _MapScreenState extends State<MapScreen> {
 
   final storage = new FlutterSecureStorage();
 
-  Future<String?>  readToken() async {
+  Future<String?> readToken() async {
     String? token = await storage.read(key: 'token');
-    if(token != null){
+    if (token != null) {
       Provider.of<Auth>(context, listen: false).tryToken(token);
     }
   }
@@ -112,19 +108,18 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       drawerEnableOpenDragGesture: false,
       drawer: Drawer(
-        child: Consumer<Auth>(builder: (context,auth,child){
-          if(! auth.authenticated){
+        child: Consumer<Auth>(builder: (context, auth, child) {
+          if (!auth.authenticated) {
             return ListView(
               children: [
                 ListTile(
                   title: Text('not login'),
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => SignInForm(),
-                        )
-                    );
+                        ));
                   },
                 ),
                 ListTile(
@@ -134,15 +129,15 @@ class _MapScreenState extends State<MapScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => SignUpForm(),
-                        )
-                    );
+                        ));
                   },
                 ),
               ],
             );
-          }else{
+          } else {
             return mainDrawer();
-          }}),
+          }
+        }),
       ),
       backgroundColor: Colors.grey.shade200,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
@@ -165,35 +160,35 @@ class _MapScreenState extends State<MapScreen> {
         ),
       ),
       body: Center(
-          child: _loading
-              ? CircularProgressIndicator()
-              : Container(
-                  child: Stack(
-                    children: <Widget>[
-                      GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: _initialPosition,
-                          zoom: 14.4746,
-                        ),
-                        onMapCreated: (GoogleMapController controller) {
-                          _controller.complete(controller);
-                        },
-                        // markers: _createMarker(),
-                        myLocationEnabled: true,
-                        myLocationButtonEnabled: false,
-                        mapToolbarEnabled: false,
-                        buildingsEnabled: true,
-                        onTap: (LatLng latLang) {
-                          print('Clicked: $latLang');
-                        },
+        child: _loading
+            ? CircularProgressIndicator()
+            : Container(
+                child: Stack(
+                  children: <Widget>[
+                    GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: _initialPosition,
+                        zoom: 14.4746,
                       ),
-                      const Positioned(
-                          child:  MapScreenBottomBtn(),
-                          bottom: 60,
-                      ),
-                    ],
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller.complete(controller);
+                      },
+                      // markers: _createMarker(),
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      mapToolbarEnabled: false,
+                      buildingsEnabled: true,
+                      onTap: (LatLng latLang) {
+                        print('Clicked: $latLang');
+                      },
+                    ),
+                    const Positioned(
+                      child: MapScreenBottomBtn(),
+                      bottom: 60,
+                    ),
+                  ],
                 ),
-        ),
+              ),
       ),
     );
   }

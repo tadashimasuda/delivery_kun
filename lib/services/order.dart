@@ -26,4 +26,18 @@ class OrderList extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void postOrder() async {
+    Auth auth = Auth();
+    String? token = await auth.getToken();
+    try {
+      Dio.Response response = await dio().post('/order',
+          data: {'earnings_incentive': 1.5},
+          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
+      notifyListeners();
+    } on Dio.DioError catch (e) {
+      print(e);
+      notifyListeners();
+    }
+  }
 }
