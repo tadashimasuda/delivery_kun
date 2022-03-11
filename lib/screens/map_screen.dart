@@ -113,7 +113,7 @@ class _MapScreenState extends State<MapScreen> {
             return ListView(
               children: [
                 ListTile(
-                  title: Text('not login'),
+                  title: Text('ログイン'),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -123,7 +123,7 @@ class _MapScreenState extends State<MapScreen> {
                   },
                 ),
                 ListTile(
-                  title: const Text('Sign Up'),
+                  title: const Text('新規登録'),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -141,21 +141,27 @@ class _MapScreenState extends State<MapScreen> {
       ),
       backgroundColor: Colors.grey.shade200,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      floatingActionButton: Builder(
-        builder: (context) => FloatingActionButton(
-          elevation: 20,
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(color: Colors.blue, width: 3),
-                borderRadius: BorderRadius.circular(30),
-                image: DecorationImage(
-                  image: NetworkImage(
-                      "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
-                )),
+      floatingActionButton: Container(
+        width: 70,
+        height: 70,
+        child: Builder(
+          builder: (context) => FloatingActionButton(
+            elevation: 20,
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            child: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(color: Colors.blue, width: 3),
+                  borderRadius: BorderRadius.circular(70),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
+                  )),
+            ),
           ),
         ),
       ),
