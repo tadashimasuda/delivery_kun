@@ -1,5 +1,5 @@
 import 'package:delivery_kun/models/validate.dart';
-import 'package:delivery_kun/screens/MapScreen.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

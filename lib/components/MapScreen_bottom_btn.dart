@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 import 'dart:async';
 
-import 'package:delivery_kun/screens/MapScreen.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/screens/user_status.dart';
 
 class MapScreenBottomBtn extends StatefulWidget {
@@ -114,7 +114,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                 ),
               ),
               ElevatedButton(
-                onPressed:currentLocation,
+                onPressed:MapScreen.currentLocation,
                 child: Icon(Icons.location_on,color: Colors.grey,),
                 style: ElevatedButton.styleFrom(
                   shape: const CircleBorder(),

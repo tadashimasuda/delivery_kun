@@ -13,56 +13,57 @@ import 'sign_in_screen.dart';
 
 Completer<GoogleMapController> _controller = Completer();
 
-void currentLocation() async {
-  final GoogleMapController controller = await _controller.future;
-  final hasPermission = await _handlePermission();
+class MapScreen extends StatefulWidget {
+  const MapScreen({Key? key}) : super(key: key);
 
-  if (!hasPermission) {
-    return;
-  }
-  Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
+  static void currentLocation() async {
+    final GoogleMapController controller = await _controller.future;
+    final hasPermission = await handlePermission();
 
-  controller.animateCamera(CameraUpdate.newCameraPosition(
-    CameraPosition(
-      bearing: 0,
-      target: LatLng(position.latitude, position.longitude),
-      zoom: 14.4746,
-    ),
-  ));
-}
+    if (!hasPermission) {
+      return;
+    }
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
-Future<bool> _handlePermission() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-
-  // Test if location services are enabled.
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    // do stuff
-    return false;
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 14.4746,
+      ),
+    ));
   }
 
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
+
+  static Future<bool> handlePermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
       // do stuff
       return false;
     }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // do stuff
+        return false;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      // do stuff
+
+      return false;
+    }
+    return true;
   }
-
-  if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately.
-    // do stuff
-
-    return false;
-  }
-  return true;
-}
-
-class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -74,8 +75,10 @@ class _MapScreenState extends State<MapScreen> {
   late bool _loading;
 
 
+
+
   void _getUserLocation() async {
-    final hasPermission = await _handlePermission();
+    final hasPermission = await MapScreen.handlePermission();
 
     if (!hasPermission) {
       return;
