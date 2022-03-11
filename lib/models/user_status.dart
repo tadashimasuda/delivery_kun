@@ -1,6 +1,6 @@
 class UserStatus {
   final String onlineTime;
-  final int daysEarningsTotal;
+  final num daysEarningsTotal;
   final int daysEarningsQty;
   final String vehicleModel;
   final int actualCost;
