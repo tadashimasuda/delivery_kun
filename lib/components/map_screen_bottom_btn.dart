@@ -16,7 +16,6 @@ class MapScreenBottomBtn extends StatefulWidget {
 }
 
 class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
-
   Widget getTimeText() {
     var now = DateTime.now();
     return Text('記録時間：${now.hour}時${now.minute}分');
@@ -86,45 +85,56 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserStatusScreen(),
-                      ));
-                },
-                child: Icon(Icons.list_alt,color: Colors.grey,),
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  primary: Colors.white,
-                  minimumSize: Size(65, 65),
-                  elevation: 15,
-                ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserStatusScreen(),
+                  ));
+            },
+            child: Icon(
+              Icons.list_alt,
+              color: Colors.grey,
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              primary: Colors.white,
+              minimumSize: Size(65, 65),
+              elevation: 15,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Platform.isIOS ? IOSDialog() : AndroidDialog();
+            },
+            child: Text(
+              '受注',
+              style: TextStyle(
+                  fontSize: 25,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Platform.isIOS ? IOSDialog() : AndroidDialog();
-                },
-                child: Text('受注'),
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  primary: Colors.red,
-                  minimumSize: Size(90, 90),
-                  elevation: 15,
-                ),
-              ),
-              ElevatedButton(
-                onPressed:MapScreen.currentLocation,
-                child: Icon(Icons.location_on,color: Colors.grey,),
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  primary: Colors.white,
-                  minimumSize: Size(65, 65),
-                  elevation: 15,
-                ),
-              ),
-          ],
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              primary: Colors.red,
+              minimumSize: Size(90, 90),
+              elevation: 15,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: MapScreen.currentLocation,
+            child: Icon(
+              Icons.location_on,
+              color: Colors.grey,
+            ),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              primary: Colors.white,
+              minimumSize: Size(65, 65),
+              elevation: 15,
+            ),
+          ),
+        ],
       ),
     );
   }
