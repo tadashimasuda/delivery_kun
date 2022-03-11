@@ -94,7 +94,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                 : TextButton(onPressed: () {}, child: Text('')),
                           ],
                         )),
-                    DayStatusBarChart(list: status.status!.hourQty),
+                    DayStatusBarChart(data: status.status!.hourQty),
                     Container(
                         margin: EdgeInsets.only(right: 15, left: 15),
                         child: Column(
@@ -237,8 +237,8 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => OrderListScreen(
-                                          userId: 1,
-                                          date: status.date,
+                                        userId: 1,
+                                        date: status.date,
                                       ),
                                       fullscreenDialog: true,
                                     )).then((val) {
@@ -264,15 +264,15 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
 }
 
 class DayStatusBarChart extends StatelessWidget {
-  DayStatusBarChart({required this.list});
+  DayStatusBarChart({required this.data});
 
-  List<dynamic> list;
+  List<dynamic> data;
 
   @override
   Widget build(BuildContext context) {
     List<hourQty> desktopDalsesData = [];
 
-    list.forEach((val) {
+    data.forEach((val) {
       desktopDalsesData
           .add(hourQty(hour: val['hour'].toString(), qty: val['count']));
     });

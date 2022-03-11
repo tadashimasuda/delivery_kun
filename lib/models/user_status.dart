@@ -20,6 +20,5 @@ class UserStatus {
         actualCost = json['data']['summary']['actualCost'] ?? '',
         daysEarningsQty = json['data']['summary']['daysEarningsQty'] ?? '',
         vehicleModel = json['data']['user']['vehicleModel'] ?? '',
-        hourQty = json['data']['chartData']?? '';
-
+        hourQty = json['data']['chartData'];
 }
