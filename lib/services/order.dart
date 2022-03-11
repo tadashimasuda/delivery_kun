@@ -6,15 +6,15 @@ import 'dio.dart';
 class OrderList extends ChangeNotifier {
   List<dynamic>? _orders;
 
-  List<dynamic> get orders => _orders!;
+  List<dynamic>? get orders => _orders;
 
-  void getOrders(int user_id, String date) async {
+  void getOrders(String date) async {
     Auth auth = Auth();
     String? token = await auth.getToken();
     try {
       Dio.Response response = await dio().get('/order',
           options: Dio.Options(headers: {'Authorization': 'Bearer $token'}),
-          queryParameters: {'date': date, 'user_id': user_id});
+          queryParameters: {'date': date});
 
       Map<String, dynamic> ordersJson =
           Map<String, dynamic>.from(response.data);
