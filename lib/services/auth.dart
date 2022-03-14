@@ -56,7 +56,7 @@ class Auth extends ChangeNotifier {
 
         return false;
       } else {
-        _validate_message = Validate(['メールアドレスとパスワードが一致しませんでした。'], ['']);
+        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'], ['']);
         notifyListeners();
 
         return false;
@@ -80,7 +80,7 @@ class Auth extends ChangeNotifier {
 
         return false;
       } else {
-        _validate_message = Validate(['メールアドレスとパスワードが一致しませんでした。'], ['']);
+        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'], ['']);
         notifyListeners();
 
         return false;

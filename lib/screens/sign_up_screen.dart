@@ -1,4 +1,5 @@
 import 'package:delivery_kun/screens/map_screen.dart';
+import 'package:delivery_kun/screens/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> with ValidateText{
+  String name = '';
   String email = '';
   String password = '';
   String passwordConfirmation = '';
@@ -24,11 +26,8 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText{
     return Scaffold(
         body: SafeArea(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(24, 40, 24, 0),
+        padding: EdgeInsets.fromLTRB(24, 20, 24, 0),
         child: Column(children: [
-          SizedBox(
-            height: 50,
-          ),
           Text(
             'ようこそ！',
             style: TextStyle(
@@ -37,7 +36,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText{
                 fontSize: 30),
           ),
           SizedBox(
-            height: 30,
+            height: 10,
           ),
           Text(
             'アカウント作成',
@@ -53,6 +52,20 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText{
                   children: [
                     AccountTextField(
                       obscureText: false,
+                      title: 'ユーザ名',
+                      icon: Icons.person,
+                      onChange: (value) {
+                        name = value;
+                      },
+                    ),
+                    Column(
+                      children: ValidateUserName(auth.validate_message),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    AccountTextField(
+                      obscureText: false,
                       title: 'メールアドレス',
                       icon: Icons.mail,
                       onChange: (value) {
@@ -63,7 +76,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText{
                       children: ValidateEmail(auth.validate_message),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     AccountTextField(
                       obscureText: true,
@@ -77,7 +90,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText{
                       children: ValidatePassword(auth.validate_message),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     AccountTextField(
                       obscureText: true,
@@ -88,7 +101,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText{
                       },
                     ),
                     SizedBox(
-                      height: 40,
+                      height: 30,
                     ),
                   ]
               ),
@@ -99,6 +112,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText{
             color: Colors.lightBlue,
             onTap: () async {
               Map creds = {
+                'name':name,
                 'email': email,
                 'password': password,
                 'password_confirmation': passwordConfirmation
@@ -124,9 +138,16 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText{
           SizedBox(
             height: 20,
           ),
-          Text(
-            'ログイン',
-            style: TextStyle(color: Colors.lightBlue),
+          TextButton(
+            onPressed: (){
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SignInForm())
+              );
+            },
+            child: Text(
+              'ログイン',
+              style: TextStyle(color: Colors.lightBlue),
+            ),
           )
         ]),
       ),

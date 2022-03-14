@@ -33,4 +33,20 @@ mixin ValidateText{
     }
     return messages;
   }
+
+  List<Widget> ValidateUserName(Validate? validate) {
+    var userName = validate?.name;
+
+    List<Widget> messages = [];
+    if (userName != null) {
+      userName.forEach((message) {
+        messages.add(Text(
+          message,
+          style: TextStyle(color: Colors.redAccent),
+        ));
+      });
+      return messages;
+    }
+    return messages;
+  }
 }
