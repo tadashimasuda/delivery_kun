@@ -88,7 +88,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                       ]),
                 )
             ),
-            account_btn(
+            SubmitBtn(
               title: 'ログイン',
               color: Colors.lightBlue,
               onTap: () async {

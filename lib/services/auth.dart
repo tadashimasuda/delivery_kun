@@ -43,7 +43,7 @@ class Auth extends ChangeNotifier {
   Future<bool> login({required Map creds}) async {
     try {
       Dio.Response response = await dio().post('/login', data: creds);
-      String token = response.data['data']['access_token'].toString();
+      String token = response.data['data']['accessToken'].toString();
       tryToken(token);
       notifyListeners();
 
@@ -56,7 +56,7 @@ class Auth extends ChangeNotifier {
 
         return false;
       } else {
-        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'], ['']);
+        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'],[], [],[]);
         notifyListeners();
 
         return false;
@@ -67,7 +67,7 @@ class Auth extends ChangeNotifier {
   Future<bool> register({required Map creds}) async {
     try {
       Dio.Response response = await dio().post('/register', data: creds);
-      String token = response.data['data']['access_token'].toString();
+      String token = response.data['data']['accessToken'].toString();
       tryToken(token);
       notifyListeners();
 
@@ -80,7 +80,40 @@ class Auth extends ChangeNotifier {
 
         return false;
       } else {
-        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'], ['']);
+        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'],[], [],[]);
+        notifyListeners();
+
+        return false;
+      }
+    }
+  }
+
+  Future<bool> updateUser({required Map userData}) async{
+    try {
+      print(userData);
+      Dio.Response response = await dio().patch('/user/update',
+          data: userData,
+          options: Dio.Options(headers: {'Authorization': 'Bearer $token'})
+      );
+
+      if(response.statusCode == 201){
+        tryToken(token);
+        notifyListeners();
+
+        return true;
+      }
+      return false;
+    } on Dio.DioError catch (e) {
+      if (e.response?.statusCode == 422) {
+        var response = e.response?.data;
+        _validate_message = Validate.fromJson(response);
+        notifyListeners();
+
+        return false;
+      } else {
+        print(e.response?.statusCode);
+        print(e.response?.statusMessage);
+        _validate_message = Validate([],[],[], [],[]);
         notifyListeners();
 
         return false;

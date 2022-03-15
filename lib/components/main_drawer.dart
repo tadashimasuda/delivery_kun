@@ -1,4 +1,4 @@
-import 'package:delivery_kun/screens/sign_up_screen.dart';
+import 'package:delivery_kun/screens/setting_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +37,11 @@ class _mainDrawerState extends State<mainDrawer> {
           ),
           ListTile(
             title: const Text('設定'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingScreen())
+              );
+            },
           )
         ],
       );

@@ -49,4 +49,37 @@ mixin ValidateText{
     }
     return messages;
   }
+
+  List<Widget> ValidateVehicleModel(Validate? validate) {
+    var vehicleModelMessage = validate?.vehicleModelId;
+
+    List<Widget> messages = [];
+    if (vehicleModelMessage != null) {
+      vehicleModelMessage.forEach((message) {
+        messages.add(Text(
+          message,
+          style: TextStyle(color: Colors.redAccent),
+        ));
+      });
+      return messages;
+    }
+    return messages;
+  }
+
+  List<Widget> ValidatePrefecture(Validate? validate) {
+    var prefectureMessage = validate?.prefectureId;
+
+    List<Widget> messages = [];
+    if (prefectureMessage != null) {
+      prefectureMessage.forEach((message) {
+        messages.add(Text(
+          message,
+          style: TextStyle(color: Colors.redAccent),
+        ));
+      });
+      return messages;
+    }
+    return messages;
+  }
+
 }
