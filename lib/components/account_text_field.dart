@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AccountTextField extends StatelessWidget {
-  AccountTextField({required this.obscureText,required this.title,required this.icon,required this.onChange});
+  AccountTextField({this.inputText,required this.obscureText,required this.title,required this.icon,required this.onChange});
 
+  final String? inputText;
   final bool obscureText;
   final String title;
   final IconData icon;
@@ -11,6 +12,7 @@ class AccountTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: TextEditingController(text:inputText),
       obscureText: obscureText,
       onChanged: onChange,
       decoration: InputDecoration(
