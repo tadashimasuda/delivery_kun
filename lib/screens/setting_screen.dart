@@ -26,21 +26,21 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
   @override
   void initState() {
     Auth auth = context.read<Auth>();
-    String _name = auth.user.name;
-    String _email = auth.user.email;
+    _name = auth.user.name;
+    _email = auth.user.email;
     _selectVehicleModelId = auth.user.vehicleModel;
     _selectPrefectureId = auth.user.prefectureId;
     super.initState();
   }
 
-  Widget vehiceModelIcon(int vehiceModelId){
-    if(vehiceModelId ==0) {
+  Widget vehiceModelIcon(int vehiceModelId) {
+    if (vehiceModelId == 0) {
       return Icon(Icons.directions_car);
-    }else if(vehiceModelId==1){
+    } else if (vehiceModelId == 1) {
       return Icon(Icons.directions_bike);
-    }else if(vehiceModelId==2){
+    } else if (vehiceModelId == 2) {
       return Icon(Icons.motorcycle);
-    }else{
+    } else {
       return Icon(Icons.directions_walk);
     }
   }
@@ -92,7 +92,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                   readOnly: true,
                   decoration: InputDecoration(
                       labelText: '配達車両',
-                      suffixIcon:vehiceModelIcon(_selectVehicleModelId),
+                      suffixIcon: vehiceModelIcon(_selectVehicleModelId),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)))),
                   onTap: () {
@@ -176,11 +176,26 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                               .updateUser(userData: userData);
 
                       if (response) {
+                        showCupertinoDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: Text('更新されました！',style: TextStyle(color: Colors.black),),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    isDestructiveAction: true,
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => MapScreen()));
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
 
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MapScreen()));
                       }
                     })
               ],
