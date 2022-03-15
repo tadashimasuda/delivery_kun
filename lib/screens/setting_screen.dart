@@ -52,7 +52,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
         title: Text('ユーザー設定'),
       ),
       body: Container(
-          padding: EdgeInsets.fromLTRB(24, 20, 24, 0),
+          padding: EdgeInsets.fromLTRB(24, 70, 24, 0),
           child: Consumer<Auth>(builder: (context, auth, _) {
             return Column(
               children: [
