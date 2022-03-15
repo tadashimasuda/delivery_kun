@@ -17,8 +17,8 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> with ValidateText {
   String _name = '';
   String _email = '';
-  int _selectVehicleModelNumber = 1;
-  int _selectPrefectureNumber = 1;
+  int _selectVehicleModelId = 1;
+  int _selectPrefectureId = 1;
 
   List<String> _prefectureList = ['東京', '埼玉', '栃木'];
   List<String> _VehicleModelList = ['バイク', '自転車', '車', '徒歩'];
@@ -26,12 +26,25 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
   @override
   void initState() {
     Auth auth = context.read<Auth>();
-    _name = auth.user.name;
-    _email = auth.user.email;
-    _selectVehicleModelNumber = auth.user.vehicleModel;
-    _selectPrefectureNumber = auth.user.prefectureId;
+    String _name = auth.user.name;
+    String _email = auth.user.email;
+    _selectVehicleModelId = auth.user.vehicleModel;
+    _selectPrefectureId = auth.user.prefectureId;
     super.initState();
   }
+
+  Widget vehiceModelIcon(int vehiceModelId){
+    if(vehiceModelId ==0) {
+      return Icon(Icons.directions_car);
+    }else if(vehiceModelId==1){
+      return Icon(Icons.directions_bike);
+    }else if(vehiceModelId==2){
+      return Icon(Icons.motorcycle);
+    }else{
+      return Icon(Icons.directions_walk);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,11 +88,11 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                 ),
                 TextField(
                   controller: TextEditingController(
-                      text: _VehicleModelList[_selectVehicleModelNumber]),
+                      text: _VehicleModelList[_selectVehicleModelId]),
                   readOnly: true,
                   decoration: InputDecoration(
                       labelText: '配達車両',
-                      suffixIcon: Icon(Icons.directions_bike),
+                      suffixIcon:vehiceModelIcon(_selectVehicleModelId),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)))),
                   onTap: () {
@@ -92,7 +105,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                               itemExtent: 30,
                               onSelectedItemChanged: (val) {
                                 setState(() {
-                                  _selectVehicleModelNumber = val;
+                                  _selectVehicleModelId = val;
                                 });
                               },
                               children: _VehicleModelList.map((e) => Text(e))
@@ -112,10 +125,10 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                 ),
                 TextField(
                   controller: TextEditingController(
-                      text: _prefectureList[_selectPrefectureNumber]),
+                      text: _prefectureList[_selectPrefectureId]),
                   readOnly: true,
                   decoration: InputDecoration(
-                      hintText: _prefectureList[_selectPrefectureNumber],
+                      hintText: _prefectureList[_selectPrefectureId],
                       suffixIcon: Icon(Icons.location_on),
                       labelText: '活動場所',
                       border: OutlineInputBorder(
@@ -130,14 +143,13 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                               itemExtent: 30,
                               onSelectedItemChanged: (val) {
                                 setState(() {
-                                  _selectPrefectureNumber = val;
-                                  print(_selectPrefectureNumber);
+                                  _selectPrefectureId = val;
                                 });
                               },
                               children:
                                   _prefectureList.map((e) => Text(e)).toList(),
                               scrollController: FixedExtentScrollController(
-                                  initialItem: _selectPrefectureNumber),
+                                  initialItem: _selectPrefectureId),
                             ),
                           );
                         });
@@ -156,8 +168,8 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                       Map userData = {
                         'email': _email,
                         'name': _name,
-                        'prefectureId': _selectPrefectureNumber,
-                        'vehicleModelId': _selectVehicleModelNumber
+                        'prefectureId': _selectPrefectureId,
+                        'vehicleModelId': _selectVehicleModelId
                       };
                       bool response =
                           await Provider.of<Auth>(context, listen: false)
