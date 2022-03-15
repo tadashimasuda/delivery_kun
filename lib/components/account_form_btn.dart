@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class account_btn extends StatelessWidget {
-  account_btn({required this.title, required this.color, required this.onTap});
+class SubmitBtn extends StatelessWidget {
+  SubmitBtn({required this.title, required this.color, required this.onTap});
 
   final String title;
   final Color color;
