@@ -63,7 +63,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
       body: isLoading
           ? SafeArea(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+                padding: EdgeInsets.fromLTRB(35, 20, 35, 0),
                 child: Column(children: [
                   Text(
                     'ようこそ！',
@@ -76,8 +76,9 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                     height: 10,
                   ),
                   Text(
-                    'アカウント作成',
-                    style: TextStyle(fontSize: 20),
+                    'デリバリーくんをはじめよう',
+                    style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(
                     height: 20,
@@ -167,7 +168,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                   SizedBox(
                     height: 20,
                   ),
-                  Text('or', textAlign: TextAlign.center),
+                  Text('または', textAlign: TextAlign.center),
                   SizedBox(
                     height: 20,
                   ),
@@ -176,8 +177,9 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.grey)),
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(color: Colors.grey)
+                      ),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       child: Row(
@@ -247,9 +249,17 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                           MaterialPageRoute(
                               builder: (context) => SignInForm()));
                     },
-                    child: Text(
-                      'ログイン',
-                      style: TextStyle(color: Colors.lightBlue),
+                    child: Row(
+                      children: [
+                        Text(
+                          'アカウントをお持ちの方は',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        Text(
+                          'ログイン',
+                          style: TextStyle(color: Colors.lightBlue),
+                        ),
+                      ],
                     ),
                   )
                 ]),

@@ -1,5 +1,6 @@
 import 'package:delivery_kun/models/validate.dart';
 import 'package:delivery_kun/screens/map_screen.dart';
+import 'package:delivery_kun/screens/sign_up_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -62,7 +63,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
     return Scaffold(
       body: SafeArea(
           child: Padding(
-        padding: EdgeInsets.fromLTRB(24, 40, 24, 0),
+        padding: EdgeInsets.fromLTRB(35, 40, 35, 0),
         child: Column(
           children: [
             SizedBox(
@@ -79,8 +80,11 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
               height: 30,
             ),
             Text(
-              'ログイン',
-              style: TextStyle(fontSize: 20),
+              'デリバリーくんにログイン',
+              style: TextStyle(
+                  fontSize: 20,
+                fontWeight: FontWeight.bold
+              ),
             ),
             SizedBox(
               height: 20,
@@ -140,7 +144,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
             SizedBox(
               height: 15,
             ),
-            Text('or', textAlign: TextAlign.center),
+            Text('または', textAlign: TextAlign.center),
             SizedBox(
               height: 15,
             ),
@@ -149,7 +153,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(100),
                     border: Border.all(color: Colors.grey)),
                 width: MediaQuery.of(context).size.width,
                 height: 50,
@@ -168,7 +172,10 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                     Text(
                       'Googleでログイン',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
                     ),
                   ],
                 ),
@@ -210,7 +217,22 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                 }
               },
             ),
-
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SignUpForm()));
+              },
+              child: Row(
+                children: [
+                  Text('アカウントをお持ちでない方は',style: TextStyle(color: Colors.grey),),
+                  Text(
+                  '登録',
+                  style: TextStyle(color: Colors.lightBlue),
+                ),],
+              ),
+            )
           ],
         ),
       )),
