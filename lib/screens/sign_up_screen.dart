@@ -181,10 +181,19 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          //TODO:google Icon
+                          Container(
+                            width: 25,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      'https://github.com/sbis04/flutterfire-samples/blob/google-sign-in/assets/google_logo.png?raw=true')),
+                            ),
+                          ),
+                          SizedBox(width: 20,),
                           Text(
-                            'Googleでアカウント登録',
+                            'Googleで登録',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.black, fontSize: 18),
                           ),
