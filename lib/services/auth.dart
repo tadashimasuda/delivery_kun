@@ -121,6 +121,27 @@ class Auth extends ChangeNotifier {
     }
   }
 
+  Future<bool> GoogleLogin({required String accessToken}) async{
+    try{
+      Map requestData = {
+        'accessToken':accessToken
+      };
+
+      Dio.Response response = await dio().post('/google/auth/login', data: requestData);
+      String token = response.data['data']['accessToken'].toString();
+      tryToken(token);
+
+      notifyListeners();
+
+      return true;
+    }on Dio.DioError catch (e){
+      print(e);
+      return true;
+    }
+
+    return true;
+  }
+
   Future<String?> getToken() async {
     String? _token = await storage.read(key: 'token');
     return _token;
