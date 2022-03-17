@@ -16,10 +16,8 @@ class AccountTextField extends StatelessWidget {
       obscureText: obscureText,
       onChanged: onChange,
       decoration: InputDecoration(
-          suffixIcon: Icon(icon),
           labelText: title,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)))),
+      )
     );
   }
 }
