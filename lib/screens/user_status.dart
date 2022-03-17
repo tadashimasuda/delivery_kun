@@ -6,6 +6,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'order_list.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/user_status.dart';
+import 'package:flutter/cupertino.dart';
 
 class UserStatusScreen extends StatefulWidget {
   const UserStatusScreen({Key? key}) : super(key: key);
@@ -54,6 +55,9 @@ class LoggedInUserStatus extends StatefulWidget {
 }
 
 class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
+  var actualCost = TextEditingController();
+  String validateMessage = '';
+
   @override
   Widget build(BuildContext context) {
     context.read<Status>().getStatusToday(widget.user_id);
@@ -190,6 +194,59 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                   ),
                                 ),
                                 TableCell(
+                                    child: GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CupertinoAlertDialog(
+                                          title: Text("支出を入力"),
+                                          content: CupertinoTextField(
+                                            controller: actualCost,
+                                            keyboardType: TextInputType.number,
+                                          ),
+                                          actions: <Widget>[
+                                            CupertinoDialogAction(
+                                              child: Text("キャンセル"),
+                                              isDestructiveAction: true,
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                            ),
+                                            CupertinoDialogAction(
+                                              child: Text("完了"),
+                                              isDestructiveAction: true,
+                                              onPressed: () async {
+                                                int requestActualCost = int.parse(actualCost.text);
+
+                                                if (actualCost.text.isEmpty) {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (_) => AlertWidght(title:'支出を入力してください')
+                                                  );
+                                                } else {
+                                                  bool response = await Provider
+                                                          .of<Status>(context,
+                                                              listen: false)
+                                                      .updateAcutualCost(
+                                                          actualCost:
+                                                              requestActualCost);
+
+                                                  if (response) {
+                                                    Navigator.pop(context);
+                                                    setState(() {});
+                                                  }else{
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (_) => AlertWidght(title: 'エラーが発生しました'));
+                                                  }
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                   child: SizedBox(
                                     height: 50,
                                     child: Text(
@@ -201,7 +258,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                       ),
                                     ),
                                   ),
-                                ),
+                                ))
                               ]),
                               TableRow(children: [
                                 TableCell(
@@ -259,6 +316,26 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                   ],
                 )
               : Center(child: CircularProgressIndicator())),
+    );
+  }
+}
+
+class AlertWidght extends StatelessWidget {
+  AlertWidght({required this.title});
+  String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoAlertDialog(
+      title: Text(title),
+      actions: [
+        CupertinoDialogAction(
+          child: Text('OK'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      ],
     );
   }
 }

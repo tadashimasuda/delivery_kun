@@ -1,4 +1,5 @@
 import 'package:delivery_kun/models/user_status.dart';
+import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart' as Dio;
 import 'package:intl/intl.dart';
@@ -73,6 +74,36 @@ class Status extends ChangeNotifier {
           hourQty: []);
 
       notifyListeners();
+    }
+  }
+
+  Future<bool> updateAcutualCost({required int actualCost}) async {
+    Auth auth = Auth();
+
+    String date = DateFormat('yyyyMMdd').format(_date).toString();
+    String? token = await auth.getToken();
+
+    try {
+      Dio.Response response = await dio().patch(
+          '/actual_cost',
+          data:{
+            'actual_cost':actualCost,
+          },
+          options: Dio.Options(
+              headers: {'Authorization': 'Bearer $token'},
+              ),
+          queryParameters: {
+            'date': date
+          },
+      );
+
+      notifyListeners();
+
+      return true;
+    } on Dio.DioError catch (e) {
+      notifyListeners();
+
+      return false;
     }
   }
 }
