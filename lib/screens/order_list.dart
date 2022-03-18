@@ -48,6 +48,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
   }
 
   Widget _orderItem(var order, int index) {
+    num earnings_incentive = order['earnings_incentive'];
     num earnings_total = order['earnings_total'];
     String created_at = order['created_at'];
 
@@ -69,7 +70,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                 child: Text('$created_at', textAlign: TextAlign.center)),
           ),
           Expanded(
-            child: Text('×$earnings_total', textAlign: TextAlign.center),
+            child: Text('×$earnings_incentive', textAlign: TextAlign.center),
           ),
           Expanded(
             child: Text('¥${earnings_total}', textAlign: TextAlign.center),
