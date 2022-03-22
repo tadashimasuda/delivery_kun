@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:delivery_kun/services/order.dart';
+import 'package:delivery_kun/constants.dart';
 
 class OrderUpdateScreen extends StatefulWidget {
   OrderUpdateScreen(
@@ -16,7 +17,9 @@ class OrderUpdateScreen extends StatefulWidget {
 
   @override
   _OrderUpdateScreenState createState() => _OrderUpdateScreenState(
-      id: id, earningsIncentive: earningsIncentive, orderReceivedAt: orderReceivedAt);
+      id: id,
+      earningsIncentive: earningsIncentive,
+      orderReceivedAt: orderReceivedAt);
 }
 
 class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
@@ -29,9 +32,9 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
   double earningsIncentive;
   String orderReceivedAt;
 
-  final List<String> _incentiveList = ['1.0', '1.1', '1.3', '1.4', '1.5', '1.7', '1.8', '1.9', '2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9'];
-
-  late int _selectIncentiveId = _incentiveList.indexWhere((val) => val == earningsIncentive.toString());
+  List<String> _incentiveList = incentiveList;
+  late int _selectIncentiveId =
+      _incentiveList.indexWhere((val) => val == earningsIncentive.toString());
   int _selectHour = 0;
   int _selectMinite = 0;
   List<int> _hourList = [];
@@ -42,14 +45,17 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
     DateTime orderReceivedAtParse = DateTime.parse(orderReceivedAt).toLocal();
     _selectHour = orderReceivedAtParse.hour;
     _selectMinite = orderReceivedAtParse.minute;
-    for(int h=0; h<24;h++){_hourList.add(h);}
-    for(int m=0; m<60;m++){_miniteList.add(m);}
+    for (int h = 0; h < 24; h++) {
+      _hourList.add(h);
+    }
+    for (int m = 0; m < 60; m++) {
+      _miniteList.add(m);
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     var incentiveController = TextEditingController();
     var baseController = TextEditingController();
     baseController.text = '715';
@@ -61,17 +67,19 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
         body: Container(
           padding: const EdgeInsets.fromLTRB(30, 50, 30, 0),
           child: Column(
-            children:[
+            children: [
               Table(
                 children: [
                   TableRow(children: [
-                    UpdateTitleCell(
-                        title:'受注時間'
-                    ),
+                    UpdateTitleCell(title: '受注時間'),
                     TableCell(
                       verticalAlignment: TableCellVerticalAlignment.middle,
                       child: TextField(
-                        controller: TextEditingController(text: _selectHour.toString()+'時'+_selectMinite.toString()+'分'),
+                        controller: TextEditingController(
+                            text: _selectHour.toString() +
+                                '時' +
+                                _selectMinite.toString() +
+                                '分'),
                         readOnly: true,
                         onTap: () {
                           showModalBottomSheet(
@@ -79,7 +87,8 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                               builder: (BuildContext context) {
                                 return Row(
                                   children: [
-                                    Expanded(child: CupertinoPicker(
+                                    Expanded(
+                                        child: CupertinoPicker(
                                       itemExtent: 30,
                                       onSelectedItemChanged: (val) {
                                         setState(() {
@@ -89,11 +98,13 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                                       children: _hourList
                                           .map((e) => Text(e.toString()))
                                           .toList(),
-                                      scrollController: FixedExtentScrollController(
-                                          initialItem: _selectHour),
+                                      scrollController:
+                                          FixedExtentScrollController(
+                                              initialItem: _selectHour),
                                     )),
                                     Expanded(child: Text('時')),
-                                    Expanded(child: CupertinoPicker(
+                                    Expanded(
+                                        child: CupertinoPicker(
                                       itemExtent: 30,
                                       onSelectedItemChanged: (val) {
                                         setState(() {
@@ -103,8 +114,9 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                                       children: _miniteList
                                           .map((e) => Text(e.toString()))
                                           .toList(),
-                                      scrollController: FixedExtentScrollController(
-                                          initialItem: _selectMinite),
+                                      scrollController:
+                                          FixedExtentScrollController(
+                                              initialItem: _selectMinite),
                                     )),
                                     Expanded(child: Text('分')),
                                   ],
@@ -115,9 +127,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                     ),
                   ]),
                   TableRow(children: [
-                    UpdateTitleCell(
-                        title:'報酬ベース'
-                    ),
+                    UpdateTitleCell(title: '報酬ベース'),
                     TableCell(
                       child: TextField(
                         controller: baseController,
@@ -126,32 +136,35 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                     )
                   ]),
                   TableRow(children: [
-                    UpdateTitleCell(
-                        title:'インセンティブ'
-                    ),
+                    UpdateTitleCell(title: 'インセンティブ'),
                     TableCell(
                       child: TextField(
-                          controller: TextEditingController(text:_incentiveList[_selectIncentiveId].toString()),
+                          controller: TextEditingController(
+                              text: _incentiveList[_selectIncentiveId]
+                                  .toString()),
                           readOnly: true,
                           onTap: () {
                             showModalBottomSheet(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return Container(
-                                    height: MediaQuery.of(context).size.height / 3,
+                                    height:
+                                        MediaQuery.of(context).size.height / 3,
                                     child: CupertinoPicker(
                                       itemExtent: 30,
                                       onSelectedItemChanged: (val) {
                                         setState(() {
                                           _selectIncentiveId = val;
-                                          incentiveController.text = _incentiveList[val].toString();
+                                          incentiveController.text =
+                                              _incentiveList[val].toString();
                                         });
                                       },
                                       children: _incentiveList
                                           .map((e) => Text(e))
                                           .toList(),
-                                      scrollController: FixedExtentScrollController(
-                                          initialItem: _selectIncentiveId),
+                                      scrollController:
+                                          FixedExtentScrollController(
+                                              initialItem: _selectIncentiveId),
                                     ),
                                   );
                                 });
@@ -161,22 +174,32 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                 ],
               ),
               TextButton(
-                  onPressed: () async{
-                    String time = orderReceivedAt.substring(0,10)+' '+_selectHour.toString().padLeft(2, "0")+':'+_selectMinite.toString().padLeft(2, "0")+':00';
+                  onPressed: () async {
+                    String time = orderReceivedAt.substring(0, 10) +
+                        ' ' +
+                        _selectHour.toString().padLeft(2, "0") +
+                        ':' +
+                        _selectMinite.toString().padLeft(2, "0") +
+                        ':00';
                     Map requestData = {
-                      'earnings_incentive':_incentiveList[_selectIncentiveId],
-                      'earnings_base':baseController.text,
-                      'update_date_time':time
+                      'earnings_incentive': _incentiveList[_selectIncentiveId],
+                      'earnings_base': baseController.text,
+                      'update_date_time': time
                     };
 
-                    bool response = await Provider.of<OrderList>(context, listen: false).updateOrder(requestData: requestData,id: id);
+                    bool response =
+                        await Provider.of<OrderList>(context, listen: false)
+                            .updateOrder(requestData: requestData, id: id);
 
                     if (response) {
                       showCupertinoDialog(
                           context: context,
                           builder: (context) {
                             return CupertinoAlertDialog(
-                              title: Text('更新されました！',style: TextStyle(color: Colors.black),),
+                              title: Text(
+                                '更新されました！',
+                                style: TextStyle(color: Colors.black),
+                              ),
                               actions: [
                                 CupertinoDialogAction(
                                   isDestructiveAction: true,
@@ -205,15 +228,11 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                               '編集完了',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold
-                              ),
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          )
-                      )
-                  )
-              )
+                          ))))
             ],
           ),
         ));
@@ -228,13 +247,10 @@ class UpdateTitleCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TableCell(
-      verticalAlignment: TableCellVerticalAlignment.middle,
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold
-        ),
-      )
-    );
+        verticalAlignment: TableCellVerticalAlignment.middle,
+        child: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ));
   }
 }
