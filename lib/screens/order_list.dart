@@ -21,14 +21,16 @@ class _OrderListScreenState extends State<OrderListScreen> {
 
   String getJPDate(DateTime createdAt){
     initializeDateFormatting('ja');
-    return  DateFormat.Hm('ja').format(createdAt.toLocal()).toString();
+    return DateFormat.Hm('ja').format(createdAt.toLocal()).toString();
   }
-
+  void reloadWidget(){
+    String date = DateFormat('yyyyMMdd').format(widget.date).toString();
+    context.read<OrderList>().getOrders(date);
+  }
 
   @override
   Widget build(BuildContext context) {
-    String date = DateFormat('yyyyMMdd').format(widget.date).toString();
-    context.read<OrderList>().getOrders(date);
+    reloadWidget();
     return Scaffold(
         appBar: AppBar(
           title: Text(DateFormat('M月d日').format(widget.date).toString()),
@@ -75,7 +77,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         ),
                         fullscreenDialog: true,
                       )).then((val) {
-                    Provider.of<OrderList>(context, listen: false).getOrders(DateFormat('yyyyMMdd').format(widget.date).toString());
+                      reloadWidget();
                   });
                 },
               ),
