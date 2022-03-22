@@ -9,16 +9,19 @@ class OrderUpdateScreen extends StatefulWidget {
   OrderUpdateScreen(
       {required this.id,
       required this.earningsIncentive,
+      required this.earningsBase,
       required this.orderReceivedAt});
 
   int id;
   double earningsIncentive;
+  num earningsBase;
   String orderReceivedAt;
 
   @override
   _OrderUpdateScreenState createState() => _OrderUpdateScreenState(
       id: id,
       earningsIncentive: earningsIncentive,
+      earningsBase:earningsBase,
       orderReceivedAt: orderReceivedAt);
 }
 
@@ -26,10 +29,12 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
   _OrderUpdateScreenState(
       {required this.id,
       required this.earningsIncentive,
+      required this.earningsBase,
       required this.orderReceivedAt});
 
   int id;
   double earningsIncentive;
+  num earningsBase;
   String orderReceivedAt;
 
   List<String> _incentiveList = incentiveList;
@@ -56,9 +61,10 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     var incentiveController = TextEditingController();
     var baseController = TextEditingController();
-    baseController.text = '715';
+    baseController.text = earningsBase.toString();
 
     return Scaffold(
         appBar: AppBar(
@@ -173,6 +179,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                   ])
                 ],
               ),
+              SizedBox(height: 30,),
               TextButton(
                   onPressed: () async {
                     String time = orderReceivedAt.substring(0, 10) +
@@ -214,16 +221,15 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                           });
                     }
                   },
-                  child: GestureDetector(
-                      child: Container(
-                          margin: EdgeInsets.only(top: 30),
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(color: Colors.grey)),
-                          child: const Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: Colors.grey)),
+                    child: GestureDetector(
+                      child: const Center(
                             child: Text(
                               '編集完了',
                               textAlign: TextAlign.center,
@@ -232,7 +238,9 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold),
                             ),
-                          ))))
+                          ),
+                    ),
+                  ))
             ],
           ),
         ));

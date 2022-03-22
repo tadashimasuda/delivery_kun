@@ -172,7 +172,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                         'name': _name,
                         'email': _email,
                         'vehicleModelId': _selectVehicleModelId,
-                        'prefectureId': _selectPrefectureId,
+                        'prefectureId': _selectPrefectureId+1,
                       };
                       bool response =
                           await Provider.of<Auth>(context, listen: false)

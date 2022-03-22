@@ -57,6 +57,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
   Widget _orderItem(var order, int index) {
     num earningsIncentive = order['earnings_incentive'];
     num earningsTotal = order['earnings_total'];
+    num earningsBase = order['earnings_base'];
     String orderReceivedAt = order['order_received_at'].toString();
 
     return InkWell(
@@ -75,6 +76,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                             id: order['id'],
                             earningsIncentive:
                                 double.parse(earningsIncentive.toString()),
+                            earningsBase:earningsBase,
                             orderReceivedAt: orderReceivedAt),
                         fullscreenDialog: true,
                       )).then((val) {

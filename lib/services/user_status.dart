@@ -66,7 +66,7 @@ class Status extends ChangeNotifier {
       notifyListeners();
     } on Dio.DioError catch (e) {
       _userStatus = UserStatus(
-          onlineTime: 'エラー:${e.response!.statusCode}',
+          onlineTime: 'エラー',
           actualCost: 0,
           daysEarningsQty: 0,
           daysEarningsTotal: 0,
