@@ -2,6 +2,7 @@ import 'package:delivery_kun/screens/order_update_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_kun/services/order.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -17,6 +18,12 @@ class OrderListScreen extends StatefulWidget {
 
 class _OrderListScreenState extends State<OrderListScreen> {
   late int userId;
+
+  String getJPDate(DateTime createdAt){
+    initializeDateFormatting('ja');
+    return  DateFormat.Hm('ja').format(createdAt.toLocal()).toString();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +54,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
   Widget _orderItem(var order, int index) {
     num earningsIncentive = order['earnings_incentive'];
     num earningsTotal = order['earnings_total'];
-    String createdAt = order['created_at'].toString();
+    String orderReceivedAt = order['order_received_at'].toString();
 
     return InkWell(
       onLongPress: (){
@@ -63,11 +70,13 @@ class _OrderListScreenState extends State<OrderListScreen> {
                       MaterialPageRoute(
                         builder: (context) =>  OrderUpdateScreen(
                           id: order['id'],
-                          earningsIncentive:earningsIncentive,
-                          createdAt: createdAt
+                          earningsIncentive:double.parse(earningsIncentive.toString()),
+                          orderReceivedAt: orderReceivedAt
                         ),
                         fullscreenDialog: true,
-                      ));
+                      )).then((val) {
+                    Provider.of<OrderList>(context, listen: false).getOrders(DateFormat('yyyyMMdd').format(widget.date).toString());
+                  });
                 },
               ),
               CupertinoActionSheetAction(
@@ -98,13 +107,13 @@ class _OrderListScreenState extends State<OrderListScreen> {
           Expanded(
             child: Container(
                 child: Text(
-                    DateFormat('hh時mm分').format(DateTime.parse(createdAt)).toString(),
+                    getJPDate(DateTime.parse(order['order_received_at'])),
                     textAlign: TextAlign.center
                 )
             ),
           ),
           Expanded(
-            child: Text('×$earningsIncentive', textAlign: TextAlign.center),
+            child: Text('×${double.parse(earningsIncentive.toString())}', textAlign: TextAlign.center),
           ),
           Expanded(
             child: Text('¥${earningsTotal}', textAlign: TextAlign.center),

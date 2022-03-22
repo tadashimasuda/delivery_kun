@@ -4,7 +4,7 @@ class Order {
   final num earningsIncentive;
   final num earningsBase;
   final num earningsTotal;
-  final DateTime createdAt;
+  final DateTime orderReceivedAt;
 
   Order(
       {required this.id,
@@ -12,7 +12,7 @@ class Order {
         required this.earningsIncentive,
         required this.earningsBase,
         required this.earningsTotal,
-        required this.createdAt});
+        required this.orderReceivedAt});
 
   Order.fromJson(Map<String, dynamic> json)
       : id = json['data']['id'],
@@ -20,5 +20,5 @@ class Order {
         earningsIncentive = json['data']['earnings_incentive'],
         earningsBase = json['data']['earnings_base'],
         earningsTotal = json['data']['earnings_total'],
-        createdAt = json['data']['created_at'];
+        orderReceivedAt = json['data']['order_received_at'];
 }

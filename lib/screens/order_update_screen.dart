@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:delivery_kun/services/order.dart';
 
@@ -9,47 +10,47 @@ class OrderUpdateScreen extends StatefulWidget {
   OrderUpdateScreen(
       {required this.id,
       required this.earningsIncentive,
-      required this.createdAt});
+      required this.orderReceivedAt});
 
   int id;
-  num earningsIncentive;
-  String createdAt;
+  double earningsIncentive;
+  String orderReceivedAt;
 
   @override
   _OrderUpdateScreenState createState() => _OrderUpdateScreenState(
-      id: id, earningsIncentive: earningsIncentive, createdAtString: createdAt);
+      id: id, earningsIncentive: earningsIncentive, orderReceivedAt: orderReceivedAt);
 }
 
 class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
   _OrderUpdateScreenState(
       {required this.id,
       required this.earningsIncentive,
-      required this.createdAtString});
+      required this.orderReceivedAt});
 
   int id;
-  num earningsIncentive;
-  String createdAtString;
+  double earningsIncentive;
+  String orderReceivedAt;
 
-  final List<String> _incentiveList = [
-    '1.0',
-    '1.1',
-    '1.2',
-    '1.3',
-    '1.4',
-    '1.5',
-    '1.6',
-    '1.7',
-    '1.8',
-    '1.9',
-    '2.0',
-  ];
+  final List<String> _incentiveList = ['1.0', '1.1', '1.3', '1.4', '1.5', '1.7', '1.8', '1.9', '2.0','2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9'];
 
   late int _selectIncentiveId = _incentiveList.indexWhere((val) => val == earningsIncentive.toString());
-  late DateTime _selectDateTime = DateTime.parse(createdAtString);
+  int _selectHour = 0;
+  int _selectMinite = 0;
+  List<int> _hourList = [];
+  List<int> _miniteList = [];
+
+  @override
+  void initState() {
+    DateTime orderReceivedAtParse = DateTime.parse(orderReceivedAt).toLocal();
+    _selectHour = orderReceivedAtParse.hour;
+    _selectMinite = orderReceivedAtParse.minute;
+    for(int h=0; h<24;h++){_hourList.add(h);}
+    for(int m=0; m<60;m++){_miniteList.add(m);}
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    DateTime createdAt = DateTime.parse(createdAtString);
 
     var incentiveController = TextEditingController();
     var baseController = TextEditingController();
@@ -72,23 +73,43 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                     TableCell(
                       verticalAlignment: TableCellVerticalAlignment.middle,
                       child: TextField(
-                        controller: TextEditingController(text: DateFormat('hh時mm分').format(_selectDateTime).toString()),
+                        controller: TextEditingController(text: _selectHour.toString()+'時'+_selectMinite.toString()+'分'),
                         readOnly: true,
                         onTap: () {
                           showModalBottomSheet(
                               context: context,
                               builder: (BuildContext context) {
-                                return Container(
-                                  height: MediaQuery.of(context).size.height / 3,
-                                  child: CupertinoDatePicker(
-                                    initialDateTime:createdAt,
-                                    mode: CupertinoDatePickerMode.time,
-                                    onDateTimeChanged: (dateTime) {
-                                      setState(() {
-                                        _selectDateTime = dateTime;
-                                      });
-                                    },
-                                  ),
+                                return Row(
+                                  children: [
+                                    Expanded(child: CupertinoPicker(
+                                      itemExtent: 30,
+                                      onSelectedItemChanged: (val) {
+                                        setState(() {
+                                          _selectHour = val;
+                                        });
+                                      },
+                                      children: _hourList
+                                          .map((e) => Text(e.toString()))
+                                          .toList(),
+                                      scrollController: FixedExtentScrollController(
+                                          initialItem: _selectHour),
+                                    )),
+                                    Expanded(child: Text('時')),
+                                    Expanded(child: CupertinoPicker(
+                                      itemExtent: 30,
+                                      onSelectedItemChanged: (val) {
+                                        setState(() {
+                                          _selectMinite = val;
+                                        });
+                                      },
+                                      children: _miniteList
+                                          .map((e) => Text(e.toString()))
+                                          .toList(),
+                                      scrollController: FixedExtentScrollController(
+                                          initialItem: _selectMinite),
+                                    )),
+                                    Expanded(child: Text('分')),
+                                  ],
                                 );
                               });
                         },
@@ -143,13 +164,15 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
               ),
               TextButton(
                   onPressed: () async{
+                    String time = orderReceivedAt.substring(0,10)+' '+_selectHour.toString().padLeft(2, "0")+':'+_selectMinite.toString().padLeft(2, "0")+':00';
                     Map requestData = {
                       'earnings_incentive':_incentiveList[_selectIncentiveId],
                       'earnings_base':baseController.text,
-                      'date_time':_selectDateTime.toString().substring(0,19),
+                      'update_date_time':time
                     };
 
                     bool response = await Provider.of<OrderList>(context, listen: false).updateOrder(requestData: requestData,id: id);
+
                     if (response) {
                       showCupertinoDialog(
                           context: context,

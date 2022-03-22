@@ -63,7 +63,7 @@ class OrderList extends ChangeNotifier {
   Future<bool> updateOrder({required Map requestData,required int id}) async {
     Auth auth = Auth();
     String? token = await auth.getToken();
-    print(requestData['date_time']);
+
     try {
       Dio.Response response = await dio().patch('/order/$id',
           data: requestData,
@@ -71,6 +71,7 @@ class OrderList extends ChangeNotifier {
 
       return true;
     } on Dio.DioError catch (e) {
+      print(e.response?.statusCode);
       print(e.response?.statusMessage);
       return false;
     }
