@@ -55,7 +55,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       body: Container(
           padding: EdgeInsets.fromLTRB(24, 70, 24, 0),
           child: Consumer<Auth>(builder: (context, auth, _) {
-            return Column(
+            return auth.user != null ? Column(
               children: [
                 AccountTextField(
                   inputText: auth.user.name,
@@ -201,7 +201,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                       }
                     })
               ],
-            );
+            ):Center(child: CircularProgressIndicator());
           })),
     );
   }
