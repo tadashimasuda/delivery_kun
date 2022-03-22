@@ -179,6 +179,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                   ])
                 ],
               ),
+              SizedBox(height: 30,),
               TextButton(
                   onPressed: () async {
                     String time = orderReceivedAt.substring(0, 10) +
@@ -220,16 +221,15 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                           });
                     }
                   },
-                  child: GestureDetector(
-                      child: Container(
-                          margin: EdgeInsets.only(top: 30),
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(color: Colors.grey)),
-                          child: const Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: Colors.grey)),
+                    child: GestureDetector(
+                      child: const Center(
                             child: Text(
                               '編集完了',
                               textAlign: TextAlign.center,
@@ -238,7 +238,9 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold),
                             ),
-                          ))))
+                          ),
+                    ),
+                  ))
             ],
           ),
         ));
