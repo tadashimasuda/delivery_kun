@@ -9,16 +9,19 @@ class OrderUpdateScreen extends StatefulWidget {
   OrderUpdateScreen(
       {required this.id,
       required this.earningsIncentive,
+      required this.earningsBase,
       required this.orderReceivedAt});
 
   int id;
   double earningsIncentive;
+  num earningsBase;
   String orderReceivedAt;
 
   @override
   _OrderUpdateScreenState createState() => _OrderUpdateScreenState(
       id: id,
       earningsIncentive: earningsIncentive,
+      earningsBase:earningsBase,
       orderReceivedAt: orderReceivedAt);
 }
 
@@ -26,10 +29,12 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
   _OrderUpdateScreenState(
       {required this.id,
       required this.earningsIncentive,
+      required this.earningsBase,
       required this.orderReceivedAt});
 
   int id;
   double earningsIncentive;
+  num earningsBase;
   String orderReceivedAt;
 
   List<String> _incentiveList = incentiveList;
@@ -56,9 +61,10 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     var incentiveController = TextEditingController();
     var baseController = TextEditingController();
-    baseController.text = '715';
+    baseController.text = earningsBase.toString();
 
     return Scaffold(
         appBar: AppBar(

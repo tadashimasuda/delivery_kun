@@ -51,7 +51,7 @@ class OrderList extends ChangeNotifier {
     String? token = await auth.getToken();
     try {
       Dio.Response response = await dio().post('/order',
-          data: {'earnings_incentive': 1.5},
+          data: {'earnings_incentive': 1.0},
           options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
       notifyListeners();
     } on Dio.DioError catch (e) {
