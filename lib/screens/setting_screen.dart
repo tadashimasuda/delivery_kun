@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
+import 'package:delivery_kun/constants.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -20,8 +21,8 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
   int _selectVehicleModelId = 1;
   int _selectPrefectureId = 1;
 
-  List<String> _prefectureList = ['東京', '埼玉', '栃木'];
-  List<String> _VehicleModelList = ['バイク', '自転車', '車', '徒歩'];
+  List<String> _prefectureList = prefectureList;
+  List<String> _VehicleModelList = VehicleModelList;
 
   @override
   void initState() {
@@ -35,11 +36,11 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
 
   Widget vehiceModelIcon(int vehiceModelId) {
     if (vehiceModelId == 0) {
-      return Icon(Icons.directions_car);
+      return Icon(Icons.motorcycle);
     } else if (vehiceModelId == 1) {
       return Icon(Icons.directions_bike);
     } else if (vehiceModelId == 2) {
-      return Icon(Icons.motorcycle);
+      return Icon(Icons.directions_car);
     } else {
       return Icon(Icons.directions_walk);
     }
@@ -54,13 +55,14 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       body: Container(
           padding: EdgeInsets.fromLTRB(24, 70, 24, 0),
           child: Consumer<Auth>(builder: (context, auth, _) {
-            return Column(
+            return auth.user != null ? Column(
               children: [
                 AccountTextField(
                   inputText: auth.user.name,
                   obscureText: false,
                   title: 'ユーザ名',
                   icon: Icons.person,
+                  isBorder: true,
                   onChange: (value) {
                     _name = value;
                   },
@@ -76,6 +78,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                   obscureText: false,
                   title: 'メールアドレス',
                   icon: Icons.mail,
+                  isBorder: true,
                   onChange: (value) {
                     _email = value;
                   },
@@ -166,10 +169,10 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                     color: Colors.lightBlue,
                     onTap: () async {
                       Map userData = {
-                        'email': _email,
                         'name': _name,
+                        'email': _email,
+                        'vehicleModelId': _selectVehicleModelId,
                         'prefectureId': _selectPrefectureId,
-                        'vehicleModelId': _selectVehicleModelId
                       };
                       bool response =
                           await Provider.of<Auth>(context, listen: false)
@@ -195,11 +198,10 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                                 ],
                               );
                             });
-
                       }
                     })
               ],
-            );
+            ):Center(child: CircularProgressIndicator());
           })),
     );
   }
