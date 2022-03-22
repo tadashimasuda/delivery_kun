@@ -19,11 +19,12 @@ class OrderListScreen extends StatefulWidget {
 class _OrderListScreenState extends State<OrderListScreen> {
   late int userId;
 
-  String getJPDate(DateTime createdAt){
+  String getJPDate(DateTime createdAt) {
     initializeDateFormatting('ja');
     return DateFormat.Hm('ja').format(createdAt.toLocal()).toString();
   }
-  void reloadWidget(){
+
+  void reloadWidget() {
     String date = DateFormat('yyyyMMdd').format(widget.date).toString();
     context.read<OrderList>().getOrders(date);
   }
@@ -36,21 +37,21 @@ class _OrderListScreenState extends State<OrderListScreen> {
           title: Text(DateFormat('M月d日').format(widget.date).toString()),
         ),
         body: Consumer<OrderList>(
-          builder: (context, orderList, child) => orderList.orders != null
-              ? Container(
-              child: orderList == null
-                  ? Text(' ')
-                  : ListView.builder(
-                      itemCount: orderList.orders?.length,
-                      itemBuilder: (context, int index) {
-                        return Container(
-                          height: 55,
-                          child: _orderItem(orderList.orders?[index], index),
-                        );
-                      }),
-            )
-              :Center(child: CircularProgressIndicator())
-        ));
+            builder: (context, orderList, child) => orderList.orders != null
+                ? Container(
+                    child: orderList == null
+                        ? Text(' ')
+                        : ListView.builder(
+                            itemCount: orderList.orders?.length,
+                            itemBuilder: (context, int index) {
+                              return Container(
+                                height: 55,
+                                child:
+                                    _orderItem(orderList.orders?[index], index),
+                              );
+                            }),
+                  )
+                : Center(child: CircularProgressIndicator())));
   }
 
   Widget _orderItem(var order, int index) {
@@ -59,25 +60,25 @@ class _OrderListScreenState extends State<OrderListScreen> {
     String orderReceivedAt = order['order_received_at'].toString();
 
     return InkWell(
-      onLongPress: (){
+      onLongPress: () {
         showCupertinoModalPopup<void>(
           context: context,
           builder: (BuildContext context) => CupertinoActionSheet(
             actions: <CupertinoActionSheetAction>[
-            CupertinoActionSheetAction(
+              CupertinoActionSheetAction(
                 child: const Text('編集'),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  OrderUpdateScreen(
-                          id: order['id'],
-                          earningsIncentive:double.parse(earningsIncentive.toString()),
-                          orderReceivedAt: orderReceivedAt
-                        ),
+                        builder: (context) => OrderUpdateScreen(
+                            id: order['id'],
+                            earningsIncentive:
+                                double.parse(earningsIncentive.toString()),
+                            orderReceivedAt: orderReceivedAt),
                         fullscreenDialog: true,
                       )).then((val) {
-                      reloadWidget();
+                    reloadWidget();
                   });
                 },
               ),
@@ -85,11 +86,73 @@ class _OrderListScreenState extends State<OrderListScreen> {
                 child: const Text('削除'),
                 onPressed: () {
                   Navigator.pop(context);
+                  showCupertinoDialog(
+                      context: context,
+                      builder: (context) => CupertinoAlertDialog(
+                          title: Text(
+                            '削除しますか？',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          actions: [
+                            CupertinoDialogAction(
+                              isDestructiveAction: true,
+                              child: Text(
+                                '削除',
+                                style: TextStyle(color: Colors.lightBlue),
+                              ),
+                              onPressed: () async {
+                                bool response = await Provider.of<OrderList>(context, listen: false).deleteOrder(id:order['id']);
+                                if(response){
+                                  Navigator.pop(context);
+                                  reloadWidget();
+                                }else{
+                                  showCupertinoDialog(
+                                      context: context,
+                                      builder: (context) => CupertinoAlertDialog(
+                                        title: Text(
+                                          'エラーが発生しました',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                            isDestructiveAction: true,
+                                            child: Text(
+                                              'OK',
+                                              style: TextStyle(color: Colors.lightBlue),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              reloadWidget();
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                  );
+                                }
+                              },
+                            ),
+                            CupertinoDialogAction(
+                              isDestructiveAction: true,
+                              child: Text(
+                                'キャンセル',
+                                style: TextStyle(color: Colors.lightBlue),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        )
+                      );
                 },
               )
             ],
-            cancelButton:CupertinoActionSheetAction(
-              child: Text("キャンセル",style: TextStyle(color: Colors.redAccent),),
+            cancelButton: CupertinoActionSheetAction(
+              child: Text(
+                "キャンセル",
+                style: TextStyle(color: Colors.redAccent),
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -110,12 +173,11 @@ class _OrderListScreenState extends State<OrderListScreen> {
             child: Container(
                 child: Text(
                     getJPDate(DateTime.parse(order['order_received_at'])),
-                    textAlign: TextAlign.center
-                )
-            ),
+                    textAlign: TextAlign.center)),
           ),
           Expanded(
-            child: Text('×${double.parse(earningsIncentive.toString())}', textAlign: TextAlign.center),
+            child: Text('×${double.parse(earningsIncentive.toString())}',
+                textAlign: TextAlign.center),
           ),
           Expanded(
             child: Text('¥${earningsTotal}', textAlign: TextAlign.center),

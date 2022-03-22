@@ -76,4 +76,22 @@ class OrderList extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> deleteOrder({required int id}) async {
+    Auth auth = Auth();
+    String? token = await auth.getToken();
+
+    try {
+      await dio().delete('/order/$id',
+          data: {'id':id},
+          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
+
+      return true;
+    } on Dio.DioError catch (e) {
+      print(e.response?.statusCode);
+      print(e.response?.statusMessage);
+
+      return false;
+    }
+  }
 }
