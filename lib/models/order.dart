@@ -1,24 +1,24 @@
 class Order {
   final int id;
-  final int prefecture_id;
-  final int earnings_incentive;
-  final int earnings_base;
-  final int earnings_total;
-  final String created_at;
+  final int prefectureId;
+  final num earningsIncentive;
+  final num earningsBase;
+  final num earningsTotal;
+  final DateTime orderReceivedAt;
 
   Order(
       {required this.id,
-        required this.prefecture_id,
-        required this.earnings_incentive,
-        required this.earnings_base,
-        required this.earnings_total,
-        required this.created_at});
+        required this.prefectureId,
+        required this.earningsIncentive,
+        required this.earningsBase,
+        required this.earningsTotal,
+        required this.orderReceivedAt});
 
   Order.fromJson(Map<String, dynamic> json)
-      : id = json['id'] ?? '',
-        prefecture_id = json['prefecture_id'] ?? '',
-        earnings_incentive = json['earnings_incentive'] ?? '',
-        earnings_base = json['earnings_base'] ?? '',
-        earnings_total = json['earnings_total'] ?? '',
-        created_at = json['created_at'] ?? '';
+      : id = json['data']['id'],
+        prefectureId = json['data']['prefecture_id'],
+        earningsIncentive = json['data']['earnings_incentive'],
+        earningsBase = json['data']['earnings_base'],
+        earningsTotal = json['data']['earnings_total'],
+        orderReceivedAt = json['data']['order_received_at'];
 }

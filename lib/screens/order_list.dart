@@ -1,7 +1,10 @@
+import 'package:delivery_kun/screens/order_update_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_kun/services/order.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
 
 class OrderListScreen extends StatefulWidget {
   OrderListScreen({required this.userId, required this.date});
@@ -16,14 +19,18 @@ class OrderListScreen extends StatefulWidget {
 class _OrderListScreenState extends State<OrderListScreen> {
   late int userId;
 
-  @override
-  void initState() {
-    super.initState();
+  String getJPDate(DateTime createdAt){
+    initializeDateFormatting('ja');
+    return DateFormat.Hm('ja').format(createdAt.toLocal()).toString();
   }
-  @override
-  Widget build(BuildContext context) {
+  void reloadWidget(){
     String date = DateFormat('yyyyMMdd').format(widget.date).toString();
     context.read<OrderList>().getOrders(date);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    reloadWidget();
     return Scaffold(
         appBar: AppBar(
           title: Text(DateFormat('M月d日').format(widget.date).toString()),
@@ -31,14 +38,13 @@ class _OrderListScreenState extends State<OrderListScreen> {
         body: Consumer<OrderList>(
           builder: (context, orderList, child) => orderList.orders != null
               ? Container(
-              margin: EdgeInsets.only(top: 30),
               child: orderList == null
-                  ? Text('a')
+                  ? Text(' ')
                   : ListView.builder(
                       itemCount: orderList.orders?.length,
                       itemBuilder: (context, int index) {
                         return Container(
-                          height: 65,
+                          height: 55,
                           child: _orderItem(orderList.orders?[index], index),
                         );
                       }),
@@ -48,12 +54,48 @@ class _OrderListScreenState extends State<OrderListScreen> {
   }
 
   Widget _orderItem(var order, int index) {
-    num earnings_total = order['earnings_total'];
-    String created_at = order['created_at'];
+    num earningsIncentive = order['earnings_incentive'];
+    num earningsTotal = order['earnings_total'];
+    String orderReceivedAt = order['order_received_at'].toString();
 
     return InkWell(
-      onTap: () {
-        print('Tap now');
+      onLongPress: (){
+        showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) => CupertinoActionSheet(
+            actions: <CupertinoActionSheetAction>[
+            CupertinoActionSheetAction(
+                child: const Text('編集'),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>  OrderUpdateScreen(
+                          id: order['id'],
+                          earningsIncentive:double.parse(earningsIncentive.toString()),
+                          orderReceivedAt: orderReceivedAt
+                        ),
+                        fullscreenDialog: true,
+                      )).then((val) {
+                      reloadWidget();
+                  });
+                },
+              ),
+              CupertinoActionSheetAction(
+                child: const Text('削除'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+            cancelButton:CupertinoActionSheetAction(
+              child: Text("キャンセル",style: TextStyle(color: Colors.redAccent),),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        );
       },
       child: Row(
         children: [
@@ -66,13 +108,17 @@ class _OrderListScreenState extends State<OrderListScreen> {
           ),
           Expanded(
             child: Container(
-                child: Text('$created_at', textAlign: TextAlign.center)),
+                child: Text(
+                    getJPDate(DateTime.parse(order['order_received_at'])),
+                    textAlign: TextAlign.center
+                )
+            ),
           ),
           Expanded(
-            child: Text('×$earnings_total', textAlign: TextAlign.center),
+            child: Text('×${double.parse(earningsIncentive.toString())}', textAlign: TextAlign.center),
           ),
           Expanded(
-            child: Text('¥${earnings_total}', textAlign: TextAlign.center),
+            child: Text('¥${earningsTotal}', textAlign: TextAlign.center),
           ),
         ],
       ),
