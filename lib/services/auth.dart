@@ -90,7 +90,6 @@ class Auth extends ChangeNotifier {
 
   Future<bool> updateUser({required Map userData}) async{
     try {
-      print(userData);
       Dio.Response response = await dio().patch('/user/update',
           data: userData,
           options: Dio.Options(headers: {'Authorization': 'Bearer $token'})
@@ -104,6 +103,8 @@ class Auth extends ChangeNotifier {
       }
       return false;
     } on Dio.DioError catch (e) {
+      print(e.response?.statusCode);
+
       if (e.response?.statusCode == 422) {
         var response = e.response?.data;
         _validate_message = Validate.fromJson(response);

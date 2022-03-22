@@ -22,3 +22,11 @@ const List<String> incentiveList = [
   '2.8',
   '2.9'
 ];
+
+const List<String> prefectureList = [
+  '東京', '埼玉', '栃木'
+];
+
+const List<String> VehicleModelList = [
+  'バイク', '自転車', '車', '徒歩'
+];
