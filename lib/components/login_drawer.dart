@@ -3,14 +3,14 @@ import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class mainDrawer extends StatefulWidget {
-  const mainDrawer({Key? key}) : super(key: key);
+class LoginDrawer extends StatefulWidget {
+  const LoginDrawer({Key? key}) : super(key: key);
 
   @override
-  _mainDrawerState createState() => _mainDrawerState();
+  _LoginDrawerState createState() => _LoginDrawerState();
 }
 
-class _mainDrawerState extends State<mainDrawer> {
+class _LoginDrawerState extends State<LoginDrawer> {
   @override
   Widget build(BuildContext context) {
     return Consumer<Auth>(builder: (context, auth, child) {
