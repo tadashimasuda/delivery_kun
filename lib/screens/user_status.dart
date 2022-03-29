@@ -7,6 +7,7 @@ import 'order_list.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/cupertino.dart';
+import 'sign_up_screen.dart';
 
 class UserStatusScreen extends StatefulWidget {
   const UserStatusScreen({Key? key}) : super(key: key);
@@ -27,20 +28,7 @@ class _UserStatusScreenState extends State<UserStatusScreen> {
               ? LoggedInUserStatus(
                   user_id: auth.user.id,
                 )
-              : NotLoginUserstatus()),
-    );
-  }
-}
-
-class NotLoginUserstatus extends StatelessWidget {
-  const NotLoginUserstatus({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('ログインはこちら'),
+              : SignUpForm()),
     );
   }
 }
