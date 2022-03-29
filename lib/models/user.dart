@@ -14,6 +14,6 @@ class User {
         name = json['data']['name'] ?? '',
         email = json['data']['email'] ?? '',
         vehicleModel = json['data']['vehicleModel'],
-        prefectureId = json['data']['prefectureId'],
+        prefectureId = json['data']['prefectureId'] - 1,
         token = json['data']['accessToken'] ?? '';
 }
