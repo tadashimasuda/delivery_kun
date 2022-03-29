@@ -210,7 +210,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                               actions: [
                                 CupertinoDialogAction(
                                   isDestructiveAction: true,
-                                  child: Text('OK'),
+                                  child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
                                   onPressed: () {
                                     Navigator.pop(context);
                                     Navigator.pop(context);

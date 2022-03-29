@@ -187,7 +187,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                                 actions: [
                                   CupertinoDialogAction(
                                     isDestructiveAction: true,
-                                    child: Text('OK'),
+                                    child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
                                     onPressed: () {
                                       Navigator.push(
                                           context,
