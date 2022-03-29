@@ -1,3 +1,4 @@
+import 'package:url_launcher/url_launcher.dart';
 import 'package:delivery_kun/screens/setting_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,12 @@ class LoginDrawer extends StatefulWidget {
 }
 
 class _LoginDrawerState extends State<LoginDrawer> {
+
+  String _url = 'https://docs.google.com/forms/d/1-EyD9wgMg3dsEL1B26RwCGv5NmYUZnDCsUTv4n-TvZs/edit?usp=sharing';
+  void _launchURL() async {
+    if (!await launch(_url)) throw 'Could not launch $_url';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<Auth>(builder: (context, auth, child) {
@@ -46,6 +53,10 @@ class _LoginDrawerState extends State<LoginDrawer> {
                   MaterialPageRoute(builder: (context) => SettingScreen())
               );
             },
+          ),
+          ListTile(
+            title: const Text('お問い合わせ'),
+            onTap: _launchURL
           )
         ],
       );

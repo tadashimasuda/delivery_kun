@@ -34,6 +34,10 @@ PODS:
     - Flutter
   - "permission_handler (5.1.0+2)":
     - Flutter
+  - url_launcher_ios (0.0.1):
+    - Flutter
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -44,6 +48,8 @@ DEPENDENCIES:
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
   trunk:
@@ -70,6 +76,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/location/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
@@ -85,6 +95,8 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
+  webview_flutter_wkwebview: 005fbd90c888a42c5690919a1527ecc6649e1162
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
