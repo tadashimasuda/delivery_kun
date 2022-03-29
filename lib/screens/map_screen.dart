@@ -1,3 +1,4 @@
+import 'package:delivery_kun/components/notLogin_drawer.dart';
 import 'package:delivery_kun/screens/sign_up_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 
-import 'package:delivery_kun/components/main_drawer.dart';
+import 'package:delivery_kun/components/login_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
 import 'package:provider/provider.dart';
 import 'sign_in_screen.dart';
@@ -109,34 +110,7 @@ class _MapScreenState extends State<MapScreen> {
       drawerEnableOpenDragGesture: false,
       drawer: Drawer(
         child: Consumer<Auth>(builder: (context, auth, child) {
-          if (!auth.authenticated) {
-            return ListView(
-              children: [
-                ListTile(
-                  title: Text('ログイン'),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignInForm(),
-                        ));
-                  },
-                ),
-                ListTile(
-                  title: const Text('新規登録'),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUpForm(),
-                        ));
-                  },
-                ),
-              ],
-            );
-          } else {
-            return mainDrawer();
-          }
+          return auth.authenticated ? LoginDrawer() : NotLoginDrawer();
         }),
       ),
       backgroundColor: Colors.grey.shade200,
@@ -199,3 +173,5 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
+
+
