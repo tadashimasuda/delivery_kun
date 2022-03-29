@@ -20,7 +20,12 @@ class _LoginDrawerState extends State<LoginDrawer> {
         children: [
           Column(children: [
             UserAccountsDrawerHeader(
-              accountName: Text(auth.user.name),
+              accountName: Text(
+                auth.user.name,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600
+                ),),
               accountEmail: Text(''),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
