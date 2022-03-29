@@ -201,7 +201,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                                   Navigator.pop(context),
                                             ),
                                             CupertinoDialogAction(
-                                              child: Text("完了"),
+                                              child: Text("完了",style: TextStyle(color: Colors.blueAccent)),
                                               isDestructiveAction: true,
                                               onPressed: () async {
                                                 int requestActualCost = int.parse(actualCost.text);

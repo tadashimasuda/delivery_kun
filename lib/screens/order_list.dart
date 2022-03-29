@@ -138,7 +138,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                               isDestructiveAction: true,
                               child: Text(
                                 'キャンセル',
-                                style: TextStyle(color: Colors.lightBlue),
+                                style: TextStyle(color: Colors.redAccent),
                               ),
                               onPressed: () {
                                 Navigator.pop(context);

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:delivery_kun/components/notLogin_drawer.dart';
 import 'package:delivery_kun/screens/sign_up_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
@@ -125,17 +127,13 @@ class _MapScreenState extends State<MapScreen> {
               Scaffold.of(context).openDrawer();
             },
             child: Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
                   color: Colors.transparent,
-                  border: Border.all(color: Colors.blue, width: 3),
                   borderRadius: BorderRadius.circular(70),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
-                  )),
-            ),
+                  image: DecorationImage(image: AssetImage("images/user.png")),
+                )),
           ),
         ),
       ),
@@ -173,5 +171,3 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
-
-
