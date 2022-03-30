@@ -170,7 +170,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
               const Positioned(
                 child: MapScreenBottomBtn(),
-                bottom: 60,
+                bottom: 20
               ),
             ],
           ),
