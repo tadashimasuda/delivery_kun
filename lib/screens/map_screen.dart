@@ -1,7 +1,5 @@
-import 'dart:ui';
-
 import 'package:delivery_kun/components/notLogin_drawer.dart';
-import 'package:delivery_kun/screens/sign_up_screen.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,8 +9,8 @@ import 'dart:async';
 
 import 'package:delivery_kun/components/login_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'sign_in_screen.dart';
 
 Completer<GoogleMapController> _controller = Completer();
 
@@ -74,6 +72,8 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late LatLng _initialPosition;
   late bool _loading;
+  late BannerAd _bannerAd;
+  bool _isAdLoaded = true;
 
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
@@ -89,12 +89,18 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  _initBannerAd() {
+    AdmobLoad admobLoad = AdmobLoad();
+    _bannerAd = admobLoad.createBarnnerAd();
+  }
+
   @override
   void initState() {
     super.initState();
     _loading = true;
     _getUserLocation();
     readToken();
+    _initBannerAd();
   }
 
   final storage = new FlutterSecureStorage();
@@ -121,53 +127,60 @@ class _MapScreenState extends State<MapScreen> {
         width: 70,
         height: 70,
         child: Builder(
-          builder: (context) => FloatingActionButton(
-            elevation: 20,
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-            child: Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(70),
-                  image: DecorationImage(image: AssetImage("images/user.png")),
-                )),
-          ),
+          builder: (context) =>
+              FloatingActionButton(
+                elevation: 20,
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                child: Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(70),
+                      image: DecorationImage(
+                          image: AssetImage("images/user.png")),
+                    )),
+              ),
         ),
       ),
       body: Center(
         child: _loading
             ? CircularProgressIndicator()
             : Container(
-                child: Stack(
-                  children: <Widget>[
-                    GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: _initialPosition,
-                        zoom: 14.4746,
-                      ),
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                      },
-                      // markers: _createMarker(),
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      mapToolbarEnabled: false,
-                      buildingsEnabled: true,
-                      onTap: (LatLng latLang) {
-                        print('Clicked: $latLang');
-                      },
-                    ),
-                    const Positioned(
-                      child: MapScreenBottomBtn(),
-                      bottom: 60,
-                    ),
-                  ],
+          child: Stack(
+            children: <Widget>[
+              GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: _initialPosition,
+                  zoom: 14.4746,
                 ),
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+                // markers: _createMarker(),
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                mapToolbarEnabled: false,
+                buildingsEnabled: true,
+                onTap: (LatLng latLang) {
+                  print('Clicked: $latLang');
+                },
               ),
+              const Positioned(
+                child: MapScreenBottomBtn(),
+                bottom: 60,
+              ),
+            ],
+          ),
+        ),
       ),
+      bottomNavigationBar: _isAdLoaded ? Container(
+        height: _bannerAd.size.height.toDouble(),
+        width: _bannerAd.size.width.toDouble(),
+        child: AdWidget(ad: _bannerAd),
+      ) : SizedBox(),
     );
   }
 }

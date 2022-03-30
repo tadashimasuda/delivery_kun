@@ -1,4 +1,6 @@
+import 'package:delivery_kun/services/admob.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -17,6 +19,19 @@ class UserStatusScreen extends StatefulWidget {
 }
 
 class _UserStatusScreenState extends State<UserStatusScreen> {
+  late BannerAd _bannerAd;
+
+  _initBannerAd() {
+    AdmobLoad admobLoad = AdmobLoad();
+    _bannerAd = admobLoad.createBarnnerAd();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initBannerAd();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +44,11 @@ class _UserStatusScreenState extends State<UserStatusScreen> {
                   user_id: auth.user.id,
                 )
               : SignUpForm()),
+      bottomNavigationBar:  Container(
+        height: _bannerAd.size.height.toDouble(),
+        width: _bannerAd.size.width.toDouble(),
+        child: AdWidget(ad: _bannerAd),
+      ),
     );
   }
 }
@@ -353,7 +373,7 @@ class DayStatusBarChart extends StatelessWidget {
     ];
 
     return Container(
-      height: 250,
+      height: 220,
       child: charts.BarChart(seriesList, animate: true, vertical: true),
     );
   }

@@ -239,9 +239,6 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                       }
                     },
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
