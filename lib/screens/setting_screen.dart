@@ -1,9 +1,11 @@
 import 'package:delivery_kun/components/account_form_btn.dart';
 import 'package:delivery_kun/components/account_text_field.dart';
 import 'package:delivery_kun/screens/map_screen.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
 import 'package:delivery_kun/constants.dart';
@@ -20,6 +22,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
   String _email = '';
   int _selectVehicleModelId = 1;
   int _selectPrefectureId = 1;
+  late BannerAd _bannerAd;
 
   List<String> _prefectureList = prefectureList;
   List<String> _VehicleModelList = VehicleModelList;
@@ -31,6 +34,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
     _email = auth.user.email;
     _selectVehicleModelId = auth.user.vehicleModel;
     _selectPrefectureId = auth.user.prefectureId;
+    _initBannerAd();
     super.initState();
   }
 
@@ -44,6 +48,11 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
     } else {
       return Icon(Icons.directions_walk);
     }
+  }
+
+  _initBannerAd() {
+    AdmobLoad admobLoad = AdmobLoad();
+    _bannerAd = admobLoad.createBarnnerAd();
   }
 
   @override
@@ -203,6 +212,11 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
               ],
             ):Center(child: CircularProgressIndicator());
           })),
+      bottomNavigationBar:  Container(
+        height: _bannerAd.size.height.toDouble(),
+        width: _bannerAd.size.width.toDouble(),
+        child: AdWidget(ad: _bannerAd),
+      ),
     );
   }
 }
