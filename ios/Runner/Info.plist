@@ -62,5 +62,7 @@
     	</dict>
     </array>
     <!-- End of the Google Sign-in Section -->
+    <key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-3940256099942544~1458002511</string>
 </dict>
 </plist>
