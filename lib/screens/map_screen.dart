@@ -17,33 +17,12 @@ Completer<GoogleMapController> _controller = Completer();
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
 
-  static void currentLocation() async {
-    final GoogleMapController controller = await _controller.future;
-    final hasPermission = await handlePermission();
-
-    if (!hasPermission) {
-      return;
-    }
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        bearing: 0,
-        target: LatLng(position.latitude, position.longitude),
-        zoom: 14.4746,
-      ),
-    ));
-  }
-
   static Future<bool> handlePermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // do stuff
       return false;
     }
 
@@ -51,15 +30,11 @@ class MapScreen extends StatefulWidget {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // do stuff
         return false;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      // do stuff
-
       return false;
     }
     return true;
@@ -96,11 +71,11 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   void initState() {
-    super.initState();
     _loading = true;
     _getUserLocation();
     readToken();
     _initBannerAd();
+    super.initState();
   }
 
   final storage = new FlutterSecureStorage();
@@ -127,60 +102,56 @@ class _MapScreenState extends State<MapScreen> {
         width: 70,
         height: 70,
         child: Builder(
-          builder: (context) =>
-              FloatingActionButton(
-                elevation: 20,
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(70),
-                      image: DecorationImage(
-                          image: AssetImage("images/user.png")),
-                    )),
-              ),
+          builder: (context) => FloatingActionButton(
+            elevation: 20,
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            child: Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(70),
+                  image: DecorationImage(image: AssetImage("images/user.png")),
+                )),
+          ),
         ),
       ),
       body: Center(
         child: _loading
             ? CircularProgressIndicator()
             : Container(
-          child: Stack(
-            children: <Widget>[
-              GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: _initialPosition,
-                  zoom: 14.4746,
+                child: Stack(
+                  children: <Widget>[
+                    GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: _initialPosition,
+                        zoom: 14.4746,
+                      ),
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller.complete(controller);
+                      },
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: true,
+                      mapToolbarEnabled: false,
+                      buildingsEnabled: true,
+                      onTap: (LatLng latLang) {
+                        print('Clicked: $latLang');
+                      },
+                    ),
+                    const Positioned(child: MapScreenBottomBtn(), bottom: 20),
+                  ],
                 ),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-                // markers: _createMarker(),
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                mapToolbarEnabled: false,
-                buildingsEnabled: true,
-                onTap: (LatLng latLang) {
-                  print('Clicked: $latLang');
-                },
               ),
-              const Positioned(
-                child: MapScreenBottomBtn(),
-                bottom: 20
-              ),
-            ],
-          ),
-        ),
       ),
-      bottomNavigationBar: _isAdLoaded ? Container(
-        height: _bannerAd.size.height.toDouble(),
-        width: _bannerAd.size.width.toDouble(),
-        child: AdWidget(ad: _bannerAd),
-      ) : SizedBox(),
+      bottomNavigationBar: _isAdLoaded
+          ? Container(
+              height: _bannerAd.size.height.toDouble(),
+              width: _bannerAd.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd),
+            )
+          : SizedBox(),
     );
   }
 }
