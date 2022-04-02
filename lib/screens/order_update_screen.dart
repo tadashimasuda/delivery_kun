@@ -45,6 +45,9 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
   List<int> _hourList = [];
   List<int> _miniteList = [];
 
+  TextEditingController incentiveController = TextEditingController();
+  TextEditingController baseController = TextEditingController();
+
   @override
   void initState() {
     DateTime orderReceivedAtParse = DateTime.parse(orderReceivedAt).toLocal();
@@ -56,16 +59,13 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
     for (int m = 0; m < 60; m++) {
       _miniteList.add(m);
     }
+    baseController.text = earningsBase.toString();
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
-
-    var incentiveController = TextEditingController();
-    var baseController = TextEditingController();
-    baseController.text = earningsBase.toString();
-
     return Scaffold(
         appBar: AppBar(
           title: const Text('編集画面'),
