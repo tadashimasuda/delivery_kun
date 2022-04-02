@@ -1,16 +1,14 @@
-import 'package:delivery_kun/components/account_form_btn.dart';
-import 'package:delivery_kun/screens/sign_up_screen.dart';
-import 'package:delivery_kun/services/auth.dart';
-import 'package:delivery_kun/services/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 import 'dart:async';
-
-import 'package:delivery_kun/screens/map_screen.dart';
-import 'package:delivery_kun/screens/user_status.dart';
 import 'package:provider/provider.dart';
+
+import 'package:delivery_kun/components/account_form_btn.dart';
+import 'package:delivery_kun/screens/sign_up_screen.dart';
+import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/services/order.dart';
 
 class MapScreenBottomBtn extends StatefulWidget {
   const MapScreenBottomBtn({Key? key}) : super(key: key);
@@ -89,25 +87,6 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UserStatusScreen(),
-                  ));
-            },
-            child: Icon(
-              Icons.list_alt,
-              color: Colors.grey,
-            ),
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              primary: Colors.white,
-              minimumSize: Size(65, 65),
-              elevation: 15,
-            ),
-          ),
           Consumer<Auth>(builder: (context, auth, _) {
             return ElevatedButton(
               onPressed: () {
@@ -146,19 +125,21 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                                         '・支出管理もできる',
                                       ),
                                     ),
-                                    SizedBox(height: 40,),
+                                    SizedBox(
+                                      height: 40,
+                                    ),
                                     Container(
                                         child: SubmitBtn(
-                                          title: 'アカウント登録',
-                                          color: Colors.lightBlue,
-                                          onTap: (){
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => SignUpForm()
-                                                ));
-                                          },
-                                        ))
+                                      title: 'アカウント登録',
+                                      color: Colors.lightBlue,
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SignUpForm()));
+                                      },
+                                    ))
                                   ],
                                 ),
                                 insetPadding: EdgeInsets.all(20),
@@ -186,19 +167,6 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
               ),
             );
           }),
-          ElevatedButton(
-            onPressed: MapScreen.currentLocation,
-            child: Icon(
-              Icons.location_on,
-              color: Colors.grey,
-            ),
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              primary: Colors.white,
-              minimumSize: Size(65, 65),
-              elevation: 15,
-            ),
-          )
         ],
       ),
     );

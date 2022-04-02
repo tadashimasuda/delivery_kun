@@ -1,5 +1,7 @@
 import 'package:delivery_kun/screens/order_update_screen.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_kun/services/order.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -18,6 +20,18 @@ class OrderListScreen extends StatefulWidget {
 
 class _OrderListScreenState extends State<OrderListScreen> {
   late int userId;
+  late BannerAd _bannerAd;
+
+  _initBannerAd() {
+    AdmobLoad admobLoad = AdmobLoad();
+    _bannerAd = admobLoad.createBarnnerAd();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initBannerAd();
+  }
 
   String getJPDate(DateTime createdAt) {
     initializeDateFormatting('ja');
@@ -51,7 +65,13 @@ class _OrderListScreenState extends State<OrderListScreen> {
                               );
                             }),
                   )
-                : Center(child: CircularProgressIndicator())));
+                : Center(child: CircularProgressIndicator())),
+        bottomNavigationBar:  Container(
+          height: _bannerAd.size.height.toDouble(),
+          width: _bannerAd.size.width.toDouble(),
+          child: AdWidget(ad: _bannerAd),
+        ),
+    );
   }
 
   Widget _orderItem(var order, int index) {

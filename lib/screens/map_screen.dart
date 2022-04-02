@@ -1,7 +1,5 @@
-import 'dart:ui';
-
 import 'package:delivery_kun/components/notLogin_drawer.dart';
-import 'package:delivery_kun/screens/sign_up_screen.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,41 +9,20 @@ import 'dart:async';
 
 import 'package:delivery_kun/components/login_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'sign_in_screen.dart';
 
 Completer<GoogleMapController> _controller = Completer();
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
 
-  static void currentLocation() async {
-    final GoogleMapController controller = await _controller.future;
-    final hasPermission = await handlePermission();
-
-    if (!hasPermission) {
-      return;
-    }
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        bearing: 0,
-        target: LatLng(position.latitude, position.longitude),
-        zoom: 14.4746,
-      ),
-    ));
-  }
-
   static Future<bool> handlePermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // do stuff
       return false;
     }
 
@@ -53,15 +30,11 @@ class MapScreen extends StatefulWidget {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // do stuff
         return false;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      // do stuff
-
       return false;
     }
     return true;
@@ -74,6 +47,8 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late LatLng _initialPosition;
   late bool _loading;
+  late BannerAd _bannerAd;
+  bool _isAdLoaded = true;
 
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
@@ -89,12 +64,18 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  _initBannerAd() {
+    AdmobLoad admobLoad = AdmobLoad();
+    _bannerAd = admobLoad.createBarnnerAd();
+  }
+
   @override
   void initState() {
-    super.initState();
     _loading = true;
     _getUserLocation();
     readToken();
+    _initBannerAd();
+    super.initState();
   }
 
   final storage = new FlutterSecureStorage();
@@ -151,23 +132,26 @@ class _MapScreenState extends State<MapScreen> {
                       onMapCreated: (GoogleMapController controller) {
                         _controller.complete(controller);
                       },
-                      // markers: _createMarker(),
                       myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
+                      myLocationButtonEnabled: true,
                       mapToolbarEnabled: false,
                       buildingsEnabled: true,
                       onTap: (LatLng latLang) {
                         print('Clicked: $latLang');
                       },
                     ),
-                    const Positioned(
-                      child: MapScreenBottomBtn(),
-                      bottom: 60,
-                    ),
+                    const Positioned(child: MapScreenBottomBtn(), bottom: 20),
                   ],
                 ),
               ),
       ),
+      bottomNavigationBar: _isAdLoaded
+          ? Container(
+              height: _bannerAd.size.height.toDouble(),
+              width: _bannerAd.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd),
+            )
+          : SizedBox(),
     );
   }
 }
