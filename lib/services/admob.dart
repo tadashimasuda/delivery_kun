@@ -4,7 +4,7 @@ class AdmobLoad {
   BannerAd createBarnnerAd(){
     return BannerAd(
         size: AdSize.banner,
-        adUnitId: 'ca-app-pub-3940256099942544/2934735716',
+        adUnitId: 'ca-app-pub-8624775791237653/2942091016',
         listener: BannerAdListener(
             onAdLoaded: (ad){},
             onAdFailedToLoad: (ad,error){
