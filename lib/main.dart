@@ -12,7 +12,7 @@ void main() async {
   await FlutterConfig.loadEnvVariables();
 
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize(q);
+  MobileAds.instance.initialize();
 
   runApp(
     MultiProvider(
