@@ -56,7 +56,8 @@ class Auth extends ChangeNotifier {
 
         return false;
       } else {
-        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'],[], [],[]);
+        _validate_message =
+            Validate([], ['メールアドレスとパスワードが一致しませんでした。'], [], [], []);
         notifyListeners();
 
         return false;
@@ -80,7 +81,8 @@ class Auth extends ChangeNotifier {
 
         return false;
       } else {
-        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'],[], [],[]);
+        _validate_message =
+            Validate([], ['メールアドレスとパスワードが一致しませんでした。'], [], [], []);
         notifyListeners();
 
         return false;
@@ -88,14 +90,13 @@ class Auth extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUser({required Map userData}) async{
+  Future<bool> updateUser({required Map userData}) async {
     try {
       Dio.Response response = await dio().patch('/user/update',
           data: userData,
-          options: Dio.Options(headers: {'Authorization': 'Bearer $token'})
-      );
+          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
 
-      if(response.statusCode == 201){
+      if (response.statusCode == 201) {
         tryToken(token);
         notifyListeners();
 
@@ -114,7 +115,7 @@ class Auth extends ChangeNotifier {
       } else {
         print(e.response?.statusCode);
         print(e.response?.statusMessage);
-        _validate_message = Validate([],[],[], [],[]);
+        _validate_message = Validate([], [], [], [], []);
         notifyListeners();
 
         return false;
@@ -122,25 +123,51 @@ class Auth extends ChangeNotifier {
     }
   }
 
-  Future<bool> GoogleLogin({required String accessToken}) async{
-    try{
-      Map requestData = {
-        'accessToken':accessToken
-      };
+  Future<bool> GoogleLogin({required String accessToken}) async {
+    try {
+      Map requestData = {'accessToken': accessToken};
 
-      Dio.Response response = await dio().post('/google/auth/login', data: requestData);
+      Dio.Response response = await dio().post(
+        '/OAuth/google',
+        data: requestData,
+        queryParameters: {'socialName': 'google'},
+      );
       String token = response.data['data']['accessToken'].toString();
       tryToken(token);
 
       notifyListeners();
 
       return true;
-    }on Dio.DioError catch (e){
+    } on Dio.DioError catch (e) {
       print(e);
       return true;
     }
+  }
 
-    return true;
+  Future<bool> AppleLogin(
+      {required String providerId, String? UserName, String? email}) async {
+    try {
+      Map requestData = {
+        'UserName': UserName,
+        'providerId': providerId,
+        'email': email,
+      };
+
+      Dio.Response response = await dio().post(
+        '/OAuth/apple',
+        data: requestData,
+      );
+
+      String token = response.data['data']['accessToken'].toString();
+      tryToken(token);
+
+      notifyListeners();
+
+      return true;
+    } on Dio.DioError catch (e) {
+      print(e);
+      return true;
+    }
   }
 
   Future<String?> getToken() async {
