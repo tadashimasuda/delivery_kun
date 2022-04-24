@@ -1,15 +1,17 @@
-import 'package:delivery_kun/models/validate.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/screens/sign_up_screen.dart';
-import 'package:delivery_kun/services/auth.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:delivery_kun/components/account_text_field.dart';
 import 'package:delivery_kun/components/account_form_btn.dart';
+import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
+
+import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key}) : super(key: key);
@@ -23,40 +25,80 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
   String password = '';
   bool isLoading = true;
 
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
-
-  Future<bool> _handleSignIn() async {
+  Future<bool> _handleSignInGoogle() async {
     try {
-      var response = await _googleSignIn.signIn();
-      if (response != null) {
-        GoogleSignInAuthentication googleAuth = await response.authentication;
-        String accessToken = googleAuth.accessToken.toString();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-        bool isLogin = await Provider.of<Auth>(context, listen: false)
-            .GoogleLogin(accessToken: accessToken);
+      if (googleUser != null) {
+        GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-        if (isLogin) {
-          return true;
-        } else {
-          setState(() {
-            isLoading = true;
-          });
-          return false;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        var user = (await FirebaseAuth.instance.signInWithCredential(
+            credential)).user;
+
+        if (user?.uid != null) {
+          bool isLogin = await Provider.of<Auth>(context, listen: false).OAuthLogin(
+              providerName:'google',
+              providerId: user!.uid,
+              UserName: user.displayName,
+              email: user.email,
+              userImg: user.photoURL
+          );
+
+          if (isLogin) {
+            return true;
+          } else {
+            setState(() {
+              isLoading = true;
+            });
+            return false;
+          }
         }
-      } else {
-        return false;
       }
+      return false;
     } catch (error) {
       print(error);
       return false;
     }
   }
-  
+
+  Future<bool> _handleSignInApple() async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      String? UserName = appleCredential.familyName.toString() +
+          appleCredential.givenName.toString();
+
+      bool isLogin = await Provider.of<Auth>(context, listen: false).OAuthLogin(
+          providerName:'apple',
+          UserName: UserName,
+          providerId: appleCredential.userIdentifier.toString(),
+          email: appleCredential.email);
+
+      if (isLogin) {
+        return true;
+      } else {
+        setState(() {
+          isLoading = true;
+        });
+        return false;
+      }
+    } catch (error) {
+      print(error);
+
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,50 +123,47 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
               ),
               Text(
                 'デリバリーくんにログイン',
-                style: TextStyle(
-                    fontSize: 20,
-                  fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 20,
               ),
               Consumer<Auth>(
                   builder: (context, auth, child) => Form(
-                    child:Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          AccountTextField(
-                            obscureText: false,
-                            title: 'メールアドレス',
-                            icon: Icons.mail,
-                            onChange: (value) {
-                              email = value;
-                            },
-                          ),
-                          Column(
-                            children: ValidateEmail(auth.validate_message),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          AccountTextField(
-                            obscureText: true,
-                            title: 'パスワード',
-                            icon: Icons.password,
-                            onChange: (value) {
-                              password = value;
-                            },
-                          ),
-                          Column(
-                            children: ValidatePassword(auth.validate_message),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                        ]),
-                  )
-              ),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              AccountTextField(
+                                obscureText: false,
+                                title: 'メールアドレス',
+                                icon: Icons.mail,
+                                onChange: (value) {
+                                  email = value;
+                                },
+                              ),
+                              Column(
+                                children: ValidateEmail(auth.validate_message),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              AccountTextField(
+                                obscureText: true,
+                                title: 'パスワード',
+                                icon: Icons.password,
+                                onChange: (value) {
+                                  password = value;
+                                },
+                              ),
+                              Column(
+                                children:
+                                    ValidatePassword(auth.validate_message),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                            ]),
+                      )),
               SubmitBtn(
                 title: 'ログイン',
                 color: Colors.lightBlue,
@@ -133,8 +172,9 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                     'email': email,
                     'password': password,
                   };
-                  bool response = await Provider.of<Auth>(context, listen: false)
-                      .login(creds: creds);
+                  bool response =
+                      await Provider.of<Auth>(context, listen: false)
+                          .login(creds: creds);
                   if (response) {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => MapScreen()));
@@ -149,35 +189,13 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                 height: 15,
               ),
               GestureDetector(
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: Colors.grey)),
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 25,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                  'https://github.com/sbis04/flutterfire-samples/blob/google-sign-in/assets/google_logo.png?raw=true')),
-                        ),
-                      ),
-                      SizedBox(width: 20,),
-                      Text(
-                        'Googleでログイン',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
+                child: SocialSignInButton(
+                  backgroundColor: Colors.white,
+                  textColor: Colors.black,
+                  title: 'Googleでログイン',
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        'https://github.com/sbis04/flutterfire-samples/blob/google-sign-in/assets/google_logo.png?raw=true'),
                   ),
                 ),
                 onTap: () async {
@@ -185,16 +203,14 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                     isLoading = false;
                   });
 
-                  bool isLogin = await _handleSignIn();
+                  bool isLogin = await _handleSignInGoogle();
 
                   if (isLogin) {
                     setState(() {
                       isLoading = true;
                     });
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MapScreen()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MapScreen()));
                   } else {
                     setState(() {
                       isLoading = true;
@@ -217,25 +233,132 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                   }
                 },
               ),
+              SizedBox(
+                height: 15,
+              ),
+              GestureDetector(
+                child: SocialSignInButton(
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  title: 'Appleでログイン',
+                  image: DecorationImage(
+                      image: AssetImage("images/apple_login.png")),
+                ),
+                onTap: () async {
+                  setState(() {
+                    isLoading = false;
+                  });
+
+                  bool isLogin = await _handleSignInApple();
+
+                  if (isLogin) {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MapScreen()));
+                  } else {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoAlertDialog(
+                          title: Text("ログインに失敗しました。"),
+                          actions: <Widget>[
+                            CupertinoDialogAction(
+                              child: Text(
+                                "OK",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              isDestructiveAction: true,
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SignUpForm()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SignUpForm()));
                 },
                 child: Row(
                   children: [
-                    Text('アカウントをお持ちでない方は',style: TextStyle(color: Colors.grey),),
                     Text(
-                    '登録',
-                    style: TextStyle(color: Colors.lightBlue),
-                  ),],
+                      'アカウントをお持ちでない方は',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Text(
+                      '登録',
+                      style: TextStyle(color: Colors.lightBlue),
+                    ),
+                  ],
                 ),
               )
             ],
           ),
         )),
+      ),
+    );
+  }
+}
+
+class SocialSignInButton extends StatelessWidget {
+  SocialSignInButton(
+      {required this.backgroundColor,
+      required this.textColor,
+      required this.title,
+      required this.image});
+
+  final Color backgroundColor;
+  final Color textColor;
+  final String title;
+  final DecorationImage image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(100),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            )
+          ]),
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 50,
+          ),
+          Container(
+            width: 25,
+            decoration: BoxDecoration(image: image),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 18,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,11 +1,14 @@
+import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+import 'package:flutter_config/flutter_config.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/services/user_status.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_config/flutter_config.dart';
-import 'screens/map_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +16,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  await Firebase.initializeApp();
 
   runApp(
     MultiProvider(
