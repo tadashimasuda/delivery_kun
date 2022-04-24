@@ -1,15 +1,16 @@
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/screens/sign_up_screen.dart';
-import 'package:delivery_kun/services/auth.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import 'package:delivery_kun/components/account_text_field.dart';
 import 'package:delivery_kun/components/account_form_btn.dart';
+import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
+
+import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInForm extends StatefulWidget {
@@ -24,34 +25,41 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
   String password = '';
   bool isLoading = true;
 
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
-
   Future<bool> _handleSignInGoogle() async {
     try {
-      var response = await _googleSignIn.signIn();
-      if (response != null) {
-        GoogleSignInAuthentication googleAuth = await response.authentication;
-        String accessToken = googleAuth.accessToken.toString();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-        bool isLogin = await Provider.of<Auth>(context, listen: false)
-            .GoogleLogin(accessToken: accessToken);
+      if (googleUser != null) {
+        GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-        if (isLogin) {
-          return true;
-        } else {
-          setState(() {
-            isLoading = true;
-          });
-          return false;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        var user = (await FirebaseAuth.instance.signInWithCredential(
+            credential)).user;
+
+        if (user?.uid != null) {
+          bool isLogin = await Provider.of<Auth>(context, listen: false).OAuthLogin(
+              providerName:'google',
+              providerId: user!.uid,
+              UserName: user.displayName,
+              email: user.email,
+              userImg: user.photoURL
+          );
+
+          if (isLogin) {
+            return true;
+          } else {
+            setState(() {
+              isLoading = true;
+            });
+            return false;
+          }
         }
-      } else {
-        return false;
       }
+      return false;
     } catch (error) {
       print(error);
       return false;
@@ -70,7 +78,8 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
       String? UserName = appleCredential.familyName.toString() +
           appleCredential.givenName.toString();
 
-      bool isLogin = await Provider.of<Auth>(context, listen: false).AppleLogin(
+      bool isLogin = await Provider.of<Auth>(context, listen: false).OAuthLogin(
+          providerName:'apple',
           UserName: UserName,
           providerId: appleCredential.userIdentifier.toString(),
           email: appleCredential.email);

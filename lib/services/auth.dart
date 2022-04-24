@@ -1,9 +1,10 @@
+import 'dio.dart';
+import 'package:dio/dio.dart' as Dio;
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:delivery_kun/models/user.dart';
 import 'package:delivery_kun/models/validate.dart';
-import 'package:flutter/material.dart';
-import 'package:dio/dio.dart' as Dio;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dio.dart';
 
 class Auth extends ChangeNotifier {
   bool _isLoggedIn = false;
@@ -123,38 +124,20 @@ class Auth extends ChangeNotifier {
     }
   }
 
-  Future<bool> GoogleLogin({required String accessToken}) async {
-    try {
-      Map requestData = {'accessToken': accessToken};
-
-      Dio.Response response = await dio().post(
-        '/OAuth/google',
-        data: requestData,
-        queryParameters: {'socialName': 'google'},
-      );
-      String token = response.data['data']['accessToken'].toString();
-      tryToken(token);
-
-      notifyListeners();
-
-      return true;
-    } on Dio.DioError catch (e) {
-      print(e);
-      return true;
-    }
-  }
-
-  Future<bool> AppleLogin(
-      {required String providerId, String? UserName, String? email}) async {
+  Future<bool> OAuthLogin({required String providerName,required String providerId, String? UserName, String? userImg,String? email}) async {
     try {
       Map requestData = {
-        'UserName': UserName,
+        'userName': UserName,
         'providerId': providerId,
         'email': email,
+        'userImg':userImg,
       };
 
       Dio.Response response = await dio().post(
-        '/OAuth/apple',
+        '/OAuth',
+        queryParameters: {
+          'providerName': providerName
+        },
         data: requestData,
       );
 

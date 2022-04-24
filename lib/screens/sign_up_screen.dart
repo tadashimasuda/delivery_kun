@@ -1,13 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/screens/sign_in_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:delivery_kun/services/auth.dart';
-import 'package:provider/provider.dart';
 import 'package:delivery_kun/components/account_text_field.dart';
 import 'package:delivery_kun/components/account_form_btn.dart';
+import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
+
+import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({Key? key}) : super(key: key);
@@ -23,36 +27,76 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
   String passwordConfirmation = '';
   bool isLoading = true;
 
-  GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ],
-  );
-
-  Future<bool> _handleSignIn() async {
+  Future<bool> _handleSignInGoogle() async {
     try {
-      var response = await _googleSignIn.signIn();
-      if (response != null) {
-        GoogleSignInAuthentication googleAuth = await response.authentication;
-        String accessToken = googleAuth.accessToken.toString();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-        bool isLogin = await Provider.of<Auth>(context, listen: false)
-            .GoogleLogin(accessToken: accessToken);
+      if (googleUser != null) {
+        GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-        if (isLogin) {
-          return true;
-        } else {
-          setState(() {
-            isLoading = true;
-          });
-          return false;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        var user = (await FirebaseAuth.instance.signInWithCredential(
+            credential)).user;
+
+        if (user?.uid != null) {
+          bool isLogin = await Provider.of<Auth>(context, listen: false).OAuthLogin(
+              providerName:'google',
+              providerId: user!.uid,
+              UserName: user.displayName,
+              email: user.email,
+              userImg: user.photoURL
+          );
+
+          if (isLogin) {
+            return true;
+          } else {
+            setState(() {
+              isLoading = true;
+            });
+            return false;
+          }
         }
+      }
+      return false;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+
+  Future<bool> _handleSignInApple() async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      String? UserName = appleCredential.familyName.toString() +
+          appleCredential.givenName.toString();
+
+      bool isLogin = await Provider.of<Auth>(context, listen: false).OAuthLogin(
+          providerName:'apple',
+          UserName: UserName,
+          providerId: appleCredential.userIdentifier.toString(),
+          email: appleCredential.email);
+
+      if (isLogin) {
+        return true;
       } else {
+        setState(() {
+          isLoading = true;
+        });
         return false;
       }
     } catch (error) {
       print(error);
+
       return false;
     }
   }
@@ -174,41 +218,20 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                       height: 20,
                     ),
                     GestureDetector(
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: Colors.grey)
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 25,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://github.com/sbis04/flutterfire-samples/blob/google-sign-in/assets/google_logo.png?raw=true')),
-                              ),
-                            ),
-                            SizedBox(width: 20,),
-                            Text(
-                              'Googleで登録',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black, fontSize: 18),
-                            ),
-                          ],
-                        ),
+                      child: SocialSignInButton(
+                        backgroundColor: Colors.white,
+                        textColor: Colors.black,
+                        title: 'Googleでログイン',
+                        image: DecorationImage(
+                            image: NetworkImage(
+                                'https://github.com/sbis04/flutterfire-samples/blob/google-sign-in/assets/google_logo.png?raw=true')),
                       ),
                       onTap: () async {
                         setState(() {
                           isLoading = false;
                         });
 
-                        bool isLogin = await _handleSignIn();
+                        bool isLogin = await _handleSignInGoogle();
 
                         if (isLogin) {
                           setState(() {
@@ -230,6 +253,55 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                                 actions: <Widget>[
                                   CupertinoDialogAction(
                                     child: Text("OK"),
+                                    isDestructiveAction: true,
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      child: SocialSignInButton(
+                        backgroundColor: Colors.black,
+                        textColor: Colors.white,
+                        title: 'Appleでログイン',
+                        image: DecorationImage(
+                            image: AssetImage("images/apple_login.png")),
+                      ),
+                      onTap: () async {
+                        setState(() {
+                          isLoading = false;
+                        });
+
+                        bool isLogin = await _handleSignInApple();
+
+                        if (isLogin) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => MapScreen()));
+                        } else {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: Text("ログインに失敗しました。"),
+                                actions: <Widget>[
+                                  CupertinoDialogAction(
+                                    child: Text(
+                                      "OK",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
                                     isDestructiveAction: true,
                                     onPressed: () => Navigator.pop(context),
                                   ),
