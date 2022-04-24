@@ -13,17 +13,23 @@ class SubmitBtn extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: Colors.blue, borderRadius: BorderRadius.circular(100)),
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(100),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  spreadRadius: 1,
+                  blurRadius: 10,
+                  offset: Offset(0, 3),
+                )
+              ]),
           width: MediaQuery.of(context).size.width,
           height: 50,
           child: Text(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold
-            ),
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
         onTap: onTap);

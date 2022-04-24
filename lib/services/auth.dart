@@ -1,9 +1,10 @@
+import 'dio.dart';
+import 'package:dio/dio.dart' as Dio;
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:delivery_kun/models/user.dart';
 import 'package:delivery_kun/models/validate.dart';
-import 'package:flutter/material.dart';
-import 'package:dio/dio.dart' as Dio;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dio.dart';
 
 class Auth extends ChangeNotifier {
   bool _isLoggedIn = false;
@@ -56,7 +57,8 @@ class Auth extends ChangeNotifier {
 
         return false;
       } else {
-        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'],[], [],[]);
+        _validate_message =
+            Validate([], ['メールアドレスとパスワードが一致しませんでした。'], [], [], []);
         notifyListeners();
 
         return false;
@@ -80,7 +82,8 @@ class Auth extends ChangeNotifier {
 
         return false;
       } else {
-        _validate_message = Validate([],['メールアドレスとパスワードが一致しませんでした。'],[], [],[]);
+        _validate_message =
+            Validate([], ['メールアドレスとパスワードが一致しませんでした。'], [], [], []);
         notifyListeners();
 
         return false;
@@ -88,14 +91,13 @@ class Auth extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUser({required Map userData}) async{
+  Future<bool> updateUser({required Map userData}) async {
     try {
       Dio.Response response = await dio().patch('/user/update',
           data: userData,
-          options: Dio.Options(headers: {'Authorization': 'Bearer $token'})
-      );
+          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
 
-      if(response.statusCode == 201){
+      if (response.statusCode == 201) {
         tryToken(token);
         notifyListeners();
 
@@ -114,7 +116,7 @@ class Auth extends ChangeNotifier {
       } else {
         print(e.response?.statusCode);
         print(e.response?.statusMessage);
-        _validate_message = Validate([],[],[], [],[]);
+        _validate_message = Validate([], [], [], [], []);
         notifyListeners();
 
         return false;
@@ -122,25 +124,33 @@ class Auth extends ChangeNotifier {
     }
   }
 
-  Future<bool> GoogleLogin({required String accessToken}) async{
-    try{
+  Future<bool> OAuthLogin({required String providerName,required String providerId, String? UserName, String? userImg,String? email}) async {
+    try {
       Map requestData = {
-        'accessToken':accessToken
+        'userName': UserName,
+        'providerId': providerId,
+        'email': email,
+        'userImg':userImg,
       };
 
-      Dio.Response response = await dio().post('/google/auth/login', data: requestData);
+      Dio.Response response = await dio().post(
+        '/OAuth',
+        queryParameters: {
+          'providerName': providerName
+        },
+        data: requestData,
+      );
+
       String token = response.data['data']['accessToken'].toString();
       tryToken(token);
 
       notifyListeners();
 
       return true;
-    }on Dio.DioError catch (e){
+    } on Dio.DioError catch (e) {
       print(e);
       return true;
     }
-
-    return true;
   }
 
   Future<String?> getToken() async {
