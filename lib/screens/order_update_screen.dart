@@ -68,7 +68,68 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('編集画面'),
+          title: const Text(
+            '編集画面',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+          actions:<Widget> [
+            TextButton(
+                onPressed: () async {
+                  String time = orderReceivedAt.substring(0, 10) +
+                      ' ' +
+                      _selectHour.toString().padLeft(2, "0") +
+                      ':' +
+                      _selectMinite.toString().padLeft(2, "0") +
+                      ':00';
+                  Map requestData = {
+                    'earnings_incentive': _incentiveList[_selectIncentiveId],
+                    'earnings_base': baseController.text,
+                    'update_date_time': time
+                  };
+
+                  bool response =
+                  await Provider.of<OrderList>(context, listen: false)
+                      .updateOrder(requestData: requestData, id: id);
+
+                  if (!response) {
+                    showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return CupertinoAlertDialog(
+                            title: Text(
+                              'エラーが発生しました',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            actions: [
+                              CupertinoDialogAction(
+                                isDestructiveAction: true,
+                                child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  }else{
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text(
+                  '完了',
+                  style: TextStyle(
+                      color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold
+                  ),
+                )
+            )
+          ],
         ),
         body: Container(
           padding: const EdgeInsets.fromLTRB(30, 50, 30, 0),
@@ -180,67 +241,6 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                 ],
               ),
               SizedBox(height: 30,),
-              TextButton(
-                  onPressed: () async {
-                    String time = orderReceivedAt.substring(0, 10) +
-                        ' ' +
-                        _selectHour.toString().padLeft(2, "0") +
-                        ':' +
-                        _selectMinite.toString().padLeft(2, "0") +
-                        ':00';
-                    Map requestData = {
-                      'earnings_incentive': _incentiveList[_selectIncentiveId],
-                      'earnings_base': baseController.text,
-                      'update_date_time': time
-                    };
-
-                    bool response =
-                        await Provider.of<OrderList>(context, listen: false)
-                            .updateOrder(requestData: requestData, id: id);
-
-                    if (response) {
-                      showCupertinoDialog(
-                          context: context,
-                          builder: (context) {
-                            return CupertinoAlertDialog(
-                              title: Text(
-                                '更新されました！',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              actions: [
-                                CupertinoDialogAction(
-                                  isDestructiveAction: true,
-                                  child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            );
-                          });
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: Colors.grey)),
-                    child: GestureDetector(
-                      child: const Center(
-                            child: Text(
-                              '編集完了',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                    ),
-                  ))
             ],
           ),
         ));
