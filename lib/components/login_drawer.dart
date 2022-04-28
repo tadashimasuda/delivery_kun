@@ -1,4 +1,4 @@
-import 'package:delivery_kun/screens/user_status.dart';
+import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:delivery_kun/screens/setting_screen.dart';
 import 'package:delivery_kun/services/auth.dart';

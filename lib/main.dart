@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,6 +35,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'delivery-kun',
       home: MapScreen(),
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
       debugShowCheckedModeBanner: false,
     );
   }

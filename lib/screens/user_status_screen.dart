@@ -1,15 +1,15 @@
-import 'package:delivery_kun/services/admob.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-import 'order_list.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/user_status.dart';
-import 'package:flutter/cupertino.dart';
-import 'sign_up_screen.dart';
+import 'package:delivery_kun/screens/order_list.dart';
+import 'package:delivery_kun/screens/sign_up_screen.dart';
 
 class UserStatusScreen extends StatefulWidget {
   const UserStatusScreen({Key? key}) : super(key: key);
@@ -36,7 +36,7 @@ class _UserStatusScreenState extends State<UserStatusScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('売り上げ履歴'),
+        title: Text('売上履歴',),
       ),
       body: Consumer<Auth>(
           builder: (context, auth, child) => auth.authenticated
@@ -83,8 +83,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                             children: [
                               TextButton(
                                   onPressed: () {
-                                    Provider.of<Status>(context, listen: false)
-                                        .getStatusBeforeDate(widget.user_id);
+                                    Provider.of<Status>(context, listen: false).getStatusBeforeDate(widget.user_id);
                                   },
                                   child: Icon(Icons.chevron_left)),
                               Text(
@@ -140,7 +139,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                         child: SizedBox(
                                           height: 50,
                                           child: Text(
-                                            status.status?.onlineTime ?? 'a',
+                                            status.status?.onlineTime ?? ' ',
                                             style: TextStyle(
                                               fontSize: 20,
                                             ),
@@ -151,9 +150,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                         child: SizedBox(
                                           height: 50,
                                           child: Text(
-                                            status.status?.daysEarningsQty
-                                                    .toString() ??
-                                                'a',
+                                            status.status?.daysEarningsQty.toString() ?? ' ',
                                             style: TextStyle(
                                               fontSize: 20,
                                             ),
@@ -181,9 +178,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                     ),
                                   ),
                                   Text(
-                                      status.status?.daysEarningsTotal
-                                              .toString() ??
-                                          'a',
+                                      status.status?.daysEarningsTotal.toString() ?? ' ',
                                       textAlign: TextAlign.right,
                                       style: TextStyle(
                                         color: Colors.black,
@@ -233,12 +228,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                                         builder: (_) => AlertWidght(title:'支出を入力してください')
                                                     );
                                                   } else {
-                                                    bool response = await Provider
-                                                            .of<Status>(context,
-                                                                listen: false)
-                                                        .updateAcutualCost(
-                                                            actualCost:
-                                                                requestActualCost);
+                                                    bool response = await Provider.of<Status>(context, listen: false).updateAcutualCost(actualCost: requestActualCost);
 
                                                     if (response) {
                                                       Navigator.pop(context);
@@ -259,8 +249,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                     child: SizedBox(
                                       height: 50,
                                       child: Text(
-                                        status.status?.actualCost.toString() ??
-                                            'a',
+                                        status.status?.actualCost.toString() ?? ' ',
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
                                           fontSize: 20,
@@ -285,9 +274,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                     child: SizedBox(
                                       height: 50,
                                       child: Text(
-                                        (status.status!.daysEarningsTotal -
-                                                status.status!.actualCost)
-                                            .toString(),
+                                        (status.status!.daysEarningsTotal - status.status!.actualCost).toString(),
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
                                           fontSize: 20,
@@ -308,8 +295,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                         ),
                                         fullscreenDialog: true,
                                       )).then((val) {
-                                    Provider.of<Status>(context, listen: false)
-                                        .getStatusDate(widget.user_id);
+                                    Provider.of<Status>(context, listen: false).getStatusDate(widget.user_id);
                                   });
                                 },
                                 child: Text(
@@ -360,8 +346,7 @@ class DayStatusBarChart extends StatelessWidget {
     List<hourQty> desktopDalsesData = [];
 
     data.forEach((val) {
-      desktopDalsesData
-          .add(hourQty(hour: val['hour'].toString(), qty: val['count']));
+      desktopDalsesData.add(hourQty(hour: val['hour'].toString(), qty: val['count']));
     });
 
     List<charts.Series<dynamic, String>> seriesList = [
@@ -371,6 +356,7 @@ class DayStatusBarChart extends StatelessWidget {
         measureFn: (hourQty hourqty, _) => hourqty.qty,
         data: desktopDalsesData,
         labelAccessorFn: (hourQty hourqty, _) => '\$${hourqty.qty.toString()}',
+        colorFn:  (_,__)=>charts.ColorUtil.fromDartColor(Colors.red.shade500)
       )
     ];
 

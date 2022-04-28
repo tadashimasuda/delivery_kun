@@ -59,7 +59,57 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ユーザー設定'),
+        title: Text(
+            'ユーザー設定',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold
+            )
+        ),
+        actions: <Widget>[
+          TextButton(
+              onPressed: () async{
+                Map userData = {
+                  'name': _name,
+                  'email': _email,
+                  'vehicleModelId': _selectVehicleModelId,
+                  'prefectureId': _selectPrefectureId+1,
+                };
+                bool response = await Provider.of<Auth>(context, listen: false).updateUser(userData: userData);
+
+                if (!response) {
+                  showCupertinoDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoAlertDialog(
+                          title: Text('保存できませんでした',style: TextStyle(color: Colors.black),),
+                          actions: [
+                            CupertinoDialogAction(
+                              isDestructiveAction: true,
+                              child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MapScreen()));
+                              },
+                            ),
+                          ],
+                        );
+                      });
+                }else{
+                  Navigator.pop(context);
+                }
+              },
+              child:const Text(
+                '更新',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold
+                ),)
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -174,42 +224,6 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                   SizedBox(
                     height: 20,
                   ),
-                  SubmitBtn(
-                      title: '更新',
-                      color: Colors.lightBlue,
-                      onTap: () async {
-                        Map userData = {
-                          'name': _name,
-                          'email': _email,
-                          'vehicleModelId': _selectVehicleModelId,
-                          'prefectureId': _selectPrefectureId+1,
-                        };
-                        bool response =
-                            await Provider.of<Auth>(context, listen: false)
-                                .updateUser(userData: userData);
-
-                        if (response) {
-                          showCupertinoDialog(
-                              context: context,
-                              builder: (context) {
-                                return CupertinoAlertDialog(
-                                  title: Text('更新されました！',style: TextStyle(color: Colors.black),),
-                                  actions: [
-                                    CupertinoDialogAction(
-                                      isDestructiveAction: true,
-                                      child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => MapScreen()));
-                                      },
-                                    ),
-                                  ],
-                                );
-                              });
-                        }
-                      })
                 ],
               ):Center(child: CircularProgressIndicator());
             })),
