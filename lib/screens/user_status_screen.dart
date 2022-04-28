@@ -1,15 +1,15 @@
-import 'package:delivery_kun/services/admob.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-import 'order_list.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/user_status.dart';
-import 'package:flutter/cupertino.dart';
-import 'sign_up_screen.dart';
+import 'package:delivery_kun/screens/order_list.dart';
+import 'package:delivery_kun/screens/sign_up_screen.dart';
 
 class UserStatusScreen extends StatefulWidget {
   const UserStatusScreen({Key? key}) : super(key: key);
@@ -36,7 +36,7 @@ class _UserStatusScreenState extends State<UserStatusScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('売り上げ履歴'),
+        title: Text('売上履歴',),
       ),
       body: Consumer<Auth>(
           builder: (context, auth, child) => auth.authenticated
