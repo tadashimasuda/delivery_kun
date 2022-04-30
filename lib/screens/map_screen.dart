@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'package:delivery_kun/services/direction.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/services/direction.dart';
 import 'package:delivery_kun/components/notLogin_drawer.dart';
 import 'package:delivery_kun/components/login_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
@@ -93,7 +93,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
-    var destination = TextEditingController();
+    TextEditingController destination = TextEditingController();
 
     _addPolyLine(List<LatLng> polylineCoordinates) {
       PolylineId id = PolylineId("poly");
@@ -155,9 +155,6 @@ class _MapScreenState extends State<MapScreen> {
                       myLocationButtonEnabled: true,
                       mapToolbarEnabled: false,
                       buildingsEnabled: true,
-                      onTap: (LatLng latLang) {
-                        print('Clicked: $latLang');
-                      },
                     ),
                     Positioned(
                       child: DestinationTextField(
@@ -171,7 +168,7 @@ class _MapScreenState extends State<MapScreen> {
                             _addPolyLine(result);
                           }
                       ),
-                      top: deviceHeight * 0.07,
+                      top: deviceHeight * 0.08,
                       left: 100,
                     ),
                     const Positioned(child: MapScreenBottomBtn(), bottom: 20),
@@ -208,8 +205,9 @@ class DestinationTextField extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      height: deviceHeight * 0.065,
-      width:deviceWidth * 0.7,
+      height: deviceHeight * 0.06,
+      width: deviceWidth * 0.70,
+      padding: const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
