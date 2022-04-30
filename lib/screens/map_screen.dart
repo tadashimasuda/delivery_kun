@@ -1,16 +1,17 @@
-import 'package:delivery_kun/components/notLogin_drawer.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'dart:async';
-
+import 'package:delivery_kun/services/direction.dart';
+import 'package:delivery_kun/components/notLogin_drawer.dart';
 import 'package:delivery_kun/components/login_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
 
 Completer<GoogleMapController> _controller = Completer();
 
@@ -49,6 +50,7 @@ class _MapScreenState extends State<MapScreen> {
   late bool _loading;
   late BannerAd _bannerAd;
   bool _isAdLoaded = true;
+  Map<PolylineId, Polyline> polylines = {};
 
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
@@ -56,8 +58,8 @@ class _MapScreenState extends State<MapScreen> {
     if (!hasPermission) {
       return;
     }
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _initialPosition = LatLng(position.latitude, position.longitude);
       _loading = false;
@@ -89,6 +91,22 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+    TextEditingController destination = TextEditingController();
+
+    _addPolyLine(List<LatLng> polylineCoordinates) {
+      PolylineId id = PolylineId("poly");
+      Polyline polyline = Polyline(
+        polylineId: id,
+        color:Colors.blue,
+        points: polylineCoordinates,
+        width: 8,
+      );
+      polylines[id] = polyline;
+      setState(() {});
+    }
+
     return Scaffold(
       drawerEnableOpenDragGesture: false,
       drawer: Drawer(
@@ -99,8 +117,8 @@ class _MapScreenState extends State<MapScreen> {
       backgroundColor: Colors.grey.shade200,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Container(
-        width: 70,
-        height: 70,
+        width: deviceWidth * 0.2,
+        height: deviceWidth * 0.2,
         child: Builder(
           builder: (context) => FloatingActionButton(
             elevation: 20,
@@ -108,8 +126,8 @@ class _MapScreenState extends State<MapScreen> {
               Scaffold.of(context).openDrawer();
             },
             child: Container(
-                width: 70,
-                height: 70,
+                width: deviceWidth * 0.18,
+                height: deviceWidth * 0.18,
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(70),
@@ -125,6 +143,7 @@ class _MapScreenState extends State<MapScreen> {
                 child: Stack(
                   children: <Widget>[
                     GoogleMap(
+                      polylines: Set<Polyline>.of(polylines.values),
                       initialCameraPosition: CameraPosition(
                         target: _initialPosition,
                         zoom: 14.4746,
@@ -136,9 +155,21 @@ class _MapScreenState extends State<MapScreen> {
                       myLocationButtonEnabled: true,
                       mapToolbarEnabled: false,
                       buildingsEnabled: true,
-                      onTap: (LatLng latLang) {
-                        print('Clicked: $latLang');
-                      },
+                    ),
+                    Positioned(
+                      child: DestinationTextField(
+                          deviceHeight: deviceHeight,
+                          deviceWidth: deviceWidth,
+                          controller:destination,
+                          onPressed:() async{
+                            Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+                            LatLng origin = LatLng(position.latitude, position.longitude);
+                            List<LatLng> result = await Direction().getDirections(origin: origin,destination: destination.text);
+                            _addPolyLine(result);
+                          }
+                      ),
+                      top: deviceHeight * 0.08,
+                      left: 100,
                     ),
                     const Positioned(child: MapScreenBottomBtn(), bottom: 20),
                   ],
@@ -152,6 +183,56 @@ class _MapScreenState extends State<MapScreen> {
               child: AdWidget(ad: _bannerAd),
             )
           : SizedBox(),
+    );
+  }
+}
+
+class DestinationTextField extends StatelessWidget {
+  const DestinationTextField({
+    Key? key,
+    required this.deviceHeight,
+    required this.deviceWidth,
+    required this.controller,
+    required this.onPressed,
+  }) : super(key: key);
+
+  final double deviceHeight;
+  final double deviceWidth;
+  final TextEditingController controller;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Container(
+      height: deviceHeight * 0.06,
+      width: deviceWidth * 0.70,
+      padding: const EdgeInsets.only(left: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10.0,
+              spreadRadius: 1.0,
+              offset: Offset(10, 10))
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: "配達先を検索",
+          border: InputBorder.none,
+          suffixIcon: IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Colors.grey,
+            ),
+            onPressed: onPressed,
+          ),
+        ),
+      ),
     );
   }
 }
