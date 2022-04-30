@@ -31,11 +31,13 @@ class Auth extends ChangeNotifier {
       try {
         Dio.Response response = await dio().get('/user',
             options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
-        _isLoggedIn = true;
         _user = User.fromJson(response.data);
+        _isLoggedIn = true;
         _validate_message = null;
-        _token = token;
-        storeToken(token);
+        _token = response.data['data']['accessToken'].toString();
+
+        storeToken(response.data['data']['accessToken'].toString());
+
         notifyListeners();
       } catch (e) {
         print(e);
@@ -156,8 +158,8 @@ class Auth extends ChangeNotifier {
   }
 
   Future<String?> getToken() async {
-    String _token = await storage.read(key: 'token').toString();
-    return _token != null ? _token : null;
+    String? _token = await storage.read(key: 'token');
+    return _token;
   }
 
   Future storeToken(String token) async {

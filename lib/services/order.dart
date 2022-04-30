@@ -14,6 +14,7 @@ class OrderList extends ChangeNotifier {
   void getOrders(String date) async {
     Auth auth = Auth();
     String? token = await auth.getToken();
+
     try {
       Dio.Response response = await dio().get('/order',
           options: Dio.Options(headers: {'Authorization': 'Bearer $token'}),
@@ -49,6 +50,7 @@ class OrderList extends ChangeNotifier {
   void postOrder() async {
     Auth auth = Auth();
     String? token = await auth.getToken();
+
     try {
       Dio.Response response = await dio().post('/order',
           data: {'earnings_incentive': 1.0},
