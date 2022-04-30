@@ -59,11 +59,23 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    LatLng locaiton= await _getCurrentLocation();
     setState(() {
-      _initialPosition = LatLng(position.latitude, position.longitude);
+      _initialPosition = LatLng(locaiton.latitude, locaiton.longitude);
       _loading = false;
     });
+  }
+
+  void _currentLocation() async{
+    LatLng locaiton= await _getCurrentLocation();
+    final GoogleMapController controller = await _controller.future;
+
+    controller.animateCamera(CameraUpdate.newLatLngZoom(LatLng(locaiton.latitude, locaiton.longitude), 14.4746));
+  }
+
+  Future<LatLng> _getCurrentLocation() async{
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return LatLng(position.latitude, position.longitude);
   }
 
   _initBannerAd() {
@@ -91,8 +103,9 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    double deviceHeight = MediaQuery.of(context).size.height;
+    final double deviceWidth = MediaQuery.of(context).size.width;
+    final double deviceHeight = MediaQuery.of(context).size.height;
+    final int deviceWidthInt = deviceWidth.round();
     TextEditingController destination = TextEditingController();
 
     _addPolyLine(List<LatLng> polylineCoordinates) {
@@ -151,7 +164,7 @@ class _MapScreenState extends State<MapScreen> {
                         _controller.complete(controller);
                       },
                       myLocationEnabled: true,
-                      myLocationButtonEnabled: true,
+                      myLocationButtonEnabled: false,
                       mapToolbarEnabled: false,
                       buildingsEnabled: true,
                     ),
@@ -171,6 +184,20 @@ class _MapScreenState extends State<MapScreen> {
                       left: deviceWidth * 0.25,
                     ),
                     const Positioned(child: MapScreenBottomBtn(), bottom: 20),
+                    Positioned(
+                        child:Container(
+                          height: deviceHeight * 0.07,
+                          width: deviceHeight * 0.07,
+                          decoration:BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white,
+                          ),
+                          child: IconButton(
+                              icon: Icon(Icons.my_location_outlined),
+                              onPressed:_currentLocation
+                          ),
+                        ),
+                      bottom: 20,right:10),
                   ],
                 ),
               ),
