@@ -1,3 +1,5 @@
+import 'package:flutter/rendering.dart';
+
 import 'dio.dart';
 import 'package:dio/dio.dart' as Dio;
 import 'package:flutter/material.dart';
@@ -154,8 +156,8 @@ class Auth extends ChangeNotifier {
   }
 
   Future<String?> getToken() async {
-    String? _token = await storage.read(key: 'token');
-    return _token;
+    String _token = await storage.read(key: 'token').toString();
+    return _token != null ? _token : null;
   }
 
   Future storeToken(String token) async {

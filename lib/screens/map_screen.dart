@@ -85,6 +85,13 @@ class _MapScreenState extends State<MapScreen> {
     return LatLng(position.latitude, position.longitude);
   }
 
+  void readToken() {
+    String token = Auth().getToken().toString();
+    if (token != null) {
+      Provider.of<Auth>(context, listen: false).tryToken(token);
+    }
+  }
+
   _initBannerAd() {
     AdmobLoad admobLoad = AdmobLoad();
     _bannerAd = admobLoad.createBarnnerAd();
@@ -99,14 +106,7 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
   }
 
-  final storage = new FlutterSecureStorage();
 
-  Future<String?> readToken() async {
-    String? token = await storage.read(key: 'token');
-    if (token != null) {
-      Provider.of<Auth>(context, listen: false).tryToken(token);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
