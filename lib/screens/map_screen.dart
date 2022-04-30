@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:delivery_kun/models/user_status.dart';
 import 'package:delivery_kun/screens/user_status_screen.dart';
+import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,6 +53,7 @@ class _MapScreenState extends State<MapScreen> {
   late LatLng _initialPosition;
   late bool _loading;
   late BannerAd _bannerAd;
+  late bool isAuthenticated;
   bool _isAdLoaded = true;
   Map<PolylineId, Polyline> polylines = {};
 
@@ -192,8 +195,7 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                       bottom: deviceHeight * 0.13,right:10
                     ),
-                    Consumer<Auth>(builder: (context, auth, child) {
-                      return auth.authenticated ? Positioned(
+                    Provider.of<Auth>(context).authenticated ? Positioned(
                         height: deviceHeight * 0.10,
                         width: deviceWidth,
                         child: Container(
@@ -204,16 +206,16 @@ class _MapScreenState extends State<MapScreen> {
                           child: Stack(
                             children: [
                               Center(
-                                child: Consumer<Status>(builder: (context, status, child) {
-                                  return Text(
-                                    '¥${status.status?.daysEarningsTotal}',
-                                    textAlign:TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w500
-                                    ),
-                                  );
-                                }),
+                                child: Consumer<Status>(
+                                    builder: (context, status, child) =>Text(
+                                        '¥${status.status!.daysEarningsTotal}',
+                                        textAlign:TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w500
+                                        ),
+                                      )
+                                ),
                               ),
                               Positioned(
                                   child: IconButton(
@@ -237,8 +239,7 @@ class _MapScreenState extends State<MapScreen> {
                           ),
                         ),
                         bottom: 0,
-                      ) : SizedBox.shrink();
-                    }),
+                      ) : SizedBox.shrink()
                   ],
                 ),
               ),

@@ -1,3 +1,4 @@
+import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,7 +42,10 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
               CupertinoDialogAction(
                 child: Text('記録する'),
                 onPressed: () {
+                  Auth auth = context.read<Auth>();
+
                   OrderList().postOrder();
+                  Provider.of<Status>(context,listen: false).getStatusToday(auth.user.id);
                   Navigator.pop(context);
                 },
               ),
