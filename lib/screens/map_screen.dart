@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:delivery_kun/screens/user_status_screen.dart';
+import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -105,7 +107,6 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double deviceHeight = MediaQuery.of(context).size.height;
-    final int deviceWidthInt = deviceWidth.round();
     TextEditingController destination = TextEditingController();
 
     _addPolyLine(List<LatLng> polylineCoordinates) {
@@ -183,7 +184,7 @@ class _MapScreenState extends State<MapScreen> {
                       top: deviceHeight * 0.07,
                       left: deviceWidth * 0.25,
                     ),
-                    const Positioned(child: MapScreenBottomBtn(), bottom: 20),
+                    Positioned(child: MapScreenBottomBtn(), bottom: deviceHeight * 0.12),
                     Positioned(
                         child:Container(
                           height: deviceHeight * 0.07,
@@ -197,7 +198,55 @@ class _MapScreenState extends State<MapScreen> {
                               onPressed:_currentLocation
                           ),
                         ),
-                      bottom: 20,right:10),
+                      bottom: deviceHeight * 0.13,right:10
+                    ),
+                    Consumer<Auth>(builder: (context, auth, child) {
+                      return auth.authenticated ? Positioned(
+                        height: deviceHeight * 0.10,
+                        width: deviceWidth,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),
+                            color: Colors.white,
+                          ),
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Consumer<Status>(builder: (context, status, child) {
+                                  return Text(
+                                    '¥${status.status?.daysEarningsTotal}',
+                                    textAlign:TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.w500
+                                    ),
+                                  );
+                                }),
+                              ),
+                              Positioned(
+                                  child: IconButton(
+                                      onPressed: (){
+                                        showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            builder: (context) {
+                                              return FractionallySizedBox(
+                                                  heightFactor: 0.90,
+                                                  child: UserStatusScreen()
+                                              );
+                                            });
+                                      },
+                                      icon: Icon(Icons.list)
+                                  ),
+                                  height: deviceHeight * 0.10,
+                                  right:0
+                              ),
+                            ],
+                          ),
+                        ),
+                        bottom: 0,
+                      ) : SizedBox.shrink();
+                    }),
                   ],
                 ),
               ),
