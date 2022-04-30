@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:geolocator/geolocator.dart';
@@ -53,19 +55,34 @@ class _MapScreenState extends State<MapScreen> {
   late bool isAuthenticated;
   bool _isAdLoaded = true;
   Map<PolylineId, Polyline> polylines = {};
+  List<Marker> _markers = [];
+  PolylinePoints polylinePoints = PolylinePoints();
+  FlutterSecureStorage storage = FlutterSecureStorage();
+  TextEditingController destination = TextEditingController();
 
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
 
-    if (!hasPermission) {
-      return;
-    }
+    if (!hasPermission) return;
 
     LatLng locaiton = await _getCurrentLocation();
     setState(() {
       _initialPosition = LatLng(locaiton.latitude, locaiton.longitude);
       _loading = false;
     });
+  }
+
+  Future<void> _getUser() async {
+    String? token = await storage.read(key: 'token');
+    if (token != null) {
+      Provider.of<Auth>(context, listen: false).tryToken(token);
+    }
+  }
+
+  Future<LatLng> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return LatLng(position.latitude, position.longitude);
   }
 
   void _currentLocation() async {
@@ -76,20 +93,7 @@ class _MapScreenState extends State<MapScreen> {
         LatLng(locaiton.latitude, locaiton.longitude), 14.4746));
   }
 
-  Future<LatLng> _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    return LatLng(position.latitude, position.longitude);
-  }
-
-  void readToken() {
-    String token = Auth().getToken().toString();
-    if (token != null) {
-      Provider.of<Auth>(context, listen: false).tryToken(token);
-    }
-  }
-
-  _initBannerAd() {
+  void _initBannerAd() {
     AdmobLoad admobLoad = AdmobLoad();
     _bannerAd = admobLoad.createBarnnerAd();
   }
@@ -98,38 +102,55 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     _loading = true;
     _getUserLocation();
-    readToken();
+    _getUser();
     _initBannerAd();
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    final double deviceWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    final double deviceHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    TextEditingController destination = TextEditingController();
+    final double deviceWidth = MediaQuery.of(context).size.width;
+    final double deviceHeight = MediaQuery.of(context).size.height;
 
     _addPolyLine(List<LatLng> polylineCoordinates) {
       PolylineId id = PolylineId("poly");
-      Polyline polyline = Polyline(
-        polylineId: id,
-        color: Colors.blue,
-        points: polylineCoordinates,
-        width: 8,
-      );
-      polylines[id] = polyline;
-      setState(() {});
+      setState(() {
+        Polyline polyline = Polyline(
+          polylineId: id,
+          color: Colors.blue,
+          points: polylineCoordinates,
+          width: 8,
+        );
+        polylines[id] = polyline;
+      });
+    }
+
+    _addEndLocationPoint(LatLng point,String start_address){
+      _markers.add(
+           Marker(
+             markerId: MarkerId("marker1"),
+             position: point,
+             infoWindow: InfoWindow(title: start_address),
+           )
+       );
+    }
+
+    _destination(var destination){
+      LatLng end_location = LatLng(destination.data["routes"][0]["legs"][0]["end_location"]['lat'],destination.data["routes"][0]["legs"][0]["end_location"]['lng']);
+      String start_address = destination.data["routes"][0]["legs"][0]["start_address"];
+
+      List<PointLatLng> points= polylinePoints.decodePolyline(destination.data["routes"][0]["overview_polyline"]["points"]);
+      List<LatLng> polylineCoordinates = [];
+      points.forEach((point) {
+        polylineCoordinates.add(LatLng(point.latitude.toDouble(), point.longitude.toDouble()));
+      });
+
+      _addPolyLine(polylineCoordinates);
+      _addEndLocationPoint(end_location,start_address);
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset:false,
       drawerEnableOpenDragGesture: false,
       drawer: Drawer(
         child: Consumer<Auth>(builder: (context, auth, child) {
@@ -165,6 +186,7 @@ class _MapScreenState extends State<MapScreen> {
           child: Stack(
             children: <Widget>[
               GoogleMap(
+                markers: Set<Marker>.of(_markers),
                 polylines: Set<Polyline>.of(polylines.values),
                 initialCameraPosition: CameraPosition(
                   target: _initialPosition,
@@ -177,6 +199,9 @@ class _MapScreenState extends State<MapScreen> {
                 myLocationButtonEnabled: false,
                 mapToolbarEnabled: false,
                 buildingsEnabled: true,
+                onTap: (LatLng latLng){
+                  FocusScope.of(context).unfocus();
+                },
               ),
               Positioned(
                 child: DestinationTextField(
@@ -188,9 +213,10 @@ class _MapScreenState extends State<MapScreen> {
                           desiredAccuracy: LocationAccuracy.high);
                       LatLng origin = LatLng(
                           position.latitude, position.longitude);
-                      List<LatLng> result = await Direction().getDirections(
+                      var result = await Direction().getDirections(
                           origin: origin, destination: destination.text);
-                      _addPolyLine(result);
+                      _destination(result);
+                      FocusScope.of(context).unfocus();
                     }
                 ),
                 top: deviceHeight * 0.07,
@@ -207,7 +233,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
               Consumer<Auth>(
                   builder: (context, auth, child) {
-                    auth.authenticated ? Provider.of<Status>(context,listen: false).getStatusToday(auth.user.id) :false;
+                    auth.authenticated ? Provider.of<Status>(context,listen: false).getStatusToday(auth.user.id) : false;
                     return auth.authenticated != false ? Positioned(
                       height: deviceHeight * 0.10,
                       width: deviceWidth,
@@ -270,13 +296,11 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: _isAdLoaded
-          ? Container(
+      bottomNavigationBar: _isAdLoaded ? Container(
         height: _bannerAd.size.height.toDouble(),
         width: _bannerAd.size.width.toDouble(),
         child: AdWidget(ad: _bannerAd),
-      )
-          : SizedBox(),
+      ) : SizedBox(),
     );
   }
 }
