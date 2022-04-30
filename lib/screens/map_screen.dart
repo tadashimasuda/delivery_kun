@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'package:delivery_kun/models/user_status.dart';
 import 'package:delivery_kun/screens/user_status_screen.dart';
-import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
