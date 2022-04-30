@@ -116,26 +116,25 @@ class _MapScreenState extends State<MapScreen> {
       ),
       backgroundColor: Colors.grey.shade200,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      floatingActionButton: Container(
-        width: deviceWidth * 0.2,
-        height: deviceWidth * 0.2,
-        child: Builder(
-          builder: (context) => FloatingActionButton(
-            elevation: 20,
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-            child: Container(
-                width: deviceWidth * 0.18,
-                height: deviceWidth * 0.18,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(70),
-                  image: DecorationImage(image: AssetImage("images/user.png")),
-                )),
-          ),
-        ),
+      floatingActionButton: Builder(
+        builder: (context) => FloatingActionButton(
+        elevation: 10,
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
+        child: Container(
+            height: deviceWidth * 0.18,
+            width: deviceWidth * 0.18,
+            child: Icon(
+              Icons.menu,
+              color: Colors.black,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(70),
+            )),
       ),
+    ),
       body: Center(
         child: _loading
             ? CircularProgressIndicator()
@@ -168,8 +167,8 @@ class _MapScreenState extends State<MapScreen> {
                             _addPolyLine(result);
                           }
                       ),
-                      top: deviceHeight * 0.08,
-                      left: 100,
+                      top: deviceHeight * 0.07,
+                      left: deviceWidth * 0.25,
                     ),
                     const Positioned(child: MapScreenBottomBtn(), bottom: 20),
                   ],
@@ -177,13 +176,13 @@ class _MapScreenState extends State<MapScreen> {
               ),
       ),
       bottomNavigationBar: _isAdLoaded
-          ? Container(
-              height: _bannerAd.size.height.toDouble(),
-              width: _bannerAd.size.width.toDouble(),
-              child: AdWidget(ad: _bannerAd),
-            )
-          : SizedBox(),
-    );
+            ? Container(
+                height: _bannerAd.size.height.toDouble(),
+                width: _bannerAd.size.width.toDouble(),
+                child: AdWidget(ad: _bannerAd),
+              )
+            : SizedBox(),
+      );
   }
 }
 
@@ -203,7 +202,6 @@ class DestinationTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: deviceHeight * 0.06,
       width: deviceWidth * 0.70,
