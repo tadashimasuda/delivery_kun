@@ -64,22 +64,24 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
-    LatLng locaiton= await _getCurrentLocation();
+    LatLng locaiton = await _getCurrentLocation();
     setState(() {
       _initialPosition = LatLng(locaiton.latitude, locaiton.longitude);
       _loading = false;
     });
   }
 
-  void _currentLocation() async{
-    LatLng locaiton= await _getCurrentLocation();
+  void _currentLocation() async {
+    LatLng locaiton = await _getCurrentLocation();
     final GoogleMapController controller = await _controller.future;
 
-    controller.animateCamera(CameraUpdate.newLatLngZoom(LatLng(locaiton.latitude, locaiton.longitude), 14.4746));
+    controller.animateCamera(CameraUpdate.newLatLngZoom(
+        LatLng(locaiton.latitude, locaiton.longitude), 14.4746));
   }
 
-  Future<LatLng> _getCurrentLocation() async{
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  Future<LatLng> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     return LatLng(position.latitude, position.longitude);
   }
 
@@ -108,15 +110,21 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double deviceWidth = MediaQuery.of(context).size.width;
-    final double deviceHeight = MediaQuery.of(context).size.height;
+    final double deviceWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final double deviceHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     TextEditingController destination = TextEditingController();
 
     _addPolyLine(List<LatLng> polylineCoordinates) {
       PolylineId id = PolylineId("poly");
       Polyline polyline = Polyline(
         polylineId: id,
-        color:Colors.blue,
+        color: Colors.blue,
         points: polylineCoordinates,
         width: 8,
       );
@@ -134,124 +142,145 @@ class _MapScreenState extends State<MapScreen> {
       backgroundColor: Colors.grey.shade200,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Builder(
-        builder: (context) => FloatingActionButton(
-        elevation: 10,
-        onPressed: () {
-          Scaffold.of(context).openDrawer();
-        },
-        child: Container(
-            height: deviceWidth * 0.18,
-            width: deviceWidth * 0.18,
-            child: Icon(
-              Icons.menu,
-              color: Colors.black,
+        builder: (context) =>
+            FloatingActionButton(
+              elevation: 10,
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              child: Container(
+                  height: deviceWidth * 0.18,
+                  width: deviceWidth * 0.18,
+                  child: Icon(
+                    Icons.menu,
+                    color: Colors.black,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(70),
+                  )),
             ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(70),
-            )),
       ),
-    ),
       body: Center(
         child: _loading
             ? CircularProgressIndicator()
             : Container(
-                child: Stack(
-                  children: <Widget>[
-                    GoogleMap(
-                      polylines: Set<Polyline>.of(polylines.values),
-                      initialCameraPosition: CameraPosition(
-                        target: _initialPosition,
-                        zoom: 14.4746,
-                      ),
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                      },
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      mapToolbarEnabled: false,
-                      buildingsEnabled: true,
-                    ),
-                    Positioned(
-                      child: DestinationTextField(
-                          deviceHeight: deviceHeight,
-                          deviceWidth: deviceWidth,
-                          controller:destination,
-                          onPressed:() async{
-                            Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-                            LatLng origin = LatLng(position.latitude, position.longitude);
-                            List<LatLng> result = await Direction().getDirections(origin: origin,destination: destination.text);
-                            _addPolyLine(result);
-                          }
-                      ),
-                      top: deviceHeight * 0.07,
-                      left: deviceWidth * 0.25,
-                    ),
-                    Positioned(child: MapScreenBottomBtn(), bottom: deviceHeight * 0.12),
-                    Positioned(
-                        child:currentLocationBtn(
-                          deviceHeight: deviceHeight,
-                          onPressed: _currentLocation,
-                        ),
-                      bottom: deviceHeight * 0.13,right:10
-                    ),
-                    Provider.of<Auth>(context).authenticated ? Positioned(
-                        height: deviceHeight * 0.10,
-                        width: deviceWidth,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),
-                            color: Colors.white,
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Consumer<Status>(
-                                    builder: (context, status, child) =>Text(
-                                        '¥${status.status!.daysEarningsTotal}',
-                                        textAlign:TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.w500
-                                        ),
-                                      )
-                                ),
-                              ),
-                              Positioned(
-                                  child: IconButton(
-                                      onPressed: (){
-                                        showModalBottomSheet(
-                                            context: context,
-                                            isScrollControlled: true,
-                                            builder: (context) {
-                                              return FractionallySizedBox(
-                                                  heightFactor: 0.90,
-                                                  child: UserStatusScreen()
-                                              );
-                                            });
-                                      },
-                                      icon: Icon(Icons.list)
-                                  ),
-                                  height: deviceHeight * 0.10,
-                                  right:0
-                              ),
-                            ],
-                          ),
-                        ),
-                        bottom: 0,
-                      ) : SizedBox.shrink()
-                  ],
+          child: Stack(
+            children: <Widget>[
+              GoogleMap(
+                polylines: Set<Polyline>.of(polylines.values),
+                initialCameraPosition: CameraPosition(
+                  target: _initialPosition,
+                  zoom: 14.4746,
                 ),
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                mapToolbarEnabled: false,
+                buildingsEnabled: true,
               ),
+              Positioned(
+                child: DestinationTextField(
+                    deviceHeight: deviceHeight,
+                    deviceWidth: deviceWidth,
+                    controller: destination,
+                    onPressed: () async {
+                      Position position = await Geolocator.getCurrentPosition(
+                          desiredAccuracy: LocationAccuracy.high);
+                      LatLng origin = LatLng(
+                          position.latitude, position.longitude);
+                      List<LatLng> result = await Direction().getDirections(
+                          origin: origin, destination: destination.text);
+                      _addPolyLine(result);
+                    }
+                ),
+                top: deviceHeight * 0.07,
+                left: deviceWidth * 0.25,
+              ),
+              Positioned(
+                  child: MapScreenBottomBtn(), bottom: deviceHeight * 0.12),
+              Positioned(
+                  child: currentLocationBtn(
+                    deviceHeight: deviceHeight,
+                    onPressed: _currentLocation,
+                  ),
+                  bottom: deviceHeight * 0.13, right: 10
+              ),
+              Consumer<Auth>(
+                  builder: (context, auth, child) {
+                    auth.authenticated ? Provider.of<Status>(context,listen: false).getStatusToday(auth.user.id) :false;
+                    return auth.authenticated != false ? Positioned(
+                      height: deviceHeight * 0.10,
+                      width: deviceWidth,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)),
+                          color: Colors.white,
+                        ),
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: Consumer<Status>(
+                                  builder: (context, status, child) {
+                                    return status.status?.daysEarningsTotal != null ?
+                                    Text(
+                                      '¥${status.status?.daysEarningsTotal}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w500
+                                      ),
+                                    ) : Text(
+                                      'データが取得できませんでした',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w500
+                                      ),
+                                    );
+                                  }),
+                            ),
+                            Positioned(
+                                child: IconButton(
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          builder: (context) {
+                                            return FractionallySizedBox(
+                                                heightFactor: 0.90,
+                                                child: UserStatusScreen()
+                                            );
+                                          });
+                                    },
+                                    icon: Icon(Icons.list)
+                                ),
+                                height: deviceHeight * 0.10,
+                                right: 0
+                            ),
+                          ],
+                        ),
+                      ),
+                      bottom: 0,
+                    ) : SizedBox.shrink();
+                  }
+              )
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: _isAdLoaded
-            ? Container(
-                height: _bannerAd.size.height.toDouble(),
-                width: _bannerAd.size.width.toDouble(),
-                child: AdWidget(ad: _bannerAd),
-              )
-            : SizedBox(),
-      );
+          ? Container(
+        height: _bannerAd.size.height.toDouble(),
+        width: _bannerAd.size.width.toDouble(),
+        child: AdWidget(ad: _bannerAd),
+      )
+          : SizedBox(),
+    );
   }
 }
 
@@ -270,13 +299,13 @@ class currentLocationBtn extends StatelessWidget {
     return Container(
       height: deviceHeight * 0.07,
       width: deviceHeight * 0.07,
-      decoration:BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: Colors.white,
       ),
       child: IconButton(
           icon: Icon(Icons.my_location_outlined),
-          onPressed:onPressed
+          onPressed: onPressed
       ),
     );
   }
