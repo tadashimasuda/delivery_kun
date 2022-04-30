@@ -156,7 +156,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
               child: Text(
                 '受注',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 28,
                 ),
               ),
               style: ElevatedButton.styleFrom(
