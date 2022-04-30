@@ -186,17 +186,9 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     Positioned(child: MapScreenBottomBtn(), bottom: deviceHeight * 0.12),
                     Positioned(
-                        child:Container(
-                          height: deviceHeight * 0.07,
-                          width: deviceHeight * 0.07,
-                          decoration:BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.white,
-                          ),
-                          child: IconButton(
-                              icon: Icon(Icons.my_location_outlined),
-                              onPressed:_currentLocation
-                          ),
+                        child:currentLocationBtn(
+                          deviceHeight: deviceHeight,
+                          onPressed: _currentLocation,
                         ),
                       bottom: deviceHeight * 0.13,right:10
                     ),
@@ -259,6 +251,33 @@ class _MapScreenState extends State<MapScreen> {
               )
             : SizedBox(),
       );
+  }
+}
+
+class currentLocationBtn extends StatelessWidget {
+  const currentLocationBtn({
+    Key? key,
+    required this.deviceHeight,
+    required this.onPressed
+  }) : super(key: key);
+
+  final double deviceHeight;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: deviceHeight * 0.07,
+      width: deviceHeight * 0.07,
+      decoration:BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: Colors.white,
+      ),
+      child: IconButton(
+          icon: Icon(Icons.my_location_outlined),
+          onPressed:onPressed
+      ),
+    );
   }
 }
 
