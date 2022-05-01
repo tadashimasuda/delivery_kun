@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:delivery_kun/screens/user_status_screen.dart';
-import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,6 +10,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
+import 'package:delivery_kun/services/user_status.dart';
+import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:delivery_kun/components/notLogin_drawer.dart';
 import 'package:delivery_kun/components/login_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
@@ -379,6 +379,13 @@ class currentLocationBtn extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10.0,
+              spreadRadius: 1.0,
+              offset: Offset(10, 10))
+        ],
       ),
       child: IconButton(
           icon: Icon(Icons.my_location_outlined),
