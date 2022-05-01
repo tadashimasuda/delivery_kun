@@ -1,8 +1,8 @@
-import 'package:delivery_kun/models/order.dart';
-import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart' as Dio;
 import 'dio.dart';
+import 'package:delivery_kun/models/order.dart';
+import 'package:delivery_kun/services/auth.dart';
 
 class OrderList extends ChangeNotifier {
   List<dynamic>? _orders;
@@ -10,9 +10,9 @@ class OrderList extends ChangeNotifier {
 
   List<dynamic>? get orders => _orders;
   Order? get order => _order;
+  Auth auth = Auth();
 
   void getOrders(String date) async {
-    Auth auth = Auth();
     String? token = await auth.getToken();
 
     try {
@@ -32,7 +32,6 @@ class OrderList extends ChangeNotifier {
   }
 
   void getOrder(int id) async {
-    Auth auth = Auth();
     String? token = await auth.getToken();
     try {
       Dio.Response response = await dio().get('/order/$id',
@@ -48,7 +47,6 @@ class OrderList extends ChangeNotifier {
   }
 
   void postOrder() async {
-    Auth auth = Auth();
     String? token = await auth.getToken();
 
     try {
@@ -63,7 +61,6 @@ class OrderList extends ChangeNotifier {
   }
 
   Future<bool> updateOrder({required Map requestData,required int id}) async {
-    Auth auth = Auth();
     String? token = await auth.getToken();
 
     try {
@@ -80,7 +77,6 @@ class OrderList extends ChangeNotifier {
   }
 
   Future<bool> deleteOrder({required int id}) async {
-    Auth auth = Auth();
     String? token = await auth.getToken();
 
     try {
