@@ -54,11 +54,11 @@ class _MapScreenState extends State<MapScreen> {
   late BannerAd _bannerAd;
   late bool isAuthenticated;
   bool _isAdLoaded = true;
-  Map<PolylineId, Polyline> polylines = {};
+  Map<PolylineId, Polyline> _polylines = {};
   List<Marker> _markers = [];
   PolylinePoints polylinePoints = PolylinePoints();
   FlutterSecureStorage storage = FlutterSecureStorage();
-  TextEditingController destination = TextEditingController();
+  TextEditingController destinationController = TextEditingController();
 
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
@@ -112,7 +112,7 @@ class _MapScreenState extends State<MapScreen> {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double deviceHeight = MediaQuery.of(context).size.height;
 
-    _addPolyLine(List<LatLng> polylineCoordinates) {
+    void _addPolyLine(List<LatLng> polylineCoordinates) {
       PolylineId id = PolylineId("poly");
       setState(() {
         Polyline polyline = Polyline(
@@ -121,11 +121,11 @@ class _MapScreenState extends State<MapScreen> {
           points: polylineCoordinates,
           width: 8,
         );
-        polylines[id] = polyline;
+        _polylines[id] = polyline;
       });
     }
 
-    _addEndLocationPoint(LatLng point,String start_address){
+    void _addEndLocationPoint(LatLng point,String start_address){
       _markers.add(
            Marker(
              markerId: MarkerId("marker1"),
@@ -135,11 +135,13 @@ class _MapScreenState extends State<MapScreen> {
        );
     }
 
-    _destination(var destination){
-      LatLng end_location = LatLng(destination.data["routes"][0]["legs"][0]["end_location"]['lat'],destination.data["routes"][0]["legs"][0]["end_location"]['lng']);
-      String start_address = destination.data["routes"][0]["legs"][0]["start_address"];
+    void _requestDestination(LatLng origin,String destinationText) async{
+      var result = await Direction().getDirections(origin: origin, destination: destinationText);
 
-      List<PointLatLng> points= polylinePoints.decodePolyline(destination.data["routes"][0]["overview_polyline"]["points"]);
+      LatLng end_location = LatLng(result.data["routes"][0]["legs"][0]["end_location"]['lat'],result.data["routes"][0]["legs"][0]["end_location"]['lng']);
+      String start_address = result.data["routes"][0]["legs"][0]["start_address"];
+
+      List<PointLatLng> points= polylinePoints.decodePolyline(result.data["routes"][0]["overview_polyline"]["points"]);
       List<LatLng> polylineCoordinates = [];
       points.forEach((point) {
         polylineCoordinates.add(LatLng(point.latitude.toDouble(), point.longitude.toDouble()));
@@ -149,6 +151,10 @@ class _MapScreenState extends State<MapScreen> {
       _addEndLocationPoint(end_location,start_address);
     }
 
+    void _clearPolylineMaker(){
+      _polylines.clear();
+      _markers.clear();
+    }
     return Scaffold(
       resizeToAvoidBottomInset:false,
       drawerEnableOpenDragGesture: false,
@@ -187,7 +193,7 @@ class _MapScreenState extends State<MapScreen> {
             children: <Widget>[
               GoogleMap(
                 markers: Set<Marker>.of(_markers),
-                polylines: Set<Polyline>.of(polylines.values),
+                polylines: Set<Polyline>.of(_polylines.values),
                 initialCameraPosition: CameraPosition(
                   target: _initialPosition,
                   zoom: 14.4746,
@@ -204,20 +210,36 @@ class _MapScreenState extends State<MapScreen> {
                 },
               ),
               Positioned(
-                child: DestinationTextField(
+                child: destinationTextField(
                     deviceHeight: deviceHeight,
                     deviceWidth: deviceWidth,
-                    controller: destination,
-                    onPressed: () async {
-                      Position position = await Geolocator.getCurrentPosition(
-                          desiredAccuracy: LocationAccuracy.high);
-                      LatLng origin = LatLng(
-                          position.latitude, position.longitude);
-                      var result = await Direction().getDirections(
-                          origin: origin, destination: destination.text);
-                      _destination(result);
+                    TextFormField: TextFormField(
+                    textInputAction: TextInputAction.search,
+                    onFieldSubmitted: (value) async{
+                      LatLng origin = await _getCurrentLocation();
+                      if(value != null){
+                        value.isNotEmpty ? _requestDestination(origin,value) : _clearPolylineMaker();
+                      }
                       FocusScope.of(context).unfocus();
-                    }
+                    },
+                    controller: destinationController,
+                    decoration: InputDecoration(
+                      hintText: "配達先を検索",
+                      border: InputBorder.none,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () async {
+                          LatLng origin = await _getCurrentLocation();
+                          destinationController.text.isNotEmpty ? _requestDestination(origin,destinationController.text) : _clearPolylineMaker();
+                          FocusScope.of(context).unfocus();
+                        },
+                      ),
+                    ),
+                  ),
+
                 ),
                 top: deviceHeight * 0.07,
                 left: deviceWidth * 0.25,
@@ -305,6 +327,40 @@ class _MapScreenState extends State<MapScreen> {
   }
 }
 
+class destinationTextField extends StatelessWidget {
+  const destinationTextField({
+    Key? key,
+    required this.deviceHeight,
+    required this.deviceWidth,
+    required this.TextFormField
+  }) : super(key: key);
+
+  final double deviceHeight;
+  final double deviceWidth;
+  final Widget TextFormField;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: deviceHeight * 0.06,
+      width: deviceWidth * 0.70,
+      padding: const EdgeInsets.only(left: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10.0,
+              spreadRadius: 1.0,
+              offset: Offset(10, 10))
+        ],
+      ),
+      child: TextFormField,
+    );
+  }
+}
+
 class currentLocationBtn extends StatelessWidget {
   const currentLocationBtn({
     Key? key,
@@ -327,55 +383,6 @@ class currentLocationBtn extends StatelessWidget {
       child: IconButton(
           icon: Icon(Icons.my_location_outlined),
           onPressed: onPressed
-      ),
-    );
-  }
-}
-
-class DestinationTextField extends StatelessWidget {
-  const DestinationTextField({
-    Key? key,
-    required this.deviceHeight,
-    required this.deviceWidth,
-    required this.controller,
-    required this.onPressed,
-  }) : super(key: key);
-
-  final double deviceHeight;
-  final double deviceWidth;
-  final TextEditingController controller;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: deviceHeight * 0.06,
-      width: deviceWidth * 0.70,
-      padding: const EdgeInsets.only(left: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10.0,
-              spreadRadius: 1.0,
-              offset: Offset(10, 10))
-        ],
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: "配達先を検索",
-          border: InputBorder.none,
-          suffixIcon: IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Colors.grey,
-            ),
-            onPressed: onPressed,
-          ),
-        ),
       ),
     );
   }

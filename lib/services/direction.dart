@@ -3,7 +3,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'dio.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:dio/dio.dart' as Dio;
 
 class Direction extends ChangeNotifier {
   PolylinePoints polylinePoints = PolylinePoints();
@@ -14,7 +13,7 @@ class Direction extends ChangeNotifier {
 
     var response = await dio().get(url);
 
-    notifyListeners();
+    // notifyListeners();
 
     return response;
   }
