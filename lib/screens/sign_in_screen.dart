@@ -326,7 +326,7 @@ class SocialSignInButton extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
