@@ -1,20 +1,21 @@
-import 'package:delivery_kun/screens/user_status_screen.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:delivery_kun/screens/setting_screen.dart';
-import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class LoginDrawer extends StatefulWidget {
-  const LoginDrawer({Key? key}) : super(key: key);
+import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/screens/user_status_screen.dart';
+import 'package:delivery_kun/screens/setting_screen.dart';
+import 'package:delivery_kun/components/drawer_list_text.dart';
+
+class LoggedInDrawer extends StatefulWidget {
+  const LoggedInDrawer({Key? key}) : super(key: key);
 
   @override
-  _LoginDrawerState createState() => _LoginDrawerState();
+  _LoggedInDrawerState createState() => _LoggedInDrawerState();
 }
 
-class _LoginDrawerState extends State<LoginDrawer> {
-  String _url =
-      'https://docs.google.com/forms/d/1-EyD9wgMg3dsEL1B26RwCGv5NmYUZnDCsUTv4n-TvZs/edit?usp=sharing';
+class _LoggedInDrawerState extends State<LoggedInDrawer> {
+  String _url = 'https://docs.google.com/forms/d/1-EyD9wgMg3dsEL1B26RwCGv5NmYUZnDCsUTv4n-TvZs/edit?usp=sharing';
 
   void _launchURL() async {
     if (!await launch(_url)) throw 'Could not launch $_url';
@@ -40,7 +41,7 @@ class _LoginDrawerState extends State<LoginDrawer> {
             ),
           ]),
           ListTile(
-            title: const Text('配達ステータス'),
+            title: drawerListText(title: '配達ステータス'),
             onTap: () {
               Navigator.push(
                   context,
@@ -49,20 +50,26 @@ class _LoginDrawerState extends State<LoginDrawer> {
                   ));
             },
           ),
+          SizedBox(height: 8,),
           ListTile(
-            title: const Text('設定'),
+            title: drawerListText(title: 'ユーザー設定'),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SettingScreen()));
             },
           ),
+          SizedBox(height: 8,),
           ListTile(
-            title: const Text('ログアウト'),
+            title: drawerListText(title: 'ログアウト'),
             onTap: () {
               Provider.of<Auth>(context, listen: false).logout();
             },
           ),
-          ListTile(title: const Text('お問い合わせ'), onTap: _launchURL),
+          SizedBox(height: 8,),
+          ListTile(
+              title: drawerListText(title: 'お問い合わせ'),
+              onTap: _launchURL
+          ),
         ],
       );
     });

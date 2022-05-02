@@ -1,4 +1,4 @@
-import 'package:delivery_kun/components/account_form_btn.dart';
+import 'package:delivery_kun/components/account_submit_btn.dart';
 import 'package:delivery_kun/components/account_text_field.dart';
 import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/services/admob.dart';

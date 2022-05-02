@@ -1,3 +1,5 @@
+import 'package:flutter/rendering.dart';
+
 import 'dio.dart';
 import 'package:dio/dio.dart' as Dio;
 import 'package:flutter/material.dart';
@@ -29,11 +31,13 @@ class Auth extends ChangeNotifier {
       try {
         Dio.Response response = await dio().get('/user',
             options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
-        _isLoggedIn = true;
         _user = User.fromJson(response.data);
+        _isLoggedIn = true;
         _validate_message = null;
-        _token = token;
-        storeToken(token);
+        _token = response.data['data']['accessToken'].toString();
+
+        storeToken(response.data['data']['accessToken'].toString());
+
         notifyListeners();
       } catch (e) {
         print(e);

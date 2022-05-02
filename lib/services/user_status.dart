@@ -7,45 +7,45 @@ import 'dio.dart';
 
 class Status extends ChangeNotifier {
   UserStatus? _userStatus;
+  int _userTodayStatus = 0;
   DateTime _date = DateTime.now();
 
   UserStatus? get status => _userStatus;
-
+  int get userTodayStatus => _userTodayStatus;
   DateTime get date => _date;
 
-  void getStatusDate(int user_id) {
+  void getStatusDate(int user_id) async {
     String date = DateFormat('yyyyMMdd').format(_date).toString();
 
-    return getStatus(user_id, date);
+    return await getStatus(user_id, date);
   }
 
-  void getStatusBeforeDate(int user_id) {
+  void getStatusBeforeDate(int user_id) async {
     _date = _date.add(Duration(days: -1));
     String date = DateFormat('yyyyMMdd').format(_date).toString();
 
-    return getStatus(user_id, date);
+    return await getStatus(user_id, date);
   }
 
-  void getStatusNextDate(int user_id) {
+  void getStatusNextDate(int user_id) async {
     if (DateFormat('yyyy年M月d日').format(DateTime.now()).toString() !=
         DateFormat('yyyy年M月d日').format(date)) {
       _date = _date.add(Duration(days: 1));
       String date = DateFormat('yyyyMMdd').format(_date).toString();
 
-      return getStatus(user_id, date);
+      return await getStatus(user_id, date);
     }
   }
 
-  void getStatusToday(int user_id) {
+  void getStatusToday(int user_id) async{
     String date = DateFormat('yyyyMMdd').format(DateTime.now()).toString();
 
-    return getStatus(user_id, date);
+    return await getStatus(user_id, date);
   }
 
-  void getStatus(int user_id, String date) async {
+  Future<void> getStatus(int user_id, String date) async {
     try {
-      Dio.Response response = await dio()
-          .get('/status', queryParameters: {'date': date, 'user_id': user_id});
+      Dio.Response response = await dio().get('/status', queryParameters: {'date': date, 'user_id': user_id});
 
       if (response.statusCode == 204) {
         _userStatus = UserStatus(
@@ -54,11 +54,16 @@ class Status extends ChangeNotifier {
             daysEarningsQty: 0,
             daysEarningsTotal: 0,
             vehicleModel: '不明',
-            hourQty: []);
+            hourQty: []
+        );
 
         notifyListeners();
 
         return;
+      }
+
+      if(date == DateFormat('yyyyMMdd').format(DateTime.now()).toString()){
+        _userTodayStatus = response.data['data']['summary']['daysEarningsTotal'];
       }
 
       _userStatus = UserStatus.fromJson(response.data);
@@ -84,7 +89,7 @@ class Status extends ChangeNotifier {
     String? token = await auth.getToken();
 
     try {
-      Dio.Response response = await dio().patch(
+      await dio().patch(
           '/actual_cost',
           data:{
             'actual_cost':actualCost,
