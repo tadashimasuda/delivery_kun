@@ -4,11 +4,11 @@ import 'dart:io' show Platform;
 import 'dart:async';
 import 'package:provider/provider.dart';
 
-import 'package:delivery_kun/components/account_form_btn.dart';
-import 'package:delivery_kun/screens/sign_up_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/services/user_status.dart';
+import 'package:delivery_kun/screens/sign_up_screen.dart';
+import 'package:delivery_kun/components/account_submit_btn.dart';
 
 class MapScreenBottomBtn extends StatefulWidget {
   const MapScreenBottomBtn({Key? key}) : super(key: key);

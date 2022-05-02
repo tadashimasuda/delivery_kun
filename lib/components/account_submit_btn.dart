@@ -13,8 +13,8 @@ class SubmitBtn extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(100),
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black12,
