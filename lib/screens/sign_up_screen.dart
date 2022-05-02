@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:delivery_kun/screens/map_screen.dart';
-import 'package:delivery_kun/screens/sign_in_screen.dart';
-import 'package:delivery_kun/components/account_text_field.dart';
-import 'package:delivery_kun/components/account_submit_btn.dart';
-import 'package:delivery_kun/services/auth.dart';
-import 'package:delivery_kun/mixins/validate_text.dart';
-
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
+import 'package:delivery_kun/screens/sign_in_screen.dart';
+import 'package:delivery_kun/components/account_text_field.dart';
+import 'package:delivery_kun/components/account_submit_btn.dart';
+import 'package:delivery_kun/mixins/validate_text.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({Key? key}) : super(key: key);
@@ -108,22 +108,14 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
           ? SingleChildScrollView(
         child: SafeArea(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(35, 20, 35, 0),
+                  padding: EdgeInsets.fromLTRB(35, 40, 35, 0),
                   child: Column(children: [
                     Text(
                       'ようこそ！',
                       style: TextStyle(
-                          color: Colors.lightBlue,
+                          color: Colors.redAccent,
                           fontWeight: FontWeight.bold,
                           fontSize: 30),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'デリバリーくんをはじめよう',
-                      style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,
-                      ),
                     ),
                     SizedBox(
                       height: 20,

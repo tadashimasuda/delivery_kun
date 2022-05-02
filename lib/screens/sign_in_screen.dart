@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:delivery_kun/screens/map_screen.dart';
-import 'package:delivery_kun/screens/sign_up_screen.dart';
-import 'package:delivery_kun/components/account_text_field.dart';
-import 'package:delivery_kun/components/account_submit_btn.dart';
-import 'package:delivery_kun/services/auth.dart';
-import 'package:delivery_kun/mixins/validate_text.dart';
-
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
+import 'package:delivery_kun/screens/sign_up_screen.dart';
+import 'package:delivery_kun/components/account_text_field.dart';
+import 'package:delivery_kun/components/account_submit_btn.dart';
+import 'package:delivery_kun/mixins/validate_text.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({Key? key}) : super(key: key);
@@ -112,21 +112,14 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                 height: 50,
               ),
               Text(
-                'おかえりなさい！',
+                'ログイン',
                 style: TextStyle(
-                    color: Colors.lightBlue,
+                    color: Colors.redAccent,
                     fontWeight: FontWeight.bold,
                     fontSize: 30),
               ),
               SizedBox(
                 height: 30,
-              ),
-              Text(
-                'デリバリーくんにログイン',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 20,
               ),
               Consumer<Auth>(
                   builder: (context, auth, child) => Form(
