@@ -346,7 +346,7 @@ class DayStatusBarChart extends StatelessWidget {
     List<hourQty> desktopDalsesData = [];
 
     data.forEach((val) {
-      desktopDalsesData.add(hourQty(hour: val['hour'].toString(), qty: val['count']));
+      desktopDalsesData.add(hourQty(hour: val['hour'].toString()+'時', qty: val['count']));
     });
 
     List<charts.Series<dynamic, String>> seriesList = [
