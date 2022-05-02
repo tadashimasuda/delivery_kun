@@ -44,7 +44,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                   Auth auth = context.read<Auth>();
 
                   OrderList().postOrder();
-                  Provider.of<Status>(context,listen: false).getStatusToday(auth.user.id);
+                  Status().getStatusToday(auth.user.id);
                   Navigator.pop(context);
                 },
               ),
