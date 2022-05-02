@@ -281,9 +281,9 @@ class _MapScreenState extends State<MapScreen> {
                             Center(
                               child: Consumer<Status>(
                                   builder: (context, status, child) {
-                                    return status.status?.daysEarningsTotal != null ?
+                                    return status.userTodayStatus != null ?
                                     Text(
-                                      '¥${status.status?.daysEarningsTotal}',
+                                      '¥${status.userTodayStatus}',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontSize: 25,

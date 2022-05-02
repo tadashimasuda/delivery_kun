@@ -7,10 +7,11 @@ import 'dio.dart';
 
 class Status extends ChangeNotifier {
   UserStatus? _userStatus;
+  int _userTodayStatus = 0;
   DateTime _date = DateTime.now();
 
   UserStatus? get status => _userStatus;
-
+  int get userTodayStatus => _userTodayStatus;
   DateTime get date => _date;
 
   void getStatusDate(int user_id) {
@@ -44,8 +45,7 @@ class Status extends ChangeNotifier {
 
   void getStatus(int user_id, String date) async {
     try {
-      Dio.Response response = await dio()
-          .get('/status', queryParameters: {'date': date, 'user_id': user_id});
+      Dio.Response response = await dio().get('/status', queryParameters: {'date': date, 'user_id': user_id});
 
       if (response.statusCode == 204) {
         _userStatus = UserStatus(
@@ -59,6 +59,10 @@ class Status extends ChangeNotifier {
         notifyListeners();
 
         return;
+      }
+
+      if(date == DateFormat('yyyyMMdd').format(DateTime.now()).toString()){
+        _userTodayStatus = response.data['data']['summary']['daysEarningsTotal'];
       }
 
       _userStatus = UserStatus.fromJson(response.data);
