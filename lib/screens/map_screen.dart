@@ -244,14 +244,24 @@ class _MapScreenState extends State<MapScreen> {
                 top: deviceHeight * 0.07,
                 left: deviceWidth * 0.25,
               ),
-              Positioned(
-                  child: MapScreenBottomBtn(), bottom: deviceHeight * 0.12),
-              Positioned(
-                  child: currentLocationBtn(
-                    deviceHeight: deviceHeight,
-                    onPressed: _currentLocation,
-                  ),
-                  bottom: deviceHeight * 0.13, right: 10
+              Consumer<Auth>(
+                  builder: (context, auth, child) {
+                    return Positioned(
+                        child: MapScreenBottomBtn(),
+                        bottom: auth.authenticated != false ? deviceHeight * 0.12 :  deviceHeight * 0.02
+                    );
+                  }
+              ),
+              Consumer<Auth>(
+                  builder: (context, auth, child) {
+                    return Positioned(
+                      child: currentLocationBtn(
+                        deviceHeight: deviceHeight,
+                        onPressed: _currentLocation,
+                      ),
+                      bottom: auth.authenticated != false ? deviceHeight * 0.12 :  deviceHeight * 0.02,right: 10,
+                    );
+                  }
               ),
               Consumer<Auth>(
                   builder: (context, auth, child) {
