@@ -12,8 +12,8 @@ import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:delivery_kun/screens/user_status_screen.dart';
-import 'package:delivery_kun/components/notLogin_drawer.dart';
-import 'package:delivery_kun/components/login_drawer.dart';
+import 'package:delivery_kun/components/notLoggedIn_drawer.dart';
+import 'package:delivery_kun/components/loggedIn_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
 
 Completer<GoogleMapController> _controller = Completer();
@@ -160,7 +160,7 @@ class _MapScreenState extends State<MapScreen> {
       drawerEnableOpenDragGesture: false,
       drawer: Drawer(
         child: Consumer<Auth>(builder: (context, auth, child) {
-          return auth.authenticated ? LoginDrawer() : NotLoginDrawer();
+          return auth.authenticated ? LoggedInDrawer() : NotLoggedInDrawer();
         }),
       ),
       backgroundColor: Colors.grey.shade200,
