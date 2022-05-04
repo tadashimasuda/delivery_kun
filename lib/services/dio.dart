@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 Dio dio(){
   var dio = new Dio();
+  dio.interceptors.add(LogInterceptor());
 
   // dio.options.baseUrl = "http://localhost:8000/api";
   // dio.options.baseUrl = "https://deliverykun-server.xyz/api";
