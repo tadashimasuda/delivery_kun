@@ -1,5 +1,3 @@
-import 'package:flutter/rendering.dart';
-
 import 'dio.dart';
 import 'package:dio/dio.dart' as Dio;
 import 'package:flutter/material.dart';
@@ -15,11 +13,8 @@ class Auth extends ChangeNotifier {
   Validate? _validate_message;
 
   bool get authenticated => _isLoggedIn;
-
   User get user => _user!;
-
   Validate? get validate_message => _validate_message;
-
   String? get token => _token;
 
   final storage = new FlutterSecureStorage();
@@ -29,8 +24,12 @@ class Auth extends ChangeNotifier {
       return;
     } else {
       try {
-        Dio.Response response = await dio().get('/user',
-            options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
+        Dio.Response response = await dio().get(
+          '/user',
+          options: Dio.Options(
+            headers: {'Authorization': 'Bearer $token'}
+          )
+        );
         _user = User.fromJson(response.data);
         _isLoggedIn = true;
         _validate_message = null;
@@ -47,7 +46,10 @@ class Auth extends ChangeNotifier {
 
   Future<bool> login({required Map creds}) async {
     try {
-      Dio.Response response = await dio().post('/login', data: creds);
+      Dio.Response response = await dio().post(
+        '/login',
+        data: creds
+      );
       String token = response.data['data']['accessToken'].toString();
       tryToken(token);
       notifyListeners();
@@ -72,7 +74,10 @@ class Auth extends ChangeNotifier {
 
   Future<bool> register({required Map creds}) async {
     try {
-      Dio.Response response = await dio().post('/register', data: creds);
+      Dio.Response response = await dio().post(
+        '/register',
+        data: creds
+      );
       String token = response.data['data']['accessToken'].toString();
       tryToken(token);
       notifyListeners();
@@ -97,9 +102,11 @@ class Auth extends ChangeNotifier {
 
   Future<bool> updateUser({required Map userData}) async {
     try {
-      Dio.Response response = await dio().patch('/user/update',
-          data: userData,
-          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
+      Dio.Response response = await dio().patch(
+        '/user/update',
+        data: userData,
+        options: Dio.Options(headers: {'Authorization': 'Bearer $token'})
+      );
 
       if (response.statusCode == 201) {
         tryToken(token);
@@ -153,12 +160,14 @@ class Auth extends ChangeNotifier {
       return true;
     } on Dio.DioError catch (e) {
       print(e);
+
       return true;
     }
   }
 
   Future<String?> getToken() async {
     String? _token = await storage.read(key: 'token');
+
     return _token;
   }
 
@@ -168,17 +177,18 @@ class Auth extends ChangeNotifier {
 
   void logout() async {
     try {
-      await dio().post('/logout',
-          options: Dio.Options(headers: {'Authorization': 'Bearer $_token'}));
-
-      _user = null;
-      _isLoggedIn = false;
-      _token = '';
-      await storage.delete(key: 'token');
+      await dio().post(
+        '/logout',
+        options: Dio.Options(headers: {'Authorization': 'Bearer $_token'})
+      );
 
       notifyListeners();
     } catch (e) {
       print(e);
     }
+    _user = null;
+    _isLoggedIn = false;
+    _token = '';
+    await storage.delete(key: 'token');
   }
 }
