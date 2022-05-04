@@ -126,38 +126,43 @@ class _MapScreenState extends State<MapScreen> {
       });
     }
 
-    void _addEndLocationPoint(LatLng point,String start_address){
-      _markers.add(
-         Marker(
-           markerId: MarkerId("marker1"),
-           position: point,
-           infoWindow: InfoWindow(title: start_address),
-         )
-       );
+    void _addEndLocationPoint(LatLng point, String start_address) {
+      _markers.add(Marker(
+        markerId: MarkerId("marker1"),
+        position: point,
+        infoWindow: InfoWindow(title: start_address),
+      ));
     }
 
-    void _requestDestination(LatLng origin,String destinationText) async{
-      var result = await Direction().getDirections(origin: origin, destination: destinationText);
+    void _requestDestination(LatLng origin, String destinationText) async {
+      var result = await Direction()
+          .getDirections(origin: origin, destination: destinationText);
 
-      LatLng end_location = LatLng(result.data["routes"][0]["legs"][0]["end_location"]['lat'],result.data["routes"][0]["legs"][0]["end_location"]['lng']);
-      String start_address = result.data["routes"][0]["legs"][0]["start_address"];
+      LatLng end_location = LatLng(
+          result.data["routes"][0]["legs"][0]["end_location"]['lat'],
+          result.data["routes"][0]["legs"][0]["end_location"]['lng']);
+      String start_address =
+          result.data["routes"][0]["legs"][0]["start_address"];
 
-      List<PointLatLng> points= polylinePoints.decodePolyline(result.data["routes"][0]["overview_polyline"]["points"]);
+      List<PointLatLng> points = polylinePoints.decodePolyline(
+          result.data["routes"][0]["overview_polyline"]["points"]);
       List<LatLng> polylineCoordinates = [];
       points.forEach((point) {
-        polylineCoordinates.add(LatLng(point.latitude.toDouble(), point.longitude.toDouble()));
+        polylineCoordinates
+            .add(LatLng(point.latitude.toDouble(), point.longitude.toDouble()));
       });
 
       _addPolyLine(polylineCoordinates);
-      _addEndLocationPoint(end_location,start_address);
+      _addEndLocationPoint(end_location, start_address);
     }
 
-    void _clearPolylineMaker(){
+    void _clearPolylineMaker() {
       _polylines.clear();
       _markers.clear();
     }
+
     return Scaffold(
-      resizeToAvoidBottomInset:false,
+      resizeToAvoidBottomInset: false,
       drawerEnableOpenDragGesture: false,
       drawer: Drawer(
         child: Consumer<Auth>(builder: (context, auth, child) {
@@ -167,137 +172,132 @@ class _MapScreenState extends State<MapScreen> {
       backgroundColor: Colors.grey.shade200,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Builder(
-        builder: (context) =>
-            FloatingActionButton(
-              elevation: 10,
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              child: Container(
-                  height: deviceWidth * 0.18,
-                  width: deviceWidth * 0.18,
-                  child: Icon(
-                    Icons.menu,
-                    color: Colors.black,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(70),
-                  )),
-            ),
+        builder: (context) => FloatingActionButton(
+          elevation: 10,
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          child: Container(
+              height: deviceWidth * 0.18,
+              width: deviceWidth * 0.18,
+              child: Icon(
+                Icons.menu,
+                color: Colors.black,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(70),
+              )),
+        ),
       ),
-      body: Center(
-        child: _loading
-            ? CircularProgressIndicator()
-            : Container(
-          child: Stack(
-            children: <Widget>[
-              GoogleMap(
-                markers: Set<Marker>.of(_markers),
-                polylines: Set<Polyline>.of(_polylines.values),
-                initialCameraPosition: CameraPosition(
-                  target: _initialPosition,
-                  zoom: 14.4746,
-                ),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                mapToolbarEnabled: false,
-                buildingsEnabled: true,
-                onTap: (LatLng latLng){
-                  FocusScope.of(context).unfocus();
-                },
-              ),
-              Positioned(
-                child: destinationTextField(
-                    deviceHeight: deviceHeight,
-                    deviceWidth: deviceWidth,
-                    TextFormField: TextFormField(
-                    textInputAction: TextInputAction.search,
-                    onFieldSubmitted: (value) async{
-                      LatLng origin = await _getCurrentLocation();
-                      if(value != null){
-                        value.isNotEmpty ? _requestDestination(origin,value) : _clearPolylineMaker();
-                      }
-                      FocusScope.of(context).unfocus();
-                    },
-                    controller: destinationController,
-                    decoration: InputDecoration(
-                      hintText: "配達先を検索",
-                      border: InputBorder.none,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                        ),
-                        onPressed: () async {
-                          LatLng origin = await _getCurrentLocation();
-                          destinationController.text.isNotEmpty ? _requestDestination(origin,destinationController.text) : _clearPolylineMaker();
-                          FocusScope.of(context).unfocus();
-                        },
+      body: Consumer<Auth>(builder: (context, auth, child) {
+        return Center(
+            child: _loading
+                ? CircularProgressIndicator()
+                : Container(
+                    child: Stack(children: <Widget>[
+                    GoogleMap(
+                      markers: Set<Marker>.of(_markers),
+                      polylines: Set<Polyline>.of(_polylines.values),
+                      initialCameraPosition: CameraPosition(
+                        target: _initialPosition,
+                        zoom: 14.4746,
                       ),
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller.complete(controller);
+                      },
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      mapToolbarEnabled: false,
+                      buildingsEnabled: true,
+                      onTap: (LatLng latLng) {
+                        FocusScope.of(context).unfocus();
+                      },
                     ),
-                  ),
-
-                ),
-                top: deviceHeight * 0.07,
-                left: deviceWidth * 0.25,
-              ),
-              Consumer<Auth>(
-                  builder: (context, auth, child) {
-                    return Positioned(
+                    Positioned(
+                      child: destinationTextField(
+                        deviceHeight: deviceHeight,
+                        deviceWidth: deviceWidth,
+                        TextFormField: TextFormField(
+                          textInputAction: TextInputAction.search,
+                          onFieldSubmitted: (value) async {
+                            LatLng origin = await _getCurrentLocation();
+                            if (value != null) {
+                              value.isNotEmpty
+                                  ? _requestDestination(origin, value)
+                                  : _clearPolylineMaker();
+                            }
+                            FocusScope.of(context).unfocus();
+                          },
+                          controller: destinationController,
+                          decoration: InputDecoration(
+                            hintText: "配達先を検索",
+                            border: InputBorder.none,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () async {
+                                LatLng origin = await _getCurrentLocation();
+                                destinationController.text.isNotEmpty
+                                    ? _requestDestination(
+                                        origin, destinationController.text)
+                                    : _clearPolylineMaker();
+                                FocusScope.of(context).unfocus();
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      top: deviceHeight * 0.07,
+                      left: deviceWidth * 0.25,
+                    ),
+                    Positioned(
                         child: MapScreenBottomBtn(),
-                        bottom: auth.authenticated != false ? deviceHeight * 0.12 :  deviceHeight * 0.02
-                    );
-                  }
-              ),
-              Consumer<Auth>(
-                  builder: (context, auth, child) {
-                    return Positioned(
+                        bottom: auth.authenticated != false
+                            ? deviceHeight * 0.12
+                            : deviceHeight * 0.02),
+                    Positioned(
                       child: currentLocationBtn(
                         deviceHeight: deviceHeight,
                         onPressed: _currentLocation,
                       ),
-                      bottom: auth.authenticated != false ? deviceHeight * 0.12 :  deviceHeight * 0.02,right: 10,
-                    );
-                  }
-              ),
-              Consumer<Auth>(
-                  builder: (context, auth, child) {
-                    auth.authenticated ? context.read<Status>().getStatusToday(auth.user.id) : false;
-                    return auth.authenticated != false ? Positioned(
-                      height: deviceHeight * 0.10,
-                      width: deviceWidth,
-                      child: DaysEarningsTotalBottomSheet(
-                        deviceHeight: deviceHeight,
-                        todayTotal: context.watch<Status>().userDaysEarningsTotal,
-                      ),
-                      bottom: 0,
-                    ) : SizedBox.shrink();
-                  }
-              )
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: _isAdLoaded ? Container(
-        height: _bannerAd.size.height.toDouble(),
-        width: _bannerAd.size.width.toDouble(),
-        child: AdWidget(ad: _bannerAd),
-      ) : SizedBox(),
+                      bottom: auth.authenticated != false
+                          ? deviceHeight * 0.12
+                          : deviceHeight * 0.02,
+                      right: 10,
+                    ),
+                    // auth.authenticated ? context.read<Status>().getStatusToday(auth.user.id) : false;
+                    auth.authenticated != false
+                        ? Positioned(
+                            height: deviceHeight * 0.10,
+                            width: deviceWidth,
+                            child: DaysEarningsTotalBottomSheet(
+                                deviceHeight: deviceHeight, todayTotal: 900),
+                            bottom: 0,
+                          )
+                        : SizedBox.shrink()
+                  ])));
+      }),
+      bottomNavigationBar: _isAdLoaded
+          ? Container(
+              height: _bannerAd.size.height.toDouble(),
+              width: _bannerAd.size.width.toDouble(),
+              child: AdWidget(ad: _bannerAd),
+            )
+          : SizedBox(),
     );
   }
 }
 
 class destinationTextField extends StatelessWidget {
-  const destinationTextField({
-    Key? key,
-    required this.deviceHeight,
-    required this.deviceWidth,
-    required this.TextFormField
-  }) : super(key: key);
+  const destinationTextField(
+      {Key? key,
+      required this.deviceHeight,
+      required this.deviceWidth,
+      required this.TextFormField})
+      : super(key: key);
 
   final double deviceHeight;
   final double deviceWidth;
@@ -326,11 +326,9 @@ class destinationTextField extends StatelessWidget {
 }
 
 class currentLocationBtn extends StatelessWidget {
-  const currentLocationBtn({
-    Key? key,
-    required this.deviceHeight,
-    required this.onPressed
-  }) : super(key: key);
+  const currentLocationBtn(
+      {Key? key, required this.deviceHeight, required this.onPressed})
+      : super(key: key);
 
   final double deviceHeight;
   final VoidCallback onPressed;
@@ -352,9 +350,7 @@ class currentLocationBtn extends StatelessWidget {
         ],
       ),
       child: IconButton(
-          icon: Icon(Icons.my_location_outlined),
-          onPressed: onPressed
-      ),
+          icon: Icon(Icons.my_location_outlined), onPressed: onPressed),
     );
   }
 }
