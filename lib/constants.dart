@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 const List<String> incentiveList = [
   '1.0',
   '1.1',
@@ -75,4 +73,25 @@ const List<String> prefectureList =[
 
 const List<String> VehicleModelList = [
   'バイク', '自転車', '車', '徒歩'
+];
+
+List<dynamic> incentiveDefault =[
+  {'incentive_hour': '07', 'earnings_incentive': 1.0},
+  {'incentive_hour': '08', 'earnings_incentive': 1.0},
+  {'incentive_hour': '09', 'earnings_incentive': 1.0},
+  {'incentive_hour': '10', 'earnings_incentive': 1.0},
+  {'incentive_hour': '11', 'earnings_incentive': 1.0},
+  {'incentive_hour': '12', 'earnings_incentive': 1.0},
+  {'incentive_hour': '13', 'earnings_incentive': 1.0},
+  {'incentive_hour': '14', 'earnings_incentive': 1.0},
+  {'incentive_hour': '15', 'earnings_incentive': 1.0},
+  {'incentive_hour': '16', 'earnings_incentive': 1.0},
+  {'incentive_hour': '17', 'earnings_incentive': 1.0},
+  {'incentive_hour': '18', 'earnings_incentive': 1.0},
+  {'incentive_hour': '19', 'earnings_incentive': 1.0},
+  {'incentive_hour': '20', 'earnings_incentive': 1.0},
+  {'incentive_hour': '21', 'earnings_incentive': 1.0},
+  {'incentive_hour': '22', 'earnings_incentive': 1.0},
+  {'incentive_hour': '23', 'earnings_incentive': 1.0},
+  {'incentive_hour': '00', 'earnings_incentive': 1.0}
 ];

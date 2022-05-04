@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:delivery_kun/screens/setting_screen.dart';
+import 'package:delivery_kun/screens/setting_incentive_screen.dart';
 import 'package:delivery_kun/components/drawer_list_text.dart';
 
 class LoggedInDrawer extends StatefulWidget {
@@ -36,18 +37,28 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
               ),
               accountEmail: Text(''),
               currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage("images/user.png")),
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage("images/user.png")
+              ),
             ),
           ]),
           ListTile(
             title: drawerListText(title: '配達ステータス'),
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UserStatusScreen(),
-                  ));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserStatusScreen(),
+                ));
+            },
+          ),
+          SizedBox(height: 8,),
+          ListTile(
+            title: drawerListText(title: 'インセンティブ設定'),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingIncentiveScreen())
+              );
             },
           ),
           SizedBox(height: 8,),
@@ -55,7 +66,8 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
             title: drawerListText(title: 'ユーザー設定'),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingScreen()));
+                  MaterialPageRoute(builder: (context) => SettingScreen())
+              );
             },
           ),
           SizedBox(height: 8,),
@@ -67,8 +79,8 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
           ),
           SizedBox(height: 8,),
           ListTile(
-              title: drawerListText(title: 'お問い合わせ'),
-              onTap: _launchURL
+            title: drawerListText(title: 'お問い合わせ'),
+            onTap: _launchURL
           ),
         ],
       );
