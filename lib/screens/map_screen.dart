@@ -11,10 +11,10 @@ import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
 import 'package:delivery_kun/services/user_status.dart';
-import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:delivery_kun/components/notLoggedIn_drawer.dart';
 import 'package:delivery_kun/components/loggedIn_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
+import 'package:delivery_kun/components/userDaysTotalBottomSheet.dart';
 
 Completer<GoogleMapController> _controller = Completer();
 
@@ -269,7 +269,7 @@ class _MapScreenState extends State<MapScreen> {
                     return auth.authenticated != false ? Positioned(
                       height: deviceHeight * 0.10,
                       width: deviceWidth,
-                      child: StatusBottomSheet(deviceHeight: deviceHeight),
+                      child: DaysEarningsTotalBottomSheet(deviceHeight: deviceHeight),
                       bottom: 0,
                     ) : SizedBox.shrink();
                   }
@@ -283,75 +283,6 @@ class _MapScreenState extends State<MapScreen> {
         width: _bannerAd.size.width.toDouble(),
         child: AdWidget(ad: _bannerAd),
       ) : SizedBox(),
-    );
-  }
-}
-
-class StatusBottomSheet extends StatelessWidget {
-  const StatusBottomSheet({
-    Key? key,
-    required this.deviceHeight,
-  }) : super(key: key);
-
-  final double deviceHeight;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20)),
-        color: Colors.white,
-      ),
-      child: Stack(
-        children: [
-          Center(
-            child: Consumer<Status>(
-                builder: (context, status, child) {
-                  return status.userTodayStatus != null ?
-                  BottomSheetText(title: '¥${status.userTodayStatus}') :
-                  BottomSheetText(title: 'データが取得できませんでした',);
-                }),
-          ),
-          Positioned(
-              child: IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return FractionallySizedBox(
-                              heightFactor: 0.90,
-                              child: UserStatusScreen()
-                          );
-                        });
-                  },
-                  icon: Icon(Icons.list)
-              ),
-              height: deviceHeight * 0.10,
-              right: 0
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BottomSheetText extends StatelessWidget {
-  BottomSheetText({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.w500
-      ),
     );
   }
 }
