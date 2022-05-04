@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:dio/dio.dart' as Dio;
+import 'dio.dart';
+
 import 'package:delivery_kun/models/user_status.dart';
 import 'package:delivery_kun/services/auth.dart';
-import 'package:flutter/material.dart';
-import 'package:dio/dio.dart' as Dio;
-import 'package:intl/intl.dart';
-import 'dio.dart';
 
 class Status extends ChangeNotifier {
   UserStatus? _userStatus;
@@ -28,8 +29,7 @@ class Status extends ChangeNotifier {
   }
 
   void getStatusNextDate(int user_id) async {
-    if (DateFormat('yyyy年M月d日').format(DateTime.now()).toString() !=
-        DateFormat('yyyy年M月d日').format(date)) {
+    if (DateFormat('yyyy年M月d日').format(DateTime.now()).toString() != DateFormat('yyyy年M月d日').format(date)) {
       _date = _date.add(Duration(days: 1));
       String date = DateFormat('yyyyMMdd').format(_date).toString();
 
@@ -45,7 +45,13 @@ class Status extends ChangeNotifier {
 
   Future<void> getStatus(int user_id, String date) async {
     try {
-      Dio.Response response = await dio().get('/status', queryParameters: {'date': date, 'user_id': user_id});
+      Dio.Response response = await dio().get(
+        '/status',
+        queryParameters: {
+          'date': date,
+          'user_id': user_id
+        }
+      );
 
       if (response.statusCode == 204) {
         _userStatus = UserStatus(
