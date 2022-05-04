@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:delivery_kun/screens/order_list.dart';
 import 'package:delivery_kun/screens/sign_up_screen.dart';
+import 'package:delivery_kun/components/days_hour_bar_chart.dart';
 
 class UserStatusScreen extends StatefulWidget {
   const UserStatusScreen({Key? key}) : super(key: key);
@@ -28,15 +28,15 @@ class _UserStatusScreenState extends State<UserStatusScreen> {
 
   @override
   void initState() {
-    super.initState();
     _initBannerAd();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('売上履歴',),
+        title: Text('売上履歴'),
       ),
       body: Consumer<Auth>(
           builder: (context, auth, child) => auth.authenticated
@@ -106,7 +106,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                   : TextButton(onPressed: () {}, child: Text('')),
                             ],
                           )),
-                      DayStatusBarChart(data: status.status!.hourQty),
+                      StatusHourBarChart(data: status.status.hourQty),
                       Container(
                           margin: EdgeInsets.only(right: 15, left: 15),
                           child: Column(
@@ -139,7 +139,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                         child: SizedBox(
                                           height: 50,
                                           child: Text(
-                                            status.status?.onlineTime ?? ' ',
+                                            status.status.onlineTime,
                                             style: TextStyle(
                                               fontSize: 20,
                                             ),
@@ -150,7 +150,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                         child: SizedBox(
                                           height: 50,
                                           child: Text(
-                                            status.status?.daysEarningsQty.toString() ?? ' ',
+                                            status.status.daysEarningsQty.toString(),
                                             style: TextStyle(
                                               fontSize: 20,
                                             ),
@@ -178,7 +178,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                     ),
                                   ),
                                   Text(
-                                      status.status?.daysEarningsTotal.toString() ?? ' ',
+                                      status.status.daysEarningsTotal.toString(),
                                       textAlign: TextAlign.right,
                                       style: TextStyle(
                                         color: Colors.black,
@@ -249,7 +249,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                     child: SizedBox(
                                       height: 50,
                                       child: Text(
-                                        status.status?.actualCost.toString() ?? ' ',
+                                        status.status.actualCost.toString(),
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
                                           fontSize: 20,
@@ -274,7 +274,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                     child: SizedBox(
                                       height: 50,
                                       child: Text(
-                                        (status.status!.daysEarningsTotal - status.status!.actualCost).toString(),
+                                        (status.status.daysEarningsTotal - status.status.actualCost).toString(),
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
                                           fontSize: 20,
@@ -336,40 +336,3 @@ class AlertWidght extends StatelessWidget {
   }
 }
 
-class DayStatusBarChart extends StatelessWidget {
-  DayStatusBarChart({required this.data});
-
-  List<dynamic> data;
-
-  @override
-  Widget build(BuildContext context) {
-    List<hourQty> desktopDalsesData = [];
-
-    data.forEach((val) {
-      desktopDalsesData.add(hourQty(hour: val['hour'].toString()+'時', qty: val['count']));
-    });
-
-    List<charts.Series<dynamic, String>> seriesList = [
-      charts.Series<hourQty, String>(
-        id: 'Sales',
-        domainFn: (hourQty hourqty, _) => hourqty.hour,
-        measureFn: (hourQty hourqty, _) => hourqty.qty,
-        data: desktopDalsesData,
-        labelAccessorFn: (hourQty hourqty, _) => '\$${hourqty.qty.toString()}',
-        colorFn:  (_,__)=>charts.ColorUtil.fromDartColor(Colors.red.shade500)
-      )
-    ];
-
-    return Container(
-      height: 220,
-      child: charts.BarChart(seriesList, animate: true, vertical: true),
-    );
-  }
-}
-
-class hourQty {
-  hourQty({required this.hour, required this.qty});
-
-  final String hour;
-  final int qty;
-}
