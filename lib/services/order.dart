@@ -52,7 +52,11 @@ class OrderList extends ChangeNotifier {
     try {
       Dio.Response response = await dio().post('/order',
           data: {'earnings_incentive': 1.0},
-          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
+          options: Dio.Options(
+              headers: {'Authorization': 'Bearer $token'}
+          )
+        );
+
       notifyListeners();
     } on Dio.DioError catch (e) {
       print(e);

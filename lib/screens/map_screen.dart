@@ -54,6 +54,7 @@ class _MapScreenState extends State<MapScreen> {
   late BannerAd _bannerAd;
   late bool isAuthenticated;
   bool _isAdLoaded = true;
+  int todayTotal = 0;
   Map<PolylineId, Polyline> _polylines = {};
   List<Marker> _markers = [];
   PolylinePoints polylinePoints = PolylinePoints();
@@ -127,11 +128,11 @@ class _MapScreenState extends State<MapScreen> {
 
     void _addEndLocationPoint(LatLng point,String start_address){
       _markers.add(
-           Marker(
-             markerId: MarkerId("marker1"),
-             position: point,
-             infoWindow: InfoWindow(title: start_address),
-           )
+         Marker(
+           markerId: MarkerId("marker1"),
+           position: point,
+           infoWindow: InfoWindow(title: start_address),
+         )
        );
     }
 
@@ -265,11 +266,14 @@ class _MapScreenState extends State<MapScreen> {
               ),
               Consumer<Auth>(
                   builder: (context, auth, child) {
-                    auth.authenticated ? Provider.of<Status>(context,listen: false).getStatusToday(auth.user.id) : false;
+                    auth.authenticated ? context.read<Status>().getStatusToday(auth.user.id) : false;
                     return auth.authenticated != false ? Positioned(
                       height: deviceHeight * 0.10,
                       width: deviceWidth,
-                      child: DaysEarningsTotalBottomSheet(deviceHeight: deviceHeight),
+                      child: DaysEarningsTotalBottomSheet(
+                        deviceHeight: deviceHeight,
+                        todayTotal: context.watch<Status>().userDaysEarningsTotal,
+                      ),
                       bottom: 0,
                     ) : SizedBox.shrink();
                   }

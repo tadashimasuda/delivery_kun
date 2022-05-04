@@ -7,12 +7,12 @@ import 'package:delivery_kun/models/user_status.dart';
 import 'package:delivery_kun/services/auth.dart';
 
 class Status extends ChangeNotifier {
-  UserStatus? _userStatus;
-  int _userTodayStatus = 0;
+  late UserStatus _userStatus;
+  late int _userDaysEarningsTotal;
   DateTime _date = DateTime.now();
 
-  UserStatus? get status => _userStatus;
-  int get userTodayStatus => _userTodayStatus;
+  UserStatus get status => _userStatus;
+  int get userDaysEarningsTotal => _userDaysEarningsTotal;
   DateTime get date => _date;
 
   void getStatusDate(int user_id) async {
@@ -37,10 +37,10 @@ class Status extends ChangeNotifier {
     }
   }
 
-  void getStatusToday(int user_id) async{
+  Future<void> getStatusToday(int user_id) async{
     String date = DateFormat('yyyyMMdd').format(DateTime.now()).toString();
 
-    return await getStatus(user_id, date);
+    await getStatus(user_id, date);
   }
 
   Future<void> getStatus(int user_id, String date) async {
@@ -62,20 +62,26 @@ class Status extends ChangeNotifier {
             vehicleModel: '不明',
             hourQty: []
         );
+      }else{
+        _userStatus = UserStatus.fromJson(response.data);
 
-        notifyListeners();
-
-        return;
+        if(date == DateFormat('yyyyMMdd').format(DateTime.now()).toString()){
+          _userDaysEarningsTotal = _userStatus.daysEarningsTotal;
+        }
       }
-
-      if(date == DateFormat('yyyyMMdd').format(DateTime.now()).toString()){
-        _userTodayStatus = response.data['data']['summary']['daysEarningsTotal'];
-      }
-
-      _userStatus = UserStatus.fromJson(response.data);
 
       notifyListeners();
     } on Dio.DioError catch (e) {
+      if (e.response?.statusCode == 429) {
+        _userStatus = UserStatus(
+            onlineTime: 'アクセス過多',
+            actualCost: 0,
+            daysEarningsQty: 0,
+            daysEarningsTotal: 0,
+            vehicleModel: '不明',
+            hourQty: []
+        );
+      }
       _userStatus = UserStatus(
           onlineTime: 'エラー',
           actualCost: 0,

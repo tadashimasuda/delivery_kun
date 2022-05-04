@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:delivery_kun/services/user_status.dart';
 import 'package:delivery_kun/screens/user_status_screen.dart';
 
 class DaysEarningsTotalBottomSheet extends StatelessWidget {
   const DaysEarningsTotalBottomSheet({
     Key? key,
     required this.deviceHeight,
+    required this.todayTotal
   }) : super(key: key);
 
   final double deviceHeight;
+  final int todayTotal;
 
   @override
   Widget build(BuildContext context) {
@@ -24,30 +24,28 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
       child: Stack(
         children: [
           Center(
-            child: Consumer<Status>(
-                builder: (context, status, child) {
-                  return status.userDaysEarningsTotal != null ?
-                  BottomSheetText(title: '¥${status.userDaysEarningsTotal}') :
-                  BottomSheetText(title: 'データが取得できませんでした',);
-                }),
+            child: todayTotal != null ?
+            BottomSheetText(title: '¥${todayTotal}') :
+            BottomSheetText(title: 'データが取得できませんでした')
           ),
           Positioned(
-              child: IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return FractionallySizedBox(
-                              heightFactor: 0.90,
-                              child: UserStatusScreen()
-                          );
-                        });
-                  },
-                  icon: Icon(Icons.list)
-              ),
-              height: deviceHeight * 0.10,
-              right: 0
+            child: IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return FractionallySizedBox(
+                        heightFactor: 0.90,
+                        child: UserStatusScreen()
+                    );
+                  }
+                );
+              },
+              icon: Icon(Icons.list)
+            ),
+            height: deviceHeight * 0.10,
+            right: 0
           ),
         ],
       ),
@@ -66,7 +64,7 @@ class BottomSheetText extends StatelessWidget {
       title,
       textAlign: TextAlign.center,
       style: TextStyle(
-          fontSize: 25,
+          fontSize: 28,
           fontWeight: FontWeight.w500
       ),
     );
