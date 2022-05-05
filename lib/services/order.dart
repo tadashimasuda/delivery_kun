@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart' as Dio;
 import 'dio.dart';
+
 import 'package:delivery_kun/models/order.dart';
 import 'package:delivery_kun/services/auth.dart';
 
@@ -46,16 +47,16 @@ class OrderList extends ChangeNotifier {
     }
   }
 
-  void postOrder() async {
+  Future<void> postOrder() async {
     String? token = await auth.getToken();
 
     try {
       Dio.Response response = await dio().post('/order',
-          data: {'earnings_incentive': 1.0},
-          options: Dio.Options(
-              headers: {'Authorization': 'Bearer $token'}
-          )
-        );
+        data: {'earnings_incentive': 1.0},
+        options: Dio.Options(
+            headers: {'Authorization': 'Bearer $token'}
+        )
+      );
 
       notifyListeners();
     } on Dio.DioError catch (e) {
@@ -70,7 +71,8 @@ class OrderList extends ChangeNotifier {
     try {
       Dio.Response response = await dio().patch('/order/$id',
           data: requestData,
-          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
+          options: Dio.Options(headers: {'Authorization': 'Bearer $token'})
+      );
 
       return true;
     } on Dio.DioError catch (e) {
@@ -85,8 +87,9 @@ class OrderList extends ChangeNotifier {
 
     try {
       await dio().delete('/order/$id',
-          data: {'id':id},
-          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
+        data: {'id':id},
+        options: Dio.Options(headers: {'Authorization': 'Bearer $token'})
+      );
 
       return true;
     } on Dio.DioError catch (e) {

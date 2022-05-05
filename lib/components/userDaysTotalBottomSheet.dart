@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:delivery_kun/services/user_status.dart';
 import 'package:delivery_kun/screens/user_status_screen.dart';
 
 class DaysEarningsTotalBottomSheet extends StatelessWidget {
   const DaysEarningsTotalBottomSheet({
     Key? key,
     required this.deviceHeight,
-    required this.todayTotal
   }) : super(key: key);
 
   final double deviceHeight;
-  final int todayTotal;
 
   @override
   Widget build(BuildContext context) {
+    int todayTotal = context.read<Status>().userDaysEarningsTotal;
+    todayTotal = context.watch<Status>().userDaysEarningsTotal;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -24,9 +27,7 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
       child: Stack(
         children: [
           Center(
-            child: todayTotal != null ?
-            BottomSheetText(title: '¥${todayTotal}') :
-            BottomSheetText(title: 'データが取得できませんでした')
+            child:BottomSheetText(title: '¥${todayTotal}')
           ),
           Positioned(
             child: IconButton(

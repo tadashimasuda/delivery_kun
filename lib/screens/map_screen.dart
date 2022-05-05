@@ -10,7 +10,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
-import 'package:delivery_kun/services/user_status.dart';
 import 'package:delivery_kun/components/notLoggedIn_drawer.dart';
 import 'package:delivery_kun/components/loggedIn_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
@@ -54,7 +53,6 @@ class _MapScreenState extends State<MapScreen> {
   late BannerAd _bannerAd;
   late bool isAuthenticated;
   bool _isAdLoaded = true;
-  int todayTotal = 0;
   Map<PolylineId, Polyline> _polylines = {};
   List<Marker> _markers = [];
   PolylinePoints polylinePoints = PolylinePoints();
@@ -76,13 +74,14 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _getUser() async {
     String? token = await storage.read(key: 'token');
     if (token != null) {
-      Provider.of<Auth>(context, listen: false).tryToken(token);
+      await Provider.of<Auth>(context, listen: false).tryToken(token);
     }
   }
 
   Future<LatLng> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high
+    );
     return LatLng(position.latitude, position.longitude);
   }
 
@@ -91,7 +90,8 @@ class _MapScreenState extends State<MapScreen> {
     final GoogleMapController controller = await _controller.future;
 
     controller.animateCamera(CameraUpdate.newLatLngZoom(
-        LatLng(locaiton.latitude, locaiton.longitude), 14.4746));
+        LatLng(locaiton.latitude, locaiton.longitude), 14.4746)
+    );
   }
 
   void _initBannerAd() {
@@ -101,11 +101,11 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   void initState() {
+    super.initState();
     _loading = true;
     _getUserLocation();
     _getUser();
     _initBannerAd();
-    super.initState();
   }
 
   @override
@@ -135,21 +135,20 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     void _requestDestination(LatLng origin, String destinationText) async {
-      var result = await Direction()
-          .getDirections(origin: origin, destination: destinationText);
+      var result = await Direction().getDirections(origin: origin, destination: destinationText);
 
       LatLng end_location = LatLng(
           result.data["routes"][0]["legs"][0]["end_location"]['lat'],
-          result.data["routes"][0]["legs"][0]["end_location"]['lng']);
-      String start_address =
-          result.data["routes"][0]["legs"][0]["start_address"];
+          result.data["routes"][0]["legs"][0]["end_location"]['lng']
+      );
+      String start_address = result.data["routes"][0]["legs"][0]["start_address"];
 
-      List<PointLatLng> points = polylinePoints.decodePolyline(
-          result.data["routes"][0]["overview_polyline"]["points"]);
+      List<PointLatLng> points = polylinePoints.decodePolyline(result.data["routes"][0]["overview_polyline"]["points"]);
       List<LatLng> polylineCoordinates = [];
       points.forEach((point) {
-        polylineCoordinates
-            .add(LatLng(point.latitude.toDouble(), point.longitude.toDouble()));
+        polylineCoordinates.add(
+            LatLng(point.latitude.toDouble(), point.longitude.toDouble())
+        );
       });
 
       _addPolyLine(polylineCoordinates);
@@ -178,16 +177,16 @@ class _MapScreenState extends State<MapScreen> {
             Scaffold.of(context).openDrawer();
           },
           child: Container(
-              height: deviceWidth * 0.18,
-              width: deviceWidth * 0.18,
-              child: Icon(
-                Icons.menu,
-                color: Colors.black,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(70),
-              )),
+            height: deviceWidth * 0.18,
+            width: deviceWidth * 0.18,
+            child: Icon(
+              Icons.menu,
+              color: Colors.black,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(70),
+            )),
         ),
       ),
       body: Consumer<Auth>(builder: (context, auth, child) {
@@ -241,8 +240,7 @@ class _MapScreenState extends State<MapScreen> {
                               onPressed: () async {
                                 LatLng origin = await _getCurrentLocation();
                                 destinationController.text.isNotEmpty
-                                    ? _requestDestination(
-                                        origin, destinationController.text)
+                                    ? _requestDestination(origin, destinationController.text)
                                     : _clearPolylineMaker();
                                 FocusScope.of(context).unfocus();
                               },
@@ -255,28 +253,22 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     Positioned(
                         child: MapScreenBottomBtn(),
-                        bottom: auth.authenticated != false
-                            ? deviceHeight * 0.12
-                            : deviceHeight * 0.02),
+                        bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02),
                     Positioned(
                       child: currentLocationBtn(
                         deviceHeight: deviceHeight,
                         onPressed: _currentLocation,
                       ),
-                      bottom: auth.authenticated != false
-                          ? deviceHeight * 0.12
-                          : deviceHeight * 0.02,
+                      bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02,
                       right: 10,
                     ),
-                    // auth.authenticated ? context.read<Status>().getStatusToday(auth.user.id) : false;
                     auth.authenticated != false
-                        ? Positioned(
-                            height: deviceHeight * 0.10,
-                            width: deviceWidth,
-                            child: DaysEarningsTotalBottomSheet(
-                                deviceHeight: deviceHeight, todayTotal: 900),
-                            bottom: 0,
-                          )
+                      ? Positioned(
+                        child: DaysEarningsTotalBottomSheet(deviceHeight: deviceHeight),
+                          height: deviceHeight * 0.10,
+                          width: deviceWidth,
+                          bottom: 0,
+                        )
                         : SizedBox.shrink()
                   ])));
       }),

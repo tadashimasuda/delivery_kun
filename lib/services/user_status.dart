@@ -7,25 +7,27 @@ import 'package:delivery_kun/models/user_status.dart';
 import 'package:delivery_kun/services/auth.dart';
 
 class Status extends ChangeNotifier {
-  late UserStatus _userStatus;
-  late int _userDaysEarningsTotal;
+  UserStatus? _userStatus;
+  int _userDaysEarningsTotal = 0;
   DateTime _date = DateTime.now();
 
-  UserStatus get status => _userStatus;
+  UserStatus? get status => _userStatus;
   int get userDaysEarningsTotal => _userDaysEarningsTotal;
   DateTime get date => _date;
+
+  Auth auth = Auth();
 
   void getStatusDate(int user_id) async {
     String date = DateFormat('yyyyMMdd').format(_date).toString();
 
-    return await getStatus(user_id, date);
+    getStatus(user_id,date);
   }
 
   void getStatusBeforeDate(int user_id) async {
     _date = _date.add(Duration(days: -1));
     String date = DateFormat('yyyyMMdd').format(_date).toString();
 
-    return await getStatus(user_id, date);
+    getStatus(user_id,date);
   }
 
   void getStatusNextDate(int user_id) async {
@@ -33,17 +35,17 @@ class Status extends ChangeNotifier {
       _date = _date.add(Duration(days: 1));
       String date = DateFormat('yyyyMMdd').format(_date).toString();
 
-      return await getStatus(user_id, date);
+      getStatus(user_id,date);
     }
   }
 
   Future<void> getStatusToday(int user_id) async{
     String date = DateFormat('yyyyMMdd').format(DateTime.now()).toString();
 
-    await getStatus(user_id, date);
+    await getStatus(user_id,date);
   }
 
-  Future<void> getStatus(int user_id, String date) async {
+  Future<void> getStatus(int user_id,String date) async {
     try {
       Dio.Response response = await dio().get(
         '/status',
@@ -55,18 +57,18 @@ class Status extends ChangeNotifier {
 
       if (response.statusCode == 204) {
         _userStatus = UserStatus(
-            onlineTime: 'データがありません',
-            actualCost: 0,
-            daysEarningsQty: 0,
-            daysEarningsTotal: 0,
-            vehicleModel: '不明',
-            hourQty: []
+          onlineTime: 'データがありません',
+          actualCost: 0,
+          daysEarningsQty: 0,
+          daysEarningsTotal: 0,
+          vehicleModel: '不明',
+          hourQty: []
         );
       }else{
         _userStatus = UserStatus.fromJson(response.data);
 
         if(date == DateFormat('yyyyMMdd').format(DateTime.now()).toString()){
-          _userDaysEarningsTotal = _userStatus.daysEarningsTotal;
+          _userDaysEarningsTotal = _userStatus!.daysEarningsTotal;
         }
       }
 
@@ -74,13 +76,12 @@ class Status extends ChangeNotifier {
     } on Dio.DioError catch (e) {
       if (e.response?.statusCode == 429) {
         _userStatus = UserStatus(
-            onlineTime: 'アクセス過多',
-            actualCost: 0,
-            daysEarningsQty: 0,
-            daysEarningsTotal: 0,
-            vehicleModel: '不明',
-            hourQty: []
-        );
+          onlineTime: 'アクセス過多',
+          actualCost: 0,
+          daysEarningsQty: 0,
+          daysEarningsTotal: 0,
+          vehicleModel: '不明',
+          hourQty: []);
       }
       _userStatus = UserStatus(
           onlineTime: 'エラー',

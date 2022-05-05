@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:delivery_kun/constants.dart';
 
+import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/services/todayIncentive.dart';
 
 class SettingIncentiveScreen extends StatefulWidget {
@@ -16,24 +16,30 @@ class _SettingIncentiveScreenState extends State<SettingIncentiveScreen> {
 
   int _selectIncentiveId = 0;
   late List<dynamic>? incentives;
+  bool is_incentives = false;
+
+  void getIncentives() {
+    incentives = context.read<Incentive>().incentives;
+    bool is_incentives = context.read<Incentive>().is_incentives;
+    if(is_incentives == false) incentives = incentiveDefault;
+  }
 
   @override
   void initState() {
-    context.read<Incentive>().getTodayIncentive();
-    incentives = context.read<Incentive>().incentives;
-    if(incentives == null) incentives = incentiveDefault;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    getIncentives();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           '今日のインセンティブ',
           style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold
+            color: Colors.white,
+            fontWeight: FontWeight.bold
           )
         ),
         actions: <Widget>[
@@ -45,9 +51,9 @@ class _SettingIncentiveScreenState extends State<SettingIncentiveScreen> {
             child:const Text(
               '更新',
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.bold
               ),
             )
           )
@@ -55,7 +61,7 @@ class _SettingIncentiveScreenState extends State<SettingIncentiveScreen> {
       ),
       body: Container(
         child: ListView.builder(
-          itemCount: context.read<Incentive>().is_incentives ? incentives?.length:incentiveDefault.length,
+          itemCount: is_incentives ? incentives?.length : incentiveDefault.length,
           itemBuilder: (context, int index) {
             return Container(
               height: 40,
@@ -147,10 +153,10 @@ class _IncentiveItemState extends State<IncentiveItem> {
         children: [
           Expanded(
             child: Container(
-                child: Text(
-                    widget.incentive_hour.toString() + '時',
-                    textAlign: TextAlign.center
-                )
+              child: Text(
+                widget.incentive_hour.toString() + '時',
+                textAlign: TextAlign.center
+              )
             ),
           ),
           Expanded(
