@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -190,6 +191,7 @@ class _MapScreenState extends State<MapScreen> {
         ),
       ),
       body: Consumer<Auth>(builder: (context, auth, child) {
+        auth.authenticated ? context.read<Status>().getStatusToday(auth.user!.id):false;
         return Center(
             child: _loading
                 ? CircularProgressIndicator()
@@ -232,16 +234,27 @@ class _MapScreenState extends State<MapScreen> {
                           decoration: InputDecoration(
                             hintText: "配達先を検索",
                             border: InputBorder.none,
-                            suffixIcon: IconButton(
+                            suffixIcon: destinationController.text.isEmpty ? IconButton(
                               icon: Icon(
                                 Icons.search,
                                 color: Colors.grey,
                               ),
                               onPressed: () async {
+                                print(destinationController.text.isEmpty);
                                 LatLng origin = await _getCurrentLocation();
                                 destinationController.text.isNotEmpty
                                     ? _requestDestination(origin, destinationController.text)
                                     : _clearPolylineMaker();
+                                FocusScope.of(context).unfocus();
+                              },
+                            ):IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                destinationController.clear();
+                                _clearPolylineMaker();
                                 FocusScope.of(context).unfocus();
                               },
                             ),
@@ -306,10 +319,10 @@ class destinationTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10.0,
-              spreadRadius: 1.0,
-              offset: Offset(10, 10))
+            color: Colors.black12,
+            blurRadius: 10.0,
+            spreadRadius: 1.0,
+            offset: Offset(10, 10))
         ],
       ),
       child: TextFormField,
@@ -335,10 +348,10 @@ class currentLocationBtn extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10.0,
-              spreadRadius: 1.0,
-              offset: Offset(10, 10))
+            color: Colors.black12,
+            blurRadius: 10.0,
+            spreadRadius: 1.0,
+            offset: Offset(10, 10))
         ],
       ),
       child: IconButton(
