@@ -10,10 +10,10 @@ class User {
       this.token);
 
   User.fromJson(Map<String, dynamic> json)
-      : id = json['data']['id'] ?? '',
-        name = json['data']['name'] ?? '',
-        email = json['data']['email'] ?? '',
+      : id = json['data']['id'],
+        name = json['data']['name'],
+        email = json['data']['email'],
         vehicleModel = json['data']['vehicleModel'],
         prefectureId = json['data']['prefectureId'] - 1,
-        token = json['data']['accessToken'] ?? '';
+        token = json['data']['accessToken'];
 }

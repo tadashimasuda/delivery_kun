@@ -13,13 +13,13 @@ class Auth extends ChangeNotifier {
   Validate? _validate_message;
 
   bool get authenticated => _isLoggedIn;
-  User get user => _user!;
+  User? get user => _user;
   Validate? get validate_message => _validate_message;
   String? get token => _token;
 
   final storage = new FlutterSecureStorage();
 
-  void tryToken(String? token) async {
+  Future<void> tryToken(String? token) async {
     if (token == null) {
       return;
     } else {
@@ -30,9 +30,11 @@ class Auth extends ChangeNotifier {
             headers: {'Authorization': 'Bearer $token'}
           )
         );
+
         _user = User.fromJson(response.data);
         _isLoggedIn = true;
         _validate_message = null;
+
         _token = response.data['data']['accessToken'].toString();
 
         storeToken(response.data['data']['accessToken'].toString());
@@ -186,6 +188,7 @@ class Auth extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
+
     _user = null;
     _isLoggedIn = false;
     _token = '';

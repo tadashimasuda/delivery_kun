@@ -12,7 +12,7 @@ class Incentive extends ChangeNotifier {
   List<dynamic>? get incentives => _incentives;
   bool get is_incentives => _is_incentives;
 
-  void getTodayIncentive() async{
+  Future<void> getTodayIncentive() async{
     String? token = await auth.getToken();
     try {
       Dio.Response response = await dio().get(

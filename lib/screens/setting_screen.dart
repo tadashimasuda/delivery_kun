@@ -1,14 +1,14 @@
-import 'package:delivery_kun/components/account_submit_btn.dart';
-import 'package:delivery_kun/components/account_text_field.dart';
-import 'package:delivery_kun/screens/map_screen.dart';
-import 'package:delivery_kun/services/admob.dart';
-import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
+
 import 'package:delivery_kun/constants.dart';
+import 'package:delivery_kun/services/admob.dart';
+import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
+import 'package:delivery_kun/components/account_text_field.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -30,10 +30,10 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
   @override
   void initState() {
     Auth auth = context.read<Auth>();
-    _name = auth.user.name;
-    _email = auth.user.email;
-    _selectVehicleModelId = auth.user.vehicleModel;
-    _selectPrefectureId = auth.user.prefectureId;
+    _name = auth.user!.name;
+    _email = auth.user!.email;
+    _selectVehicleModelId = auth.user!.vehicleModel;
+    _selectPrefectureId = auth.user!.prefectureId;
     _initBannerAd();
     super.initState();
   }
@@ -60,24 +60,24 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'ユーザー設定',
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold
-            )
+          'ユーザー設定',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold
+          )
         ),
         actions: <Widget>[
           TextButton(
-              onPressed: () async{
-                Map userData = {
+            onPressed: () async{
+              Map userData = {
                   'name': _name,
                   'email': _email,
                   'vehicleModelId': _selectVehicleModelId,
                   'prefectureId': _selectPrefectureId+1,
                 };
-                bool response = await Provider.of<Auth>(context, listen: false).updateUser(userData: userData);
+              bool response = await Provider.of<Auth>(context, listen: false).updateUser(userData: userData);
 
-                if (!response) {
+              if (!response) {
                   showCupertinoDialog(
                       context: context,
                       builder: (context) {
@@ -98,27 +98,28 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                         );
                       });
                 }else{
-                  Navigator.pop(context);
-                }
-              },
-              child:const Text(
-                '更新',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold
-                ),)
+                Navigator.pop(context);
+              }
+            },
+            child:const Text(
+              '更新',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.bold
+              ),
+            )
           )
         ],
       ),
       body: SingleChildScrollView(
         child: Container(
-            padding: EdgeInsets.fromLTRB(24, 70, 24, 0),
+          padding: EdgeInsets.fromLTRB(24, 70, 24, 0),
             child: Consumer<Auth>(builder: (context, auth, _) {
               return auth.user != null ? Column(
                 children: [
                   AccountTextField(
-                    controller:TextEditingController(text: auth.user.name),
+                    controller:TextEditingController(text: auth.user!.name),
                     obscureText: false,
                     title: 'ユーザ名',
                     icon: Icons.person,
@@ -134,7 +135,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                     height: 20,
                   ),
                   AccountTextField(
-                    controller:TextEditingController(text: auth.user.email),
+                    controller:TextEditingController(text: auth.user!.email),
                     obscureText: false,
                     title: 'メールアドレス',
                     icon: Icons.mail,
@@ -150,34 +151,34 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                     height: 20,
                   ),
                   TextField(
-                    controller: TextEditingController(
-                        text: _VehicleModelList[_selectVehicleModelId]),
+                    controller: TextEditingController(text: _VehicleModelList[_selectVehicleModelId]),
                     readOnly: true,
                     decoration: InputDecoration(
-                        labelText: '配達車両',
-                        suffixIcon: vehiceModelIcon(_selectVehicleModelId),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)))),
+                      labelText: '配達車両',
+                      suffixIcon: vehiceModelIcon(_selectVehicleModelId),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))
+                    ),
                     onTap: () {
                       showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                              height: MediaQuery.of(context).size.height / 3,
-                              child: CupertinoPicker(
-                                itemExtent: 30,
-                                onSelectedItemChanged: (val) {
-                                  setState(() {
-                                    _selectVehicleModelId = val;
-                                  });
-                                },
-                                children: _VehicleModelList.map((e) => Text(e))
-                                    .toList(),
-                                scrollController: FixedExtentScrollController(
-                                    initialItem: auth.user.vehicleModel),
-                              ),
-                            );
-                          });
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: CupertinoPicker(
+                              itemExtent: 30,
+                              onSelectedItemChanged: (val) {
+                                setState(() {
+                                  _selectVehicleModelId = val;
+                                });
+                              },
+                              children: _VehicleModelList.map((e) => Text(e))
+                                  .toList(),
+                              scrollController: FixedExtentScrollController(
+                                  initialItem: auth.user!.vehicleModel),
+                            ),
+                          );
+                        }
+                      );
                     },
                   ),
                   Column(
@@ -187,37 +188,36 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                     height: 20,
                   ),
                   TextField(
-                    controller: TextEditingController(
-                        text: _prefectureList[_selectPrefectureId]),
+                    controller: TextEditingController(text: _prefectureList[_selectPrefectureId]),
                     readOnly: true,
                     decoration: InputDecoration(
-                        hintText: _prefectureList[_selectPrefectureId],
-                        suffixIcon: Icon(Icons.location_on),
-                        labelText: '活動場所',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)))),
+                      hintText: _prefectureList[_selectPrefectureId],
+                      suffixIcon: Icon(Icons.location_on),
+                      labelText: '活動場所',
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))),
                     onTap: () {
                       showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                              height: MediaQuery.of(context).size.height / 3,
-                              child: CupertinoPicker(
-                                itemExtent: 30,
-                                onSelectedItemChanged: (val) {
-                                  setState(() {
-                                    _selectPrefectureId = val;
-                                  });
-                                },
-                                children:
-                                    _prefectureList.map((e) => Text(e)).toList(),
-                                scrollController: FixedExtentScrollController(
-                                    initialItem: _selectPrefectureId),
-                              ),
-                            );
-                          });
-                    },
-                  ),
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: CupertinoPicker(
+                              itemExtent: 30,
+                              onSelectedItemChanged: (val) {
+                                setState(() {
+                                  _selectPrefectureId = val;
+                                });
+                              },
+                              children:
+                                  _prefectureList.map((e) => Text(e)).toList(),
+                              scrollController: FixedExtentScrollController(
+                                  initialItem: _selectPrefectureId),
+                            ),
+                          );
+                          }
+                        );
+                      },
+                    ),
                   Column(
                     children: ValidatePrefecture(auth.validate_message),
                   ),

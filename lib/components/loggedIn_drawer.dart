@@ -7,6 +7,7 @@ import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:delivery_kun/screens/setting_screen.dart';
 import 'package:delivery_kun/screens/setting_incentive_screen.dart';
 import 'package:delivery_kun/components/drawer_list_text.dart';
+import 'package:delivery_kun/services/todayIncentive.dart';
 
 class LoggedInDrawer extends StatefulWidget {
   const LoggedInDrawer({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
           Column(children: [
             UserAccountsDrawerHeader(
               accountName: Text(
-                auth.user.name,
+                auth.user!.name,
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
               accountEmail: Text(''),
@@ -55,7 +56,9 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
           SizedBox(height: 8,),
           ListTile(
             title: drawerListText(title: 'インセンティブ設定'),
-            onTap: () {
+            onTap: () async {
+              await context.read<Incentive>().getTodayIncentive();
+
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SettingIncentiveScreen())
               );
