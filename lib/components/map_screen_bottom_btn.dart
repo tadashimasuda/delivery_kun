@@ -18,10 +18,7 @@ class MapScreenBottomBtn extends StatefulWidget {
 }
 
 class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
-  Widget getTimeText() {
-    var now = DateTime.now();
-    return Text('記録時間：${now.hour}時${now.minute}分');
-  }
+  DateTime now = DateTime.now();
 
   Future<dynamic> IOSDialog() {
     return showCupertinoDialog(
@@ -29,7 +26,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
         builder: (context) {
           return CupertinoAlertDialog(
             title: Text('記録しますか？'),
-            content: getTimeText(),
+            content: Text('記録時間：${now.hour}時${now.minute}分'),
             actions: [
               CupertinoDialogAction(
                 isDestructiveAction: true,
@@ -40,18 +37,20 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
               ),
               CupertinoDialogAction(
                 child: Text('記録する'),
-                onPressed: () {
+                onPressed: () async {
                   Auth auth = context.read<Auth>();
 
-                  OrderList().postOrder();
-                  Status().getStatusToday(auth.user.id);
+                  await OrderList().postOrder();
+                  await context.read<Status>().getStatusToday(auth.user!.id);
+
                   Navigator.pop(context);
                 },
               ),
             ],
           );
-        });
-  }
+        }
+      );
+    }
 
   dynamic AndroidDialog() {
     showDialog(
@@ -60,7 +59,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
       builder: (context) {
         return AlertDialog(
           title: Text('記録しますか？'),
-          content: getTimeText(),
+          content: Text('記録時間：${now.hour}時${now.minute}分'),
           actions: [
             TextButton(
               onPressed: () {
@@ -90,72 +89,75 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Consumer<Auth>(builder: (context, auth, _) {
-            return ElevatedButton(
-              onPressed: () {
-                if (auth.authenticated) {
-                  Platform.isIOS ? IOSDialog() : AndroidDialog();
-                } else {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              AlertDialog(
-                                title: Text(
-                                  "デリバリーくんに登録する",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20),
+          ElevatedButton(
+            onPressed: (){
+              if (context.read<Auth>().authenticated) {
+                Platform.isIOS ? IOSDialog() : AndroidDialog();
+                setState(() {});
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          AlertDialog(
+                            title: Text(
+                              "デリバリーくんに登録する",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20),
+                            ),
+                            content: ListBody(
+                              children: [
+                                ListTile(
+                                  title: Text(
+                                    '・ワンタッチで配達を記録',
+                                  ),
                                 ),
-                                content: ListBody(
-                                  children: [
-                                    ListTile(
-                                      title: Text(
-                                        '・ワンタッチで配達を記録',
-                                      ),
-                                    ),
-                                    ListTile(
-                                      title: Text(
-                                        '・記録をグラフで確認',
-                                      ),
-                                    ),
-                                    ListTile(
-                                      title: Text(
-                                        '・支出管理もできる',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 40,
-                                    ),
-                                    Container(
-                                        child: SubmitBtn(
-                                      title: 'アカウント登録',
-                                      color: Colors.lightBlue,
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignUpForm()));
-                                      },
-                                    ))
-                                  ],
+                                ListTile(
+                                  title: Text(
+                                    '・記録をグラフで確認',
+                                  ),
                                 ),
-                                insetPadding: EdgeInsets.all(20),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
-                              ),
-                            ],
+                                ListTile(
+                                  title: Text(
+                                    '・支出管理もできる',
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 40,
+                                ),
+                                Container(
+                                  child: SubmitBtn(
+                                    title: 'アカウント登録',
+                                    color: Colors.lightBlue,
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SignUpForm()
+                                        )
+                                      );
+                                    },
+                                  )
+                                )
+                              ],
+                            ),
+                            insetPadding: EdgeInsets.all(20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(20))
+                            ),
                           ),
-                        );
-                      });
-                }
-              },
+                        ],
+                      ),
+                    );
+                  }
+                );
+              }
+            },
               child: Text(
                 '受注',
                 style: TextStyle(
@@ -168,8 +170,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                 minimumSize: Size(90, 90),
                 elevation: 15,
               ),
-            );
-          }),
+            ),
         ],
       ),
     );

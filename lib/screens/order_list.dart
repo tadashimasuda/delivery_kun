@@ -9,9 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 
 class OrderListScreen extends StatefulWidget {
-  OrderListScreen({required this.userId, required this.date});
+  OrderListScreen({required this.date});
 
-  final int userId;
   final DateTime date;
 
   @override
@@ -19,7 +18,6 @@ class OrderListScreen extends StatefulWidget {
 }
 
 class _OrderListScreenState extends State<OrderListScreen> {
-  late int userId;
   late BannerAd _bannerAd;
 
   _initBannerAd() {

@@ -4,6 +4,7 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'package:delivery_kun/services/todayIncentive.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/services/user_status.dart';
@@ -23,6 +24,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => Auth()),
         ChangeNotifierProvider(create: (context) => Status()),
         ChangeNotifierProvider(create: (context) => OrderList()),
+        ChangeNotifierProvider(create: (context) => Incentive()),
       ],
       child: MyApp(),
     ),
