@@ -57,6 +57,7 @@ dependencies:
   sign_in_with_apple: ^3.3.0
   firebase_auth: ^3.3.15
   flutter_polyline_points: ^1.0.0
+  change_app_package_name: ^1.0.0
 
 dev_dependencies:
   flutter_test:
