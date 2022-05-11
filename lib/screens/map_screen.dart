@@ -1,16 +1,20 @@
 import 'dart:async';
-import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io' show Platform;
+
 
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
+import 'package:delivery_kun/services/user_status.dart';
 import 'package:delivery_kun/components/notLoggedIn_drawer.dart';
 import 'package:delivery_kun/components/loggedIn_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
@@ -20,6 +24,29 @@ Completer<GoogleMapController> _controller = Completer();
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
+
+  static void showAlert(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('このアプリを利用するには位置情報取得許可が必要です。'),
+          content: Text("位置情報を利用します"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("キャンセル"),
+              onPressed: () => Navigator.pop(context),
+            ),
+            TextButton(
+              child: Text("設定"),
+              onPressed: () async {
+                openAppSettings();
+              },
+            ),
+          ],
+        );
+      });
+  }
 
   static Future<bool> handlePermission() async {
     bool serviceEnabled;
@@ -31,6 +58,7 @@ class MapScreen extends StatefulWidget {
     }
 
     permission = await Geolocator.checkPermission();
+
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
@@ -63,13 +91,67 @@ class _MapScreenState extends State<MapScreen> {
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
 
-    if (!hasPermission) return;
+    if (!hasPermission){
+       Platform.isIOS ? showCupertinoDialog(
+           context: context,
+           builder: (context) {
+         return  IOSPermissionAlertDialog(context);
+       }
+    ):showDialog(
+        context: context,
+        builder: (context) {
+          return AndroidAlertPermissionDialog(context);
+        });
+    }
 
     LatLng locaiton = await _getCurrentLocation();
     setState(() {
       _initialPosition = LatLng(locaiton.latitude, locaiton.longitude);
       _loading = false;
     });
+  }
+
+  CupertinoAlertDialog IOSPermissionAlertDialog(BuildContext context) {
+    return CupertinoAlertDialog(
+         title: Text('このアプリを利用するには位置情報取得許可が必要です'),
+         content: Text('設定画面で位置情報の許可をしてください'),
+         actions: [
+           CupertinoDialogAction(
+             isDestructiveAction: true,
+             child: Text('キャンセル'),
+             onPressed: () {
+               Navigator.pop(context);
+             },
+           ),
+           CupertinoDialogAction(
+             child: Text('設定'),
+             onPressed: () async{
+               await openAppSettings();
+               Navigator.pop(context);
+             },
+           ),
+         ],
+       );
+  }
+
+  AlertDialog AndroidAlertPermissionDialog(BuildContext context){
+    return AlertDialog(
+          title: Text('このアプリを利用するには位置情報取得許可が必要です'),
+          content: Text("位置情報を利用します"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("キャンセル"),
+              onPressed: () => Navigator.pop(context),
+            ),
+            TextButton(
+              child: Text("設定"),
+              onPressed: () async {
+                await openAppSettings();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
   }
 
   Future<void> _getUser() async {
