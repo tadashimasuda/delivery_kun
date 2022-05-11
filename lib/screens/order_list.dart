@@ -91,27 +91,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
                             reloadWidget();
                           }else{
                             showCupertinoDialog(
-                                context: context,
-                                builder: (context) => CupertinoAlertDialog(
-                                  title: Text(
-                                    'エラーが発生しました',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  actions: [
-                                    CupertinoDialogAction(
-                                      isDestructiveAction: true,
-                                      child: Text(
-                                        'OK',
-                                        style: TextStyle(color: Colors.lightBlue),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        reloadWidget();
-                                      },
-                                    ),
-                                  ],
-                                )
+                              context: context,
+                              builder: (context) => IOSAlertDialog(context)
                             );
                           }
                         },
@@ -179,32 +160,22 @@ class _OrderListScreenState extends State<OrderListScreen> {
               child: const Text(
                 '削除する',
                 style: TextStyle(
-                  color: Colors.red
+                    color: Colors.red
                 ),
               ),
               onPressed: () async{
                 bool response = await Provider.of<OrderList>(context, listen: false).deleteOrder(id:id);
+
                 if(response){
                   Navigator.pop(context);
                   reloadWidget();
                 }else{
                   Navigator.pop(context);
                   showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('削除できませんでした'),
-                        content: Text('もう一度お試しください'),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('OK'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                      );
-                    }
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AndroidAlertDialog(context);
+                      }
                   );
                 }
               },
@@ -213,7 +184,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
               child: const Text(
                 'キャンセル',
                 style: TextStyle(
-                  color: Colors.grey
+                    color: Colors.grey
                 ),
               ),
               onPressed: () async{
@@ -225,6 +196,45 @@ class _OrderListScreenState extends State<OrderListScreen> {
       },
     );
   }
+
+  AlertDialog AndroidAlertDialog(BuildContext context) {
+    return AlertDialog(
+      title: const Text('更新できませんでした'),
+      content: Text('もう一度お試しください'),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('OK'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+
+  CupertinoAlertDialog IOSAlertDialog(BuildContext context) {
+    return CupertinoAlertDialog(
+                                title: Text(
+                                  'エラーが発生しました',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    isDestructiveAction: true,
+                                    child: Text(
+                                      'OK',
+                                      style: TextStyle(color: Colors.lightBlue),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      reloadWidget();
+                                    },
+                                  ),
+                                ],
+                              );
+  }
+
   @override
   Widget build(BuildContext context) {
     reloadWidget();
@@ -262,7 +272,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
     String orderReceivedAt = order['order_received_at'].toString();
 
     return InkWell(
-      onLongPress: () {
+      onTap: () {
         Platform.isIOS ? IOSPopup(order['id'],earningsIncentive,earningsBase,orderReceivedAt)
             : AndroidPopUp(order['id'],earningsIncentive,earningsBase,orderReceivedAt);
       },

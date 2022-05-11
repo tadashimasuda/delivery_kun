@@ -186,56 +186,56 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
           ),
           actions:<Widget> [
             TextButton(
-                onPressed: () async {
-                  String time = orderReceivedAt.substring(0, 10) +
-                      ' ' + _selectHour.toString().padLeft(2, "0") +
-                      ':' + _selectMinite.toString().padLeft(2, "0") +
-                      ':00';
+              onPressed: () async {
+                String time = orderReceivedAt.substring(0, 10) +
+                    ' ' + _selectHour.toString().padLeft(2, "0") +
+                    ':' + _selectMinite.toString().padLeft(2, "0") +
+                    ':00';
 
-                  Map requestData = {
-                    'earnings_incentive': _incentiveList[_selectIncentiveId],
-                    'earnings_base': baseController.text,
-                    'update_date_time': time
-                  };
+                Map requestData = {
+                  'earnings_incentive': _incentiveList[_selectIncentiveId],
+                  'earnings_base': baseController.text,
+                  'update_date_time': time
+                };
 
-                  bool response =
-                  await Provider.of<OrderList>(context, listen: false)
-                      .updateOrder(requestData: requestData, id: id);
+                bool response =
+                await Provider.of<OrderList>(context, listen: false)
+                    .updateOrder(requestData: requestData, id: id);
 
-                  if (!response) {
-                    showCupertinoDialog(
-                        context: context,
-                        builder: (context) {
-                          return CupertinoAlertDialog(
-                            title: Text(
-                              'エラーが発生しました',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            actions: [
-                              CupertinoDialogAction(
-                                isDestructiveAction: true,
-                                child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          );
-                        });
-                  }else{
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }
+                if (!response) {
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (context) {
+                      return CupertinoAlertDialog(
+                        title: Text(
+                          'エラーが発生しました',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        actions: [
+                          CupertinoDialogAction(
+                            isDestructiveAction: true,
+                            child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    });
+                }else{
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
                 },
-                child: const Text(
-                  '完了',
-                  style: TextStyle(
-                      color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold
-                  ),
-                )
+              child: const Text(
+                '完了',
+                style: TextStyle(
+                    color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold
+                ),
+              )
             )
           ],
         ),
