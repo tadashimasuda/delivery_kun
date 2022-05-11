@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'dart:io' show Platform;
 
 import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/services/todayIncentive.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
 
 class SettingIncentiveScreen extends StatefulWidget {
   const SettingIncentiveScreen({Key? key}) : super(key: key);
@@ -25,16 +27,18 @@ class _SettingIncentiveScreenState extends State<SettingIncentiveScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     getIncentives();
 
     return Scaffold(
       appBar: AppBar(
+        leading: Platform.isAndroid ? IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: (){
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MapScreen()));
+          },
+        ):null,
         title: Text(
           '今日のインセンティブ',
           style: TextStyle(
@@ -44,9 +48,10 @@ class _SettingIncentiveScreenState extends State<SettingIncentiveScreen> {
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () async{
+            onPressed: () {
               context.read<Incentive>().postTodayIncentive(incentives: incentives);
-              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MapScreen()));
             },
             child:const Text(
               '更新',
@@ -63,69 +68,102 @@ class _SettingIncentiveScreenState extends State<SettingIncentiveScreen> {
         child: ListView.builder(
           itemCount: is_incentives ? incentives?.length : incentiveDefault.length,
           itemBuilder: (context, int index) {
-            return Container(
-              height: 40,
-              child:context.read<Incentive>().is_incentives ?
-              IncentiveItem(
-                index: index,
-                incentive_hour: incentives?[index]['incentive_hour'],
-                earnings_incentive: incentives?[index]['earnings_incentive'],
-                onTap: (){
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: CupertinoPicker(
-                          itemExtent: 30,
-                          onSelectedItemChanged: (val) {
-                            setState(() {
-                              _selectIncentiveId = val;
-                              incentives?[index]['earnings_incentive'] = double.parse(incentiveList[_selectIncentiveId]);
-                            });
-                          },
-                          children: incentiveList.map((e) => Text(e.toString())).toList(),
-                          scrollController: FixedExtentScrollController(
-                              initialItem: incentiveList.indexOf(incentives![index]['earnings_incentive'].toString()),
-                          ),
-                        ),
-                      );
-                    }
-                  );
-                },
-              ):
-              IncentiveItem(
-                index: index,
-                incentive_hour: incentiveDefault[index]['incentive_hour'],
-                earnings_incentive: incentiveDefault[index]['earnings_incentive'],
-                onTap: (){
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: CupertinoPicker(
-                          itemExtent: 30,
-                          onSelectedItemChanged: (val) {
-                            setState(() {
-                              incentives?[index]['earnings_incentive'] = double.parse(incentiveList[val]);
-                            });
-                          },
-                          children: incentiveList.map((e) => Text(e.toString())).toList(),
-                          scrollController: FixedExtentScrollController(
-                            initialItem: incentiveList.indexOf(incentives![index]['earnings_incentive'].toString()),
-                          ),
-                        ),
-                      );
-                    }
-                  );
-                },
-              )
-            );
+            return Platform.isIOS ? IOSIncentiveItem(context, index) : AndroidIncentiveItem(index);
           }
         )
       ),
     );
+  }
+
+  Widget AndroidIncentiveItem(int index){
+
+    if(incentives?[index]['earnings_incentive'] is int){
+      incentives?[index]['earnings_incentive'] = incentives?[index]['earnings_incentive'].toStringAsFixed(1);
+    }
+
+    return Row(
+      mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+      children: [
+        Text("${incentives?[index]['incentive_hour']}時"),
+        DropdownButton(
+          value: "${incentives?[index]['earnings_incentive']}",
+          items: incentiveList.map((e) {
+            return DropdownMenuItem<String>(
+              value: e,
+              child: Text(e),
+            );
+          }).toList(),
+          onChanged: (String? val){
+            setState(() {
+              _selectIncentiveId = incentiveList.indexOf(val!);
+              incentives?[index]['earnings_incentive'] = incentiveList[_selectIncentiveId];
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Container IOSIncentiveItem(BuildContext context, int index) {
+    return Container(
+            height: 40,
+            child:context.read<Incentive>().is_incentives ?
+            IncentiveItem(
+              index: index,
+              incentive_hour: incentives?[index]['incentive_hour'],
+              earnings_incentive: incentives?[index]['earnings_incentive'],
+              onTap: (){
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height / 3,
+                      child: CupertinoPicker(
+                        itemExtent: 30,
+                        onSelectedItemChanged: (val) {
+                          setState(() {
+                            _selectIncentiveId = val;
+                            incentives?[index]['earnings_incentive'] = double.parse(incentiveList[_selectIncentiveId]);
+                          });
+                        },
+                        children: incentiveList.map((e) => Text(e.toString())).toList(),
+                        scrollController: FixedExtentScrollController(
+                            initialItem: incentiveList.indexOf(incentives![index]['earnings_incentive'].toString()),
+                        ),
+                      ),
+                    );
+                  }
+                );
+              },
+            ):
+            IncentiveItem(
+              index: index,
+              incentive_hour: incentiveDefault[index]['incentive_hour'],
+              earnings_incentive: incentiveDefault[index]['earnings_incentive'],
+              onTap: (){
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height / 3,
+                      child: CupertinoPicker(
+                        itemExtent: 30,
+                        onSelectedItemChanged: (val) {
+                          setState(() {
+                            incentives?[index]['earnings_incentive'] = double.parse(incentiveList[val]);
+                          });
+                        },
+                        children: incentiveList.map((e) => Text(e.toString())).toList(),
+                        scrollController: FixedExtentScrollController(
+                          initialItem: incentiveList.indexOf(incentives![index]['earnings_incentive'].toString()),
+                        ),
+                      ),
+                    );
+                  }
+                );
+              },
+            )
+          );
   }
 }
 class IncentiveItem extends StatefulWidget {

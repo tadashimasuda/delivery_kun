@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:delivery_kun/services/todayIncentive.dart';
 import 'package:delivery_kun/services/auth.dart';
@@ -32,9 +33,19 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final locale = Locale("ja", "JP");
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: locale,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        locale,
+      ],
       title: 'delivery-kun',
       home: MapScreen(),
       theme: ThemeData(
