@@ -10,7 +10,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' show Platform;
 
-
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
@@ -252,118 +251,121 @@ class _MapScreenState extends State<MapScreen> {
         }),
       ),
       backgroundColor: Colors.grey.shade200,
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      floatingActionButton: Builder(
-        builder: (context) => FloatingActionButton(
-          elevation: 10,
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          child: Container(
-            height: deviceWidth * 0.18,
-            width: deviceWidth * 0.18,
-            child: Icon(
-              Icons.menu,
-              color: Colors.black,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(70),
-            )),
-        ),
-      ),
       body: Consumer<Auth>(builder: (context, auth, child) {
-        auth.authenticated ? context.read<Status>().getStatusToday(auth.user!.id):false;
+        auth.authenticated ? context.read<Status>().getStatusToday(auth.user!.id) : false;
         return Center(
             child: _loading
                 ? CircularProgressIndicator()
                 : Container(
                     child: Stack(children: <Widget>[
-                    GoogleMap(
-                      markers: Set<Marker>.of(_markers),
-                      polylines: Set<Polyline>.of(_polylines.values),
-                      initialCameraPosition: CameraPosition(
-                        target: _initialPosition,
-                        zoom: 14.4746,
-                      ),
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                      },
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      mapToolbarEnabled: false,
-                      buildingsEnabled: true,
-                      onTap: (LatLng latLng) {
-                        FocusScope.of(context).unfocus();
-                      },
-                    ),
-                    Positioned(
-                      child: destinationTextField(
-                        deviceHeight: deviceHeight,
-                        deviceWidth: deviceWidth,
-                        TextFormField: TextFormField(
-                          textInputAction: TextInputAction.search,
-                          onFieldSubmitted: (value) async {
-                            LatLng origin = await _getCurrentLocation();
-                            if (value != null) {
-                              value.isNotEmpty
-                                  ? _requestDestination(origin, value)
-                                  : _clearPolylineMaker();
-                            }
-                            FocusScope.of(context).unfocus();
-                          },
-                          controller: destinationController,
-                          decoration: InputDecoration(
-                            hintText: "配達先を検索",
-                            border: InputBorder.none,
-                            suffixIcon: destinationController.text.isEmpty ? IconButton(
-                              icon: Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                              ),
-                              onPressed: () async {
-                                print(destinationController.text.isEmpty);
-                                LatLng origin = await _getCurrentLocation();
-                                destinationController.text.isNotEmpty
-                                    ? _requestDestination(origin, destinationController.text)
-                                    : _clearPolylineMaker();
-                                FocusScope.of(context).unfocus();
-                              },
-                            ):IconButton(
-                              icon: Icon(
-                                Icons.close,
-                                color: Colors.grey,
-                              ),
-                              onPressed: () {
-                                destinationController.clear();
-                                _clearPolylineMaker();
-                                FocusScope.of(context).unfocus();
-                              },
-                            ),
-                          ),
+                      GoogleMap(
+                        markers: Set<Marker>.of(_markers),
+                        polylines: Set<Polyline>.of(_polylines.values),
+                        initialCameraPosition: CameraPosition(
+                          target: _initialPosition,
+                          zoom: 14.4746,
                         ),
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        mapToolbarEnabled: false,
+                        buildingsEnabled: true,
+                        onTap: (LatLng latLng) {
+                          FocusScope.of(context).unfocus();
+                        },
                       ),
-                      top: deviceHeight * 0.07,
-                      left: deviceWidth * 0.25,
-                    ),
-                    Positioned(
-                        child: MapScreenBottomBtn(),
-                        bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02),
-                    Positioned(
-                      child: currentLocationBtn(
-                        deviceHeight: deviceHeight,
-                        onPressed: _currentLocation,
+                      Positioned(
+                        width: deviceWidth,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            FloatingActionButton(
+                              elevation: 10,
+                              onPressed: () {
+                                Scaffold.of(context).openDrawer();
+                              },
+                              child: Container(
+                                  height: deviceWidth * 0.18,
+                                  width: deviceWidth * 0.18,
+                                  child: Icon(
+                                    Icons.menu,
+                                    color: Colors.black,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(70),
+                                  )),
+                            ),
+                            destinationTextField(
+                              deviceHeight: deviceHeight,
+                              deviceWidth: deviceWidth,
+                              TextFormField: TextFormField(
+                                textInputAction: TextInputAction.search,
+                                onFieldSubmitted: (value) async {
+                                  LatLng origin = await _getCurrentLocation();
+                                  if (value != null) {
+                                    value.isNotEmpty
+                                        ? _requestDestination(origin, value)
+                                        : _clearPolylineMaker();
+                                  }
+                                  FocusScope.of(context).unfocus();
+                                },
+                                controller: destinationController,
+                                decoration: InputDecoration(
+                                  hintText: "配達先を検索",
+                                  border: InputBorder.none,
+                                  suffixIcon: destinationController.text.isEmpty ? IconButton(
+                                    icon: Icon(
+                                      Icons.search,
+                                      color: Colors.grey,
+                                    ),
+                                    onPressed: () async {
+                                      print(destinationController.text.isEmpty);
+                                      LatLng origin = await _getCurrentLocation();
+                                      destinationController.text.isNotEmpty
+                                          ? _requestDestination(origin, destinationController.text)
+                                          : _clearPolylineMaker();
+                                      FocusScope.of(context).unfocus();
+                                    },
+                                  ):IconButton(
+                                    icon: Icon(
+                                      Icons.close,
+                                      color: Colors.grey,
+                                    ),
+                                    onPressed: () {
+                                      destinationController.clear();
+                                      _clearPolylineMaker();
+                                      FocusScope.of(context).unfocus();
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        top: 50,
                       ),
-                      bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02,
-                      right: 10,
-                    ),
-                    auth.authenticated != false
-                      ? Positioned(
-                        child: DaysEarningsTotalBottomSheet(deviceHeight: deviceHeight),
-                          height: deviceHeight * 0.10,
-                          width: deviceWidth,
-                          bottom: 0,
-                        )
+                      Positioned(
+                          child: MapScreenBottomBtn(),
+                          bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02
+                      ),
+                      Positioned(
+                        child: currentLocationBtn(
+                          deviceHeight: deviceHeight,
+                          onPressed: _currentLocation,
+                        ),
+                        bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02,
+                        right: 10,
+                      ),
+                      auth.authenticated != false
+                        ? Positioned(
+                          child: DaysEarningsTotalBottomSheet(deviceHeight: deviceHeight),
+                            height: deviceHeight * 0.10,
+                            width: deviceWidth,
+                            bottom: 0,
+                          )
                         : SizedBox.shrink()
                   ])));
       }),

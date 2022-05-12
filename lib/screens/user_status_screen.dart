@@ -71,7 +71,6 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
   @override
   Widget build(BuildContext context) {
     int user_id = widget.user_id;
-    context.read<Status>().getStatusToday(user_id);
 
     return SingleChildScrollView(
       child: Container(
