@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'dart:io' show Platform;
 
 import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/constants.dart';
@@ -63,6 +64,114 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
     super.initState();
   }
 
+  Future _AndroidSelectTime(BuildContext context) async {
+   final initialTime = TimeOfDay(hour: _selectHour, minute: _selectMinite);
+
+   final newTime = await showTimePicker(context: context, initialTime: initialTime);
+
+   if(newTime != null){
+     setState(() {
+       _selectHour = newTime.hour;
+       _selectMinite = newTime.minute;
+     });
+   }else{
+     return;
+   }
+  }
+
+  Future _IOSSelectTime(){
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Row(
+          children: [
+            Expanded(
+              child: CupertinoPicker(
+                itemExtent: 30,
+                onSelectedItemChanged: (val) {
+                  setState(() {
+                    _selectHour = val;
+                  });
+                },
+                children: _hourList
+                    .map((e) => Text(e.toString()))
+                    .toList(),
+                scrollController:
+                FixedExtentScrollController(
+                    initialItem: _selectHour),
+              )),
+            Expanded(child: Text('時')),
+            Expanded(
+              child: CupertinoPicker(
+                itemExtent: 30,
+                onSelectedItemChanged: (val) {
+                  setState(() {
+                    _selectMinite = val;
+                  });
+                },
+                children: _miniteList.map((e) =>
+                    Text(e.toString())
+                ).toList(),
+                scrollController:
+                FixedExtentScrollController(
+                    initialItem: _selectMinite),
+              )),
+            Expanded(child: Text('分')),
+          ],
+        );
+      });
+  }
+
+  Widget IOSIncentiveTextForm(){
+    return TextField(
+        controller: TextEditingController(
+            text: _incentiveList[_selectIncentiveId]
+                .toString()
+        ),
+        readOnly: true,
+        onTap: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: CupertinoPicker(
+                    itemExtent: 30,
+                    onSelectedItemChanged: (val) {
+                      setState(() {
+                        _selectIncentiveId = val;
+                        incentiveController.text =
+                            _incentiveList[val].toString();
+                      });
+                    },
+                    children: _incentiveList
+                        .map((e) => Text(e))
+                        .toList(),
+                    scrollController:
+                    FixedExtentScrollController(
+                        initialItem: _selectIncentiveId),
+                  ),
+                );
+              });
+        });
+  }
+
+  DropdownButton AndroidIncentiveTextForm(){
+    return DropdownButton(
+      value: "${_incentiveList[_selectIncentiveId]}",
+      items: _incentiveList.map((e) {
+        return DropdownMenuItem<String>(
+          value: e,
+          child: Text(e),
+        );
+      }).toList(),
+      onChanged: (val){
+        setState(() {
+          _selectIncentiveId = incentiveList.indexOf(val);
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,57 +186,56 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
           ),
           actions:<Widget> [
             TextButton(
-                onPressed: () async {
-                  String time = orderReceivedAt.substring(0, 10) +
-                      ' ' +
-                      _selectHour.toString().padLeft(2, "0") +
-                      ':' +
-                      _selectMinite.toString().padLeft(2, "0") +
-                      ':00';
-                  Map requestData = {
-                    'earnings_incentive': _incentiveList[_selectIncentiveId],
-                    'earnings_base': baseController.text,
-                    'update_date_time': time
-                  };
+              onPressed: () async {
+                String time = orderReceivedAt.substring(0, 10) +
+                    ' ' + _selectHour.toString().padLeft(2, "0") +
+                    ':' + _selectMinite.toString().padLeft(2, "0") +
+                    ':00';
 
-                  bool response =
-                  await Provider.of<OrderList>(context, listen: false)
-                      .updateOrder(requestData: requestData, id: id);
+                Map requestData = {
+                  'earnings_incentive': _incentiveList[_selectIncentiveId],
+                  'earnings_base': baseController.text,
+                  'update_date_time': time
+                };
 
-                  if (!response) {
-                    showCupertinoDialog(
-                        context: context,
-                        builder: (context) {
-                          return CupertinoAlertDialog(
-                            title: Text(
-                              'エラーが発生しました',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            actions: [
-                              CupertinoDialogAction(
-                                isDestructiveAction: true,
-                                child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          );
-                        });
-                  }else{
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }
+                bool response =
+                await Provider.of<OrderList>(context, listen: false)
+                    .updateOrder(requestData: requestData, id: id);
+
+                if (!response) {
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (context) {
+                      return CupertinoAlertDialog(
+                        title: Text(
+                          'エラーが発生しました',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        actions: [
+                          CupertinoDialogAction(
+                            isDestructiveAction: true,
+                            child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    });
+                }else{
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
                 },
-                child: const Text(
-                  '完了',
-                  style: TextStyle(
-                      color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold
-                  ),
-                )
+              child: const Text(
+                '完了',
+                style: TextStyle(
+                    color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold
+                ),
+              )
             )
           ],
         ),
@@ -143,52 +251,13 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                       verticalAlignment: TableCellVerticalAlignment.middle,
                       child: TextField(
                         controller: TextEditingController(
-                            text: _selectHour.toString() +
-                                '時' +
-                                _selectMinite.toString() +
-                                '分'),
+                          text: _selectHour.toString() +
+                              '時' +
+                              _selectMinite.toString() +
+                              '分'),
                         readOnly: true,
                         onTap: () {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Row(
-                                  children: [
-                                    Expanded(
-                                        child: CupertinoPicker(
-                                      itemExtent: 30,
-                                      onSelectedItemChanged: (val) {
-                                        setState(() {
-                                          _selectHour = val;
-                                        });
-                                      },
-                                      children: _hourList
-                                          .map((e) => Text(e.toString()))
-                                          .toList(),
-                                      scrollController:
-                                          FixedExtentScrollController(
-                                              initialItem: _selectHour),
-                                    )),
-                                    Expanded(child: Text('時')),
-                                    Expanded(
-                                        child: CupertinoPicker(
-                                      itemExtent: 30,
-                                      onSelectedItemChanged: (val) {
-                                        setState(() {
-                                          _selectMinite = val;
-                                        });
-                                      },
-                                      children: _miniteList
-                                          .map((e) => Text(e.toString()))
-                                          .toList(),
-                                      scrollController:
-                                          FixedExtentScrollController(
-                                              initialItem: _selectMinite),
-                                    )),
-                                    Expanded(child: Text('分')),
-                                  ],
-                                );
-                              });
+                          Platform.isIOS ? _IOSSelectTime():_AndroidSelectTime(context);
                         },
                       ),
                     ),
@@ -202,42 +271,14 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                       ),
                     )
                   ]),
-                  TableRow(children: [
-                    UpdateTitleCell(title: 'インセンティブ'),
-                    TableCell(
-                      child: TextField(
-                          controller: TextEditingController(
-                              text: _incentiveList[_selectIncentiveId]
-                                  .toString()),
-                          readOnly: true,
-                          onTap: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    height:
-                                        MediaQuery.of(context).size.height / 3,
-                                    child: CupertinoPicker(
-                                      itemExtent: 30,
-                                      onSelectedItemChanged: (val) {
-                                        setState(() {
-                                          _selectIncentiveId = val;
-                                          incentiveController.text =
-                                              _incentiveList[val].toString();
-                                        });
-                                      },
-                                      children: _incentiveList
-                                          .map((e) => Text(e))
-                                          .toList(),
-                                      scrollController:
-                                          FixedExtentScrollController(
-                                              initialItem: _selectIncentiveId),
-                                    ),
-                                  );
-                                });
-                          }),
-                    )
-                  ])
+                  TableRow(
+                    children: [
+                      UpdateTitleCell(title: 'インセンティブ'),
+                      TableCell(
+                        child: Platform.isIOS ? IOSIncentiveTextForm() : AndroidIncentiveTextForm()
+                      )
+                    ]
+                  )
                 ],
               ),
               SizedBox(height: 30,),
@@ -255,10 +296,11 @@ class UpdateTitleCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TableCell(
-        verticalAlignment: TableCellVerticalAlignment.middle,
-        child: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ));
+      verticalAlignment: TableCellVerticalAlignment.middle,
+      child: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      )
+    );
   }
 }

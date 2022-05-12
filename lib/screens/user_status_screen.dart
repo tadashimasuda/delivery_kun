@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'dart:io' show Platform;
 
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/user_status.dart';
-import 'package:delivery_kun/screens/order_list.dart';
+import 'package:delivery_kun/screens/order_list_screen.dart';
 import 'package:delivery_kun/screens/sign_up_screen.dart';
 import 'package:delivery_kun/components/days_hour_bar_chart.dart';
 
@@ -63,13 +64,13 @@ class LoggedInUserStatus extends StatefulWidget {
 }
 
 class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
-  var actualCost = TextEditingController();
+  TextEditingController _actualCostController = TextEditingController();
+  late int _actualCostText;
   String validateMessage = '';
 
   @override
   Widget build(BuildContext context) {
     int user_id = widget.user_id;
-    context.read<Status>().getStatusToday(user_id);
 
     return SingleChildScrollView(
       child: Container(
@@ -176,12 +177,12 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                             ),
                           ),
                           Text(
-                              status.status!.daysEarningsTotal.toString(),
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                              ))
+                            status.status!.daysEarningsTotal.toString(),
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ))
                         ]),
                         TableRow(children: [
                           TableCell(
@@ -198,13 +199,14 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                           TableCell(
                             child: GestureDetector(
                               onTap: () {
+                                Platform.isIOS ?
                                 showDialog(
                                   context: context,
                                   builder: (context) {
                                     return CupertinoAlertDialog(
                                       title: Text("支出を入力"),
                                       content: CupertinoTextField(
-                                        controller: actualCost,
+                                        controller: _actualCostController,
                                         keyboardType: TextInputType.number,
                                       ),
                                       actions: <Widget>[
@@ -217,9 +219,9 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                           child: Text("完了",style: TextStyle(color: Colors.blueAccent)),
                                           isDestructiveAction: true,
                                           onPressed: () async {
-                                            int requestActualCost = int.parse(actualCost.text);
+                                            int requestActualCost = int.parse(_actualCostController.text);
 
-                                            if (actualCost.text.isEmpty) {
+                                            if (_actualCostController.text.isEmpty) {
                                               showDialog(
                                                 context: context,
                                                 builder: (_) => AlertWidght(title:'支出を入力してください')
@@ -232,8 +234,8 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                                 setState(() {});
                                               }else{
                                                 showDialog(
-                                                    context: context,
-                                                    builder: (_) => AlertWidght(title: 'エラーが発生しました'));
+                                                  context: context,
+                                                  builder: (_) => AlertWidght(title: 'エラーが発生しました'));
                                               }
                                             }
                                           },
@@ -241,6 +243,44 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                       ],
                                     );
                                   },
+                                ):showDialog(
+                                    context: context,
+                                    builder: (BuildContext context){
+                                      return AlertDialog(
+                                        title:Text('支出を入力してください'),
+                                        content: TextField(
+                                          keyboardType: TextInputType.number,
+                                          onChanged: (value){
+                                            _actualCostText = int.parse(value);
+                                          },
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('キャンセル')
+                                          ),
+                                          TextButton(
+                                            onPressed: () async{
+                                              bool response = await context.read<Status>().updateAcutualCost(
+                                                  actualCost: _actualCostText
+                                              );
+
+                                              if (response) {
+                                                Navigator.pop(context);
+                                                setState(() {});
+                                              }else{
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (_) => AlertWidght(title: 'エラーが発生しました'));
+                                              }
+                                            },
+                                            child: Text('完了')
+                                          )
+                                        ],
+                                      );
+                                    }
                                 );
                               },
                               child: SizedBox(
@@ -330,4 +370,3 @@ class AlertWidght extends StatelessWidget {
     );
   }
 }
-

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "568891598812",
+    "project_id": "deliverykun-3a458",
+    "storage_bucket": "deliverykun-3a458.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568891598812:android:81dfb4d6a887910d285119",
+        "android_client_info": {
+          "package_name": "tadashi.deliveryKun"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "568891598812-itcid8av9lq2eb3o59osguf8pm630d23.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAk_tKDV20EXQFZugxHhCbyDn5-KNIiXWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "568891598812-itcid8av9lq2eb3o59osguf8pm630d23.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "568891598812-ke19cigfu97co83jkm5uvgtg4mi8p7ki.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "tadashi.deliverykun"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

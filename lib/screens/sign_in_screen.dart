@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'dart:io' show Platform;
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -229,7 +229,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
               SizedBox(
                 height: 15,
               ),
-              GestureDetector(
+              Platform.isIOS ? GestureDetector(
                 child: SocialSignInButton(
                   backgroundColor: Colors.black,
                   textColor: Colors.white,
@@ -274,7 +274,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                     );
                   }
                 },
-              ),
+              ) : SizedBox.shrink(),
               TextButton(
                 onPressed: () {
                   Navigator.push(context,

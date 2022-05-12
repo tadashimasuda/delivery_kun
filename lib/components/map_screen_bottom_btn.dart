@@ -37,13 +37,13 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
               ),
               CupertinoDialogAction(
                 child: Text('記録する'),
-                onPressed: () async {
+                onPressed: () {
+                  Navigator.pop(context);
+
                   Auth auth = context.read<Auth>();
 
-                  await OrderList().postOrder();
-                  await context.read<Status>().getStatusToday(auth.user!.id);
-
-                  Navigator.pop(context);
+                  OrderList().postOrder();
+                  context.read<Status>().getStatusToday(auth.user!.id);
                 },
               ),
             ],
@@ -70,8 +70,12 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
             ),
             TextButton(
               onPressed: () {
-                OrderList().postOrder();
                 Navigator.pop(context);
+
+                Auth auth = context.read<Auth>();
+
+                OrderList().postOrder();
+                context.read<Status>().getStatusToday(auth.user!.id);
               },
               child: Text('記録する'),
             ),
