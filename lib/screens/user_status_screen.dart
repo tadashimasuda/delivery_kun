@@ -8,7 +8,7 @@ import 'dart:io' show Platform;
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/user_status.dart';
-import 'package:delivery_kun/screens/order_list.dart';
+import 'package:delivery_kun/screens/order_list_screen.dart';
 import 'package:delivery_kun/screens/sign_up_screen.dart';
 import 'package:delivery_kun/components/days_hour_bar_chart.dart';
 
