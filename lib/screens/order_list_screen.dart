@@ -1,3 +1,4 @@
+import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
@@ -9,8 +10,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:delivery_kun/screens/order_update_screen.dart';
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/order.dart';
-
-
 
 class OrderListScreen extends StatefulWidget {
   OrderListScreen({required this.date});
@@ -214,25 +213,25 @@ class _OrderListScreenState extends State<OrderListScreen> {
 
   CupertinoAlertDialog IOSAlertDialog(BuildContext context) {
     return CupertinoAlertDialog(
-                                title: Text(
-                                  'エラーが発生しました',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                actions: [
-                                  CupertinoDialogAction(
-                                    isDestructiveAction: true,
-                                    child: Text(
-                                      'OK',
-                                      style: TextStyle(color: Colors.lightBlue),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                      reloadWidget();
-                                    },
-                                  ),
-                                ],
-                              );
+      title: Text(
+        'エラーが発生しました',
+        style: TextStyle(color: Colors.black),
+      ),
+      actions: [
+        CupertinoDialogAction(
+          isDestructiveAction: true,
+          child: Text(
+            'OK',
+            style: TextStyle(color: Colors.lightBlue),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            reloadWidget();
+          },
+        ),
+      ],
+    );
   }
 
   @override
@@ -240,6 +239,12 @@ class _OrderListScreenState extends State<OrderListScreen> {
     reloadWidget();
     return Scaffold(
         appBar: AppBar(
+          leading: Platform.isAndroid ? IconButton(
+            icon: Icon(Icons.close, color: Colors.white),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+          ):null,
           title: Text(DateFormat('M月d日').format(widget.date).toString()),
         ),
         body: Consumer<OrderList>(
@@ -280,16 +285,16 @@ class _OrderListScreenState extends State<OrderListScreen> {
         children: [
           Expanded(
             child: Container(
-                child: Text(
+              child: Text(
               '${index + 1}',
               textAlign: TextAlign.center,
             )),
           ),
           Expanded(
             child: Container(
-                child: Text(
-                    getJPDate(DateTime.parse(order['order_received_at'])),
-                    textAlign: TextAlign.center)),
+              child: Text(
+                getJPDate(DateTime.parse(order['order_received_at'])),
+                textAlign: TextAlign.center)),
           ),
           Expanded(
             child: Text('×${double.parse(earningsIncentive.toString())}',
