@@ -10,7 +10,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' show Platform;
 
-
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
@@ -252,28 +251,8 @@ class _MapScreenState extends State<MapScreen> {
         }),
       ),
       backgroundColor: Colors.grey.shade200,
-      // floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      // floatingActionButton: Builder(
-      //   builder: (context) => FloatingActionButton(
-      //     elevation: 10,
-      //     onPressed: () {
-      //       Scaffold.of(context).openDrawer();
-      //     },
-      //     child: Container(
-      //       height: deviceWidth * 0.18,
-      //       width: deviceWidth * 0.18,
-      //       child: Icon(
-      //         Icons.menu,
-      //         color: Colors.black,
-      //       ),
-      //       decoration: BoxDecoration(
-      //         color: Colors.white,
-      //         borderRadius: BorderRadius.circular(70),
-      //       )),
-      //   ),
-      // ),
       body: Consumer<Auth>(builder: (context, auth, child) {
-        auth.authenticated ? context.read<Status>().getStatusToday(auth.user!.id):false;
+        auth.authenticated ? context.read<Status>().getStatusToday(auth.user!.id) : false;
         return Center(
             child: _loading
                 ? CircularProgressIndicator()
@@ -370,7 +349,8 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                       Positioned(
                           child: MapScreenBottomBtn(),
-                          bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02),
+                          bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02
+                      ),
                       Positioned(
                         child: currentLocationBtn(
                           deviceHeight: deviceHeight,
