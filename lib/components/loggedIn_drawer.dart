@@ -18,9 +18,14 @@ class LoggedInDrawer extends StatefulWidget {
 
 class _LoggedInDrawerState extends State<LoggedInDrawer> {
   String _url = 'https://docs.google.com/forms/d/1-EyD9wgMg3dsEL1B26RwCGv5NmYUZnDCsUTv4n-TvZs/edit?usp=sharing';
+  String _noteUrl = 'https://note.com/deliverykun/n/n143325d75507';
 
   void _launchURL() async {
     if (!await launch(_url)) throw 'Could not launch $_url';
+  }
+
+  void _launchNoteURL() async {
+    if (!await launch(_noteUrl)) throw 'Could not launch $_noteUrl';
   }
 
   @override
@@ -72,6 +77,11 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
                   MaterialPageRoute(builder: (context) => SettingScreen())
               );
             },
+          ),
+          SizedBox(height: 8,),
+          ListTile(
+              title: drawerListText(title: 'アプリの使い方'),
+              onTap: _launchNoteURL
           ),
           SizedBox(height: 8,),
           ListTile(
