@@ -71,6 +71,10 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
             '更新できませんでした',
             style: TextStyle(color: Colors.black),
           ),
+          content: Text(
+           'アプリのアップデートをお試しください',
+            style: TextStyle(color: Colors.black),
+          ),
           actions: [
             CupertinoDialogAction(
               isDestructiveAction: true,
@@ -90,7 +94,10 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('更新できませんでした'),
-          content: Text('もう一度お試しください'),
+          content: Text(
+            'アプリのアップデートをお試しください',
+            style: TextStyle(color: Colors.black),
+          ),
           actions: <Widget>[
             TextButton(
               child: const Text('OK'),
