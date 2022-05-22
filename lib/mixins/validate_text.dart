@@ -50,6 +50,22 @@ mixin ValidateText{
     return messages;
   }
 
+  List<Widget> ValidateEarningsBase(Validate? validate) {
+    var earningsBase = validate?.earningsBase;
+
+    List<Widget> messages = [];
+    if (earningsBase != null) {
+      earningsBase.forEach((message) {
+        messages.add(Text(
+          message,
+          style: TextStyle(color: Colors.redAccent),
+        ));
+      });
+      return messages;
+    }
+    return messages;
+  }
+
   List<Widget> ValidateVehicleModel(Validate? validate) {
     var vehicleModelMessage = validate?.vehicleModelId;
 

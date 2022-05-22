@@ -19,13 +19,14 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> with ValidateText {
-  String _name = '';
-  String _email = '';
-  int _selectVehicleModelId = 1;
-  int _selectPrefectureId = 1;
+  late String _name;
+  late String _email;
+  late int _selectVehicleModelId;
+  late int _selectPrefectureId;
   late BannerAd _bannerAd;
-  String dropdownValue = '';
-  String dropdownPrefectureValue = '';
+  late String _dropdownValue;
+  late String _dropdownPrefectureValue;
+  TextEditingController _earningsBaseController = TextEditingController();
 
   List<String> _prefectureList = prefectureList;
   List<String> _VehicleModelList = VehicleModelList;
@@ -35,10 +36,11 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
     Auth auth = context.read<Auth>();
     _name = auth.user!.name;
     _email = auth.user!.email;
+    _earningsBaseController.text = auth.user!.earningsBase.toString();
     _selectVehicleModelId = auth.user!.vehicleModel;
-    dropdownValue = _VehicleModelList[_selectVehicleModelId];
+    _dropdownValue = _VehicleModelList[_selectVehicleModelId];
     _selectPrefectureId = auth.user!.prefectureId;
-    dropdownPrefectureValue = _prefectureList[_selectPrefectureId];
+    _dropdownPrefectureValue = _prefectureList[_selectPrefectureId];
     _initBannerAd();
     super.initState();
   }
@@ -65,16 +67,16 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text('更新できませんでした',style: TextStyle(color: Colors.black),),
+          title: Text(
+            '更新できませんでした',
+            style: TextStyle(color: Colors.black),
+          ),
           actions: [
             CupertinoDialogAction(
               isDestructiveAction: true,
               child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MapScreen()));
+                Navigator.pop(context);
               },
             ),
           ],
@@ -102,6 +104,112 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
     );
   }
 
+  TextField IOSPicker(BuildContext context, Auth auth) {
+    return TextField(
+      controller: TextEditingController(text: _VehicleModelList[_selectVehicleModelId]),
+      readOnly: true,
+      decoration: InputDecoration(
+          labelText: '配達車両',
+          suffixIcon: vehiceModelIcon(_selectVehicleModelId),
+          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))
+      ),
+      onTap: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: CupertinoPicker(
+                    itemExtent: 30,
+                    onSelectedItemChanged: (val) {
+                      setState(() {
+                        _selectVehicleModelId = val;
+                      });
+                    },
+                    children: _VehicleModelList.map((e) => Text(e))
+                        .toList(),
+                    scrollController: FixedExtentScrollController(
+                        initialItem: auth.user!.vehicleModel),
+                  )
+              );
+            }
+        );
+      },
+    );
+  }
+
+  DropdownButton<String> AndroidDropDown() {
+    return DropdownButton(
+      value: _dropdownValue,
+      items: _VehicleModelList.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (String? val){
+        setState(() {
+          _selectVehicleModelId = _VehicleModelList.indexOf(val!);
+          _dropdownValue = _VehicleModelList[_selectVehicleModelId];
+        });
+      },
+      isExpanded: true,
+    );
+  }
+
+  TextField IOSPrefecturePicker(BuildContext context, Auth auth) {
+    return TextField(
+      controller: TextEditingController(text: _prefectureList[_selectPrefectureId]),
+      readOnly: true,
+      decoration: InputDecoration(
+          hintText: _prefectureList[_selectPrefectureId],
+          suffixIcon: Icon(Icons.location_on),
+          labelText: '活動場所',
+          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))),
+      onTap: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: MediaQuery.of(context).size.height / 3,
+                child: CupertinoPicker(
+                  itemExtent: 30,
+                  onSelectedItemChanged: (val) {
+                    setState(() {
+                      _selectPrefectureId = val;
+                    });
+                  },
+                  children:
+                  _prefectureList.map((e) => Text(e)).toList(),
+                  scrollController: FixedExtentScrollController(
+                      initialItem: _selectPrefectureId),
+                ),
+              );
+            }
+        );
+      },
+    );
+  }
+
+  DropdownButton<String> AndroidPrefectureDropDown() {
+    return DropdownButton(
+      value: _dropdownPrefectureValue,
+      items: _prefectureList.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (String? val){
+        setState(() {
+          _selectPrefectureId = _prefectureList.indexOf(val!);
+          _dropdownPrefectureValue = _prefectureList[_selectPrefectureId];
+        });
+      },
+      isExpanded: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +227,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
               Map userData = {
                 'name': _name,
                 'email': _email,
+                'earningsBase': _earningsBaseController.text,
                 'vehicleModelId': _selectVehicleModelId,
                 'prefectureId': _selectPrefectureId + 1,
                 };
@@ -179,6 +288,21 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                   SizedBox(
                     height: 20,
                   ),
+                  AccountTextField(
+                    controller:_earningsBaseController,
+                    obscureText: false,
+                    title: '基本報酬(円)',
+                    icon: Icons.money,
+                    isBorder: Platform.isIOS ? true : false,
+                    textInputType: TextInputType.number,
+                    onChange: (value) {},
+                  ),
+                  Column(
+                    children: ValidateEarningsBase(auth.validate_message),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Platform.isIOS ? IOSPicker(context, auth) : AndroidDropDown(),
                   Column(
                     children: ValidateVehicleModel(auth.validate_message),
@@ -204,111 +328,4 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       ),
     );
   }
-
-  TextField IOSPicker(BuildContext context, Auth auth) {
-    return TextField(
-      controller: TextEditingController(text: _VehicleModelList[_selectVehicleModelId]),
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: '配達車両',
-        suffixIcon: vehiceModelIcon(_selectVehicleModelId),
-        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))
-      ),
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: CupertinoPicker(
-                itemExtent: 30,
-                onSelectedItemChanged: (val) {
-                  setState(() {
-                    _selectVehicleModelId = val;
-                  });
-                },
-                children: _VehicleModelList.map((e) => Text(e))
-                    .toList(),
-                scrollController: FixedExtentScrollController(
-                    initialItem: auth.user!.vehicleModel),
-              )
-            );
-          }
-        );
-      },
-    );
-  }
-
-  DropdownButton<String> AndroidDropDown() {
-    return DropdownButton(
-      value: dropdownValue,
-      items: _VehicleModelList.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: (String? val){
-        setState(() {
-          _selectVehicleModelId = _VehicleModelList.indexOf(val!);
-          dropdownValue = _VehicleModelList[_selectVehicleModelId];
-        });
-      },
-      isExpanded: true,
-    );
-  }
-
-  TextField IOSPrefecturePicker(BuildContext context, Auth auth) {
-    return TextField(
-      controller: TextEditingController(text: _prefectureList[_selectPrefectureId]),
-      readOnly: true,
-      decoration: InputDecoration(
-          hintText: _prefectureList[_selectPrefectureId],
-          suffixIcon: Icon(Icons.location_on),
-          labelText: '活動場所',
-          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))),
-      onTap: () {
-        showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                height: MediaQuery.of(context).size.height / 3,
-                child: CupertinoPicker(
-                  itemExtent: 30,
-                  onSelectedItemChanged: (val) {
-                    setState(() {
-                      _selectPrefectureId = val;
-                    });
-                  },
-                  children:
-                  _prefectureList.map((e) => Text(e)).toList(),
-                  scrollController: FixedExtentScrollController(
-                      initialItem: _selectPrefectureId),
-                ),
-              );
-            }
-        );
-      },
-    );
-  }
-
-  DropdownButton<String> AndroidPrefectureDropDown() {
-    return DropdownButton(
-      value: dropdownPrefectureValue,
-      items: _prefectureList.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: (String? val){
-        setState(() {
-          _selectPrefectureId = _prefectureList.indexOf(val!);
-          dropdownPrefectureValue = _prefectureList[_selectPrefectureId];
-        });
-      },
-      isExpanded: true,
-    );
-  }
-
 }
