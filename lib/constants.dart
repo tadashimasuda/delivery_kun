@@ -21,7 +21,7 @@ const List<String> incentiveList = [
   '2.9'
 ];
 
-const List<String> prefectureList =[
+const List<String> prefectureList = [
   "北海道",
   "青森県",
   "岩手県",
@@ -71,11 +71,9 @@ const List<String> prefectureList =[
   "沖縄県"
 ];
 
-const List<String> VehicleModelList = [
-  'バイク', '自転車', '車', '徒歩'
-];
+const List<String> VehicleModelList = ['バイク', '自転車', '車', '徒歩'];
 
-List<dynamic> incentiveDefault =[
+List<dynamic> incentiveDefault = [
   {'incentive_hour': '07', 'earnings_incentive': 1.0},
   {'incentive_hour': '08', 'earnings_incentive': 1.0},
   {'incentive_hour': '09', 'earnings_incentive': 1.0},
