@@ -1,4 +1,4 @@
-import 'package:delivery_kun/screens/setting_incentives_sheet.dart';
+import 'package:delivery_kun/screens/setting_incentives_sheet_screen.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:delivery_kun/constants.dart';
