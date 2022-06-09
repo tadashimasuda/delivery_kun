@@ -79,7 +79,10 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                   );
                 });
                 if(sheetId != null){
-                  context.read<OrderList>().postOrder(sheetId:sheetId);
+                  int user_id = context.read<Auth>().user!.id;
+
+                  await context.read<OrderList>().postOrder(sheetId:sheetId);
+                  await context.read<Status>().getStatusToday(user_id);
                 }
               } else {
                 showDialog(

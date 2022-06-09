@@ -34,15 +34,46 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
         children: [
           SizedBox(height: 20,),
           SizedBox(
-            height: 40,
+            height: 45,
             width: MediaQuery.of(context).size.width * 0.8,
             child: ElevatedButton(
                 onPressed: (){
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SettingCreateIncentiveScreen())
-                  ).then((value) => setState(() {}));
+                  if(_IncentivesSheetList.length < 8){
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SettingCreateIncentiveScreen())
+                    ).then((value) => setState(() {}));
+                  }else{
+                    showDialog(
+                      context: context,
+                      builder: (childContext) {
+                        return SimpleDialog(
+                          title: Text("8シートまでしか登録できません。"),
+                          children: <Widget>[
+                            SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(childContext);
+                              },
+                              child: Text(
+                                "OK",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
-                child: Text('新規作成')
+                child: Text(
+                  '新規作成',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold
+                  ),
+                )
             ),
           ),
           SizedBox(height: 20,),
