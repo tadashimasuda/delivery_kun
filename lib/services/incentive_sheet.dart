@@ -86,4 +86,23 @@ class IncentiveSheet extends ChangeNotifier{
       print(e);
     }
   }
+
+  Future<void> postIncentive({required Map requestBody}) async{
+    String? token = await auth.getToken();
+    print(requestBody);
+    try {
+      await dio().post(
+        '/incentive_sheets',
+        data: requestBody,
+        options: Dio.Options(headers: {
+          'Authorization': 'Bearer $token'
+        }),
+      );
+
+      notifyListeners();
+    } on Dio.DioError catch (e) {
+      print(e);
+    }
+  }
+
 }

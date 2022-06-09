@@ -1,7 +1,7 @@
 import 'package:delivery_kun/screens/setting_incentives_sheet_screen.dart';
+import 'package:delivery_kun/screens/setting_new_incentive_sheet_screen.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:delivery_kun/constants.dart';
 import 'package:provider/provider.dart';
 
 class SettingIncentivesSheets extends StatefulWidget {
@@ -17,9 +17,9 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
 
   @override
   void initState() {
-    super.initState();
     _IncentivesSheetList =  context.read<IncentiveSheet>().IncentivesSheets;
     _IsIncentivesSheet = context.read<IncentiveSheet>().isInsentivesSheet;
+    super.initState();
   }
 
   @override
@@ -36,7 +36,11 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
             height: 40,
             width: MediaQuery.of(context).size.width * 0.8,
             child: ElevatedButton(
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SettingNewIncentiveScreen())
+                  ).then((value) => setState(() {print('aa');}));
+                },
                 child: Text('新規作成')
             ),
           ),
