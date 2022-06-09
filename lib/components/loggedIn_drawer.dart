@@ -63,17 +63,6 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
           ),
           SizedBox(height: 8,),
           ListTile(
-            title: drawerListText(title: 'インセンティブ設定'),
-            onTap: () async {
-              await context.read<Incentive>().getTodayIncentive();
-
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingIncentiveScreen())
-              );
-            },
-          ),
-          SizedBox(height: 8,),
-          ListTile(
             title: drawerListText(title: 'インセンティブシート設定'),
             onTap: () async {
               await context.read<IncentiveSheet>().getIncentives();
