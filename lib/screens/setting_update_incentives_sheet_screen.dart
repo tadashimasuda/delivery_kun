@@ -148,7 +148,7 @@ class _SettingUpdateIncentivesSheetScreenState
                                           textAlign: TextAlign.center,
                                         ),
                                         onTap: () async {
-                                          double result = await showDialog(
+                                          var result = await showDialog(
                                               context: context,
                                               builder: (childContext) {
                                                 return SimpleDialog(
@@ -191,10 +191,12 @@ class _SettingUpdateIncentivesSheetScreenState
                                                   ],
                                                 );
                                               });
-                                          setState(() {
-                                            IncentivesSheet.earningsIncentives['${hour}'] = result;
-                                            incentive = result;
-                                          });
+                                          if(result != null){
+                                            setState(() {
+                                              IncentivesSheet.earningsIncentives['${hour}'] = result;
+                                              incentive = result;
+                                            });
+                                          }
                                         }),
                                   )
                                 ]),
