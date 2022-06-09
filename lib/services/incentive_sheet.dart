@@ -30,8 +30,6 @@ class IncentiveSheet extends ChangeNotifier{
       );
 
       if(response != null){
-        print(response);
-
         _isInsentivesSheet = true;
         _IncentivesSheets.clear();
 
@@ -71,7 +69,6 @@ class IncentiveSheet extends ChangeNotifier{
 
   Future<void> updateIncentive({required String id,required Map requestBody}) async{
     String? token = await auth.getToken();
-    print(requestBody);
     try {
       await dio().patch(
         '/incentive_sheets/' + id,
@@ -89,11 +86,26 @@ class IncentiveSheet extends ChangeNotifier{
 
   Future<void> postIncentive({required Map requestBody}) async{
     String? token = await auth.getToken();
-    print(requestBody);
     try {
       await dio().post(
         '/incentive_sheets',
         data: requestBody,
+        options: Dio.Options(headers: {
+          'Authorization': 'Bearer $token'
+        }),
+      );
+
+      notifyListeners();
+    } on Dio.DioError catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> deleteIncentive({required String id}) async{
+    String? token = await auth.getToken();
+    try {
+      await dio().delete(
+        '/incentive_sheets/' + id,
         options: Dio.Options(headers: {
           'Authorization': 'Bearer $token'
         }),

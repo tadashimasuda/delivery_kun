@@ -39,7 +39,7 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
                 onPressed: (){
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SettingNewIncentiveScreen())
-                  ).then((value) => setState(() {print('aa');}));
+                  ).then((value) => setState(() {}));
                 },
                 child: Text('新規作成')
             ),
@@ -59,7 +59,8 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
                   onTap: () async{
                     await context.read<IncentiveSheet>().getIncentive(id: _IncentivesSheetList[index].id);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SettingIncentivesSheetScreen(id: _IncentivesSheetList[index].id,)));
+                      MaterialPageRoute(builder: (context) => SettingIncentivesSheetScreen(id: _IncentivesSheetList[index].id,))
+                    ).then((value) => setState(() {print('delete');}));
                   },
                   title: Text(
                     _IncentivesSheetList[index].title,
