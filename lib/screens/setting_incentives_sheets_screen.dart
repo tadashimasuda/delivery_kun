@@ -60,7 +60,7 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
                     await context.read<IncentiveSheet>().getIncentive(id: _IncentivesSheetList[index].id);
                     Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SettingIncentivesSheetScreen(id: _IncentivesSheetList[index].id,))
-                    ).then((value) => setState(() {print('delete');}));
+                    ).then((value) => setState(() {}));
                   },
                   title: Text(
                     _IncentivesSheetList[index].title,

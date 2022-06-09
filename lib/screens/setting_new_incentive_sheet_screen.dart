@@ -1,6 +1,5 @@
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:delivery_kun/models/incentive_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_kun/constants.dart';
 
@@ -28,6 +27,23 @@ class _SettingNewIncentiveScreenState extends State<SettingNewIncentiveScreen> {
     super.initState();
   }
 
+  SimpleDialog ErrorDialog(BuildContext childContext) {
+    return SimpleDialog(
+      title: Text("エラーが発生しました"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      children: <Widget>[
+        SimpleDialogOption(
+          onPressed: () {
+            IncentiveSheet().isError = false;
+
+            Navigator.pop(childContext);
+          },
+          child: Text("OK"),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,10 +58,19 @@ class _SettingNewIncentiveScreenState extends State<SettingNewIncentiveScreen> {
                   };
                   context.read<IncentiveSheet>().postIncentive(requestBody: requestBody);
                   await context.read<IncentiveSheet>().getIncentives();
+
+                  bool _isError = await context.read<IncentiveSheet>().isError;
+                  if(_isError){
+                    await showDialog(
+                      context: context,
+                      builder: (childContext) {
+                        return ErrorDialog(childContext);
+                    });
+                  }
                   Navigator.pop(context);
                 },
                 child:const Text(
-                  '更新',
+                  '作成',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,

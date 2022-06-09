@@ -1,9 +1,7 @@
-import 'package:delivery_kun/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart' as Dio;
 import 'package:delivery_kun/models/incentive_sheet.dart';
 import 'dio.dart';
-import 'dart:convert';
 
 import 'package:delivery_kun/services/auth.dart';
 
@@ -11,13 +9,21 @@ class IncentiveSheet extends ChangeNotifier{
   Auth auth = Auth();
   List<IncentiveSheetModel> _IncentivesSheets = [];
   bool _isInsentivesSheet = false;
-
   late IncentiveSheetModel _IncentivesSheet;
+  bool _isErorr = false;
 
   List<IncentiveSheetModel> get IncentivesSheets => _IncentivesSheets;
   bool get isInsentivesSheet => _isInsentivesSheet;
 
   IncentiveSheetModel get IncentivesSheet => _IncentivesSheet;
+
+  bool get isError => _isErorr;
+
+  void set isError(bool isError) {
+    _isErorr = isError;
+
+    notifyListeners();
+  }
 
   Future<void> getIncentives() async{
     String? token = await auth.getToken();
@@ -36,6 +42,7 @@ class IncentiveSheet extends ChangeNotifier{
         response.data['data'].forEach((item) {
           _IncentivesSheets.add(IncentiveSheetModel.fromJson(item));
         });
+
         notifyListeners();
       }
 
@@ -80,7 +87,8 @@ class IncentiveSheet extends ChangeNotifier{
 
       notifyListeners();
     } on Dio.DioError catch (e) {
-      print(e);
+      _isErorr = true;
+      notifyListeners();
     }
   }
 
@@ -97,7 +105,8 @@ class IncentiveSheet extends ChangeNotifier{
 
       notifyListeners();
     } on Dio.DioError catch (e) {
-      print(e);
+      _isErorr = true;
+      notifyListeners();
     }
   }
 
@@ -113,7 +122,8 @@ class IncentiveSheet extends ChangeNotifier{
 
       notifyListeners();
     } on Dio.DioError catch (e) {
-      print(e);
+      _isErorr = true;
+      notifyListeners();
     }
   }
 

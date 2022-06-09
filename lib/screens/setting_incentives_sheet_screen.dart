@@ -31,6 +31,23 @@ class _SettingIncentivesSheetScreenState
     super.initState();
   }
 
+  SimpleDialog ErrorDialog(BuildContext childContext) {
+    return SimpleDialog(
+      title: Text("エラーが発生しました"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      children: <Widget>[
+        SimpleDialogOption(
+          onPressed: () {
+            IncentiveSheet().isError = false;
+
+            Navigator.pop(childContext);
+          },
+          child: Text("OK"),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,25 +55,36 @@ class _SettingIncentivesSheetScreenState
           title: Text('インセンティブ設定'),
           actions: <Widget>[
             TextButton(
-                onPressed: () {
-                  Map requestBody = {
-                    'id': IncentivesSheet.id,
-                    'title': title,
-                    'earningsIncentives': IncentivesSheet.earningsIncentives
-                  };
-                  context.read<IncentiveSheet>().updateIncentive(
-                      id: IncentivesSheet.id,
-                      requestBody: requestBody
-                  );
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  '更新',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold),
-                ))
+              onPressed: () async{
+                Map requestBody = {
+                  'id': IncentivesSheet.id,
+                  'title': title,
+                  'earningsIncentives': IncentivesSheet.earningsIncentives
+                };
+                context.read<IncentiveSheet>().updateIncentive(
+                    id: IncentivesSheet.id,
+                    requestBody: requestBody
+                );
+
+                bool _isError = await context.read<IncentiveSheet>().isError;
+                if(_isError){
+                  await showDialog(
+                      context: context,
+                      builder: (childContext) {
+                    return ErrorDialog(childContext);
+                  });
+                }
+                await context.read<IncentiveSheet>().getIncentives();
+
+                Navigator.pop(context);
+              },
+              child: const Text(
+                '更新',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold),
+              ))
           ],
         ),
         body: SingleChildScrollView(
@@ -193,6 +221,17 @@ class _SettingIncentivesSheetScreenState
                               await context.read<IncentiveSheet>().getIncentives();
 
                               Navigator.pop(childContext);
+
+                              bool _isError = await context.read<IncentiveSheet>().isError;
+                              if(_isError){
+                                await showDialog(
+                                  context: context,
+                                  builder: (childContext) {
+                                    return ErrorDialog(childContext);
+                                  });
+                              }
+
+                              Navigator.pop(context);
                             },
                             child: Text("削除"),
                           ),
@@ -205,7 +244,6 @@ class _SettingIncentivesSheetScreenState
                         ],
                       );
                     });
-                  Navigator.pop(context);
                 },
               ),
               SizedBox(
