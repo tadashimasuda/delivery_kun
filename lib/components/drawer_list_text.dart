@@ -10,7 +10,7 @@ class drawerListText extends StatelessWidget {
     return Text(
       title,
       style: TextStyle(
-        fontSize: 28,
+        fontSize: 22,
         fontWeight: FontWeight.w400,
       ),
     );

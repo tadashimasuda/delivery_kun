@@ -1,3 +1,4 @@
+import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_config/flutter_config.dart';
@@ -27,6 +28,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => Status()),
         ChangeNotifierProvider(create: (context) => OrderList()),
         ChangeNotifierProvider(create: (context) => Incentive()),
+        ChangeNotifierProvider(create: (context) => IncentiveSheet()),
       ],
       child: MyApp(),
     ),
