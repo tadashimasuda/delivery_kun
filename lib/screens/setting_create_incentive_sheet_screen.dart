@@ -1,16 +1,17 @@
-import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_kun/constants.dart';
 
-class SettingNewIncentiveScreen extends StatefulWidget {
-  const SettingNewIncentiveScreen({Key? key}) : super(key: key);
+import 'package:delivery_kun/services/incentive_sheet.dart';
+
+class SettingCreateIncentiveScreen extends StatefulWidget {
+  const SettingCreateIncentiveScreen({Key? key}) : super(key: key);
 
   @override
-  _SettingNewIncentiveScreenState createState() => _SettingNewIncentiveScreenState();
+  _SettingCreateIncentiveScreenState createState() => _SettingCreateIncentiveScreenState();
 }
 
-class _SettingNewIncentiveScreenState extends State<SettingNewIncentiveScreen> {
+class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScreen> {
 
   late Map IncentivesSheet;
 
@@ -94,8 +95,10 @@ class _SettingNewIncentiveScreenState extends State<SettingNewIncentiveScreen> {
                   },
                 ),
               ),
+              SizedBox(height:10),
               Text('倍率をタップしてください',),
               SizedBox(height:10),
+
               IncentivesSheet != null ? ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),

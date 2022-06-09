@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:dio/dio.dart' as Dio;
-import 'package:delivery_kun/models/incentive_sheet.dart';
 import 'dio.dart';
 
 import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/models/incentive_sheet.dart';
 
 class IncentiveSheet extends ChangeNotifier{
   Auth auth = Auth();

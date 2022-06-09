@@ -1,22 +1,23 @@
-import 'package:delivery_kun/models/incentive_sheet.dart';
-import 'package:delivery_kun/services/incentive_sheet.dart';
-import 'package:delivery_kun/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SettingIncentivesSheetScreen extends StatefulWidget {
-  SettingIncentivesSheetScreen({required this.id});
+import 'package:delivery_kun/models/incentive_sheet.dart';
+import 'package:delivery_kun/services/incentive_sheet.dart';
+import 'package:delivery_kun/constants.dart';
+
+class SettingUpdateIncentivesSheetScreen extends StatefulWidget {
+  SettingUpdateIncentivesSheetScreen({required this.id});
 
   String id;
 
   @override
-  _SettingIncentivesSheetScreenState createState() =>
-      _SettingIncentivesSheetScreenState();
+  _SettingUpdateIncentivesSheetScreenState createState() =>
+      _SettingUpdateIncentivesSheetScreenState();
 }
 
-class _SettingIncentivesSheetScreenState
-    extends State<SettingIncentivesSheetScreen> {
+class _SettingUpdateIncentivesSheetScreenState
+    extends State<SettingUpdateIncentivesSheetScreen> {
   late IncentiveSheetModel IncentivesSheet;
   bool isIncentivesSheet = false;
 

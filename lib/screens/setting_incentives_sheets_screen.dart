@@ -1,8 +1,9 @@
-import 'package:delivery_kun/screens/setting_incentives_sheet_screen.dart';
-import 'package:delivery_kun/screens/setting_new_incentive_sheet_screen.dart';
-import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:delivery_kun/screens/setting_update_incentives_sheet_screen.dart';
+import 'package:delivery_kun/screens/setting_create_incentive_sheet_screen.dart';
+import 'package:delivery_kun/services/incentive_sheet.dart';
 
 class SettingIncentivesSheets extends StatefulWidget {
   const SettingIncentivesSheets({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
             child: ElevatedButton(
                 onPressed: (){
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SettingNewIncentiveScreen())
+                      MaterialPageRoute(builder: (context) => SettingCreateIncentiveScreen())
                   ).then((value) => setState(() {}));
                 },
                 child: Text('新規作成')
@@ -59,7 +60,7 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
                   onTap: () async{
                     await context.read<IncentiveSheet>().getIncentive(id: _IncentivesSheetList[index].id);
                     Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SettingIncentivesSheetScreen(id: _IncentivesSheetList[index].id,))
+                      MaterialPageRoute(builder: (context) => SettingUpdateIncentivesSheetScreen(id: _IncentivesSheetList[index].id,))
                     ).then((value) => setState(() {}));
                   },
                   title: Text(
