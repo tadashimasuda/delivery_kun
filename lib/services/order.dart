@@ -47,12 +47,12 @@ class OrderList extends ChangeNotifier {
     }
   }
 
-  Future<void> postOrder() async {
+  Future<void> postOrder({required String sheetId}) async {
     String? token = await auth.getToken();
 
     try {
-      Dio.Response response = await dio().post('/order',
-        data: {'earnings_incentive': 1.0},
+       await dio().post('/order',
+        data: {'sheetId': sheetId},
         options: Dio.Options(
             headers: {'Authorization': 'Bearer $token'}
         )
