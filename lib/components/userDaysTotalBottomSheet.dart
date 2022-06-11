@@ -15,7 +15,6 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int todayTotal = context.read<Status>().userDaysEarningsTotal;
 
     return Container(
       decoration: BoxDecoration(
@@ -26,20 +25,8 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Positioned(
-              child: IconButton(
-                  onPressed: () async {
-                    int user_id = context.read<Auth>().user!.id;
-                    await context.read<Status>().getStatusToday(user_id);
-                    todayTotal = context.read<Status>().userDaysEarningsTotal;
-                  },
-                  icon: Icon(Icons.refresh)
-              ),
-              height: deviceHeight * 0.10,
-              left: 0
-          ),
           Center(
-            child:BottomSheetText(title: '¥${todayTotal}')
+            child:BottomSheetText(title: '¥${context.watch<Status>().userDaysEarningsTotal}')
           ),
           Positioned(
             child: IconButton(
