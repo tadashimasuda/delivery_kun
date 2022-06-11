@@ -23,6 +23,7 @@ class _SettingUpdateIncentivesSheetScreenState
 
   TextEditingController TitleContoller = TextEditingController();
   String title = '';
+  bool isCreating = false;
 
   @override
   void initState() {
@@ -57,6 +58,10 @@ class _SettingUpdateIncentivesSheetScreenState
           actions: <Widget>[
             TextButton(
               onPressed: () async{
+                setState(() {
+                  isCreating = true;
+                });
+
                 Map requestBody = {
                   'id': IncentivesSheet.id,
                   'title': title,
@@ -77,15 +82,20 @@ class _SettingUpdateIncentivesSheetScreenState
                 }
                 await context.read<IncentiveSheet>().getIncentives();
 
+                setState(() {
+                  isCreating = false;
+                });
+
                 Navigator.pop(context);
               },
-              child: const Text(
+              child: !isCreating ? Text(
                 '更新',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold),
-              ))
+              ) : SizedBox(height: 0,)
+            )
           ],
         ),
         body: SingleChildScrollView(
