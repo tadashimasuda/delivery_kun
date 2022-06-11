@@ -1,3 +1,5 @@
+import 'package:delivery_kun/models/incentive_sheet.dart';
+import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
@@ -20,71 +22,6 @@ class MapScreenBottomBtn extends StatefulWidget {
 class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
   DateTime now = DateTime.now();
 
-  Future<dynamic> IOSDialog() {
-    return showCupertinoDialog(
-        context: context,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            title: Text('記録しますか？'),
-            content: Text('記録時間：${now.hour}時${now.minute}分'),
-            actions: [
-              CupertinoDialogAction(
-                isDestructiveAction: true,
-                child: Text('キャンセル'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              CupertinoDialogAction(
-                child: Text('記録する'),
-                onPressed: () {
-                  Navigator.pop(context);
-
-                  Auth auth = context.read<Auth>();
-
-                  OrderList().postOrder();
-                  context.read<Status>().getStatusToday(auth.user!.id);
-                },
-              ),
-            ],
-          );
-        }
-      );
-    }
-
-  dynamic AndroidDialog() {
-    showDialog(
-      barrierColor: Colors.black.withOpacity(0.5),
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('記録しますか？'),
-          content: Text('記録時間：${now.hour}時${now.minute}分'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                print(DateTime.now());
-              },
-              child: Text('キャンセル'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-
-                Auth auth = context.read<Auth>();
-
-                OrderList().postOrder();
-                context.read<Status>().getStatusToday(auth.user!.id);
-              },
-              child: Text('記録する'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -94,10 +31,59 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           ElevatedButton(
-            onPressed: (){
+            onPressed: () async{
               if (context.read<Auth>().authenticated) {
-                Platform.isIOS ? IOSDialog() : AndroidDialog();
-                setState(() {});
+                late List<IncentiveSheetModel>  _IncentivesSheetList = context.read<IncentiveSheet>().IncentivesSheets;
+
+                var sheetId = await showDialog(
+                    context: context,
+                    builder: (childContext) {
+                  return SimpleDialog(
+                    title: Text("反映するインセンティブを選択してください"),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20))
+                    ),
+                    children: <Widget>[
+                      for (var _IncentivesSheet in _IncentivesSheetList)
+                        Column(
+                          children: [
+                            SimpleDialogOption(
+                              onPressed: () {
+                                Navigator.pop(childContext,_IncentivesSheet.id);
+                              },
+                              child: Container(
+                                height: 45,
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius:
+                                  BorderRadius.all(
+                                      Radius.circular(20)
+                                  )
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    _IncentivesSheet.title,
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )),
+                            ),
+                            SizedBox(height: 6,)
+                          ],
+                        ),
+                    ],
+                  );
+                });
+                if(sheetId != null){
+                  int user_id = context.read<Auth>().user!.id;
+
+                  await context.read<OrderList>().postOrder(sheetId:sheetId);
+                  await context.read<Status>().getStatusToday(user_id);
+                }
               } else {
                 showDialog(
                   context: context,

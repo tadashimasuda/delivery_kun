@@ -247,21 +247,30 @@ class _OrderListScreenState extends State<OrderListScreen> {
           ):null,
           title: Text(DateFormat('M月d日').format(widget.date).toString()),
         ),
-        body: Consumer<OrderList>(
-            builder: (context, orderList, child) => orderList.orders != null
-                ? Container(
-                    child: orderList == null
-                        ? Text(' ')
-                        : ListView.builder(
-                            itemCount: orderList.orders?.length,
-                            itemBuilder: (context, int index) {
-                              return Container(
-                                height: 55,
-                                child: _orderItem(orderList.orders?[index], index),
-                              );
-                            }),
-                  )
-                : Center(child: CircularProgressIndicator())),
+        body: Column(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Text('タップで編集・削除ができます'),
+            Consumer<OrderList>(
+                builder: (context, orderList, child) => orderList.orders != null
+                    ? Container(
+                  child: orderList == null
+                      ? Text(' ')
+                      : Expanded(
+                        child: ListView.builder(
+                        itemCount: orderList.orders?.length,
+                        itemBuilder: (context, int index) {
+                          return Container(
+                            height: 55,
+                            child: _orderItem(orderList.orders?[index], index),
+                          );
+                        }),
+                      ),
+                ) : Center(child: CircularProgressIndicator()))
+          ],
+        ),
         bottomNavigationBar:  Container(
           height: _bannerAd.size.height.toDouble(),
           width: _bannerAd.size.width.toDouble(),
