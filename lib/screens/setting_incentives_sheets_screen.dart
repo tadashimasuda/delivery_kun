@@ -38,6 +38,14 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
                 MaterialPageRoute(builder: (context) => MapScreen()));
           },
         ):null,
+        actions: [
+          IconButton(
+              onPressed: () async {
+                await context.read<IncentiveSheet>().getIncentives();
+              },
+              icon: Icon(Icons.refresh)
+          ),
+        ],
       ),
       body: Column(
         children: [
