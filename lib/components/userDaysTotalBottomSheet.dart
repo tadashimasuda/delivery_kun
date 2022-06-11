@@ -16,7 +16,6 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int todayTotal = context.read<Status>().userDaysEarningsTotal;
-    todayTotal = context.watch<Status>().userDaysEarningsTotal;
 
     return Container(
       decoration: BoxDecoration(
