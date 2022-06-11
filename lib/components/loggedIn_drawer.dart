@@ -20,7 +20,7 @@ class LoggedInDrawer extends StatefulWidget {
 }
 
 class _LoggedInDrawerState extends State<LoggedInDrawer> {
-  String _url = 'https://docs.google.com/forms/d/1-EyD9wgMg3dsEL1B26RwCGv5NmYUZnDCsUTv4n-TvZs/edit?usp=sharing';
+  String _url = 'https://twitter.com/deliveryKun';
   String _noteUrl = 'https://note.com/deliverykun/n/n143325d75507';
 
   void _launchURL() async {
