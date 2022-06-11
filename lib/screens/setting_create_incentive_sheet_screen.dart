@@ -18,6 +18,7 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
 
   TextEditingController TitleContoller = TextEditingController();
   String title = '';
+  bool isCreating = false;
 
   @override
   void initState() {
@@ -54,6 +55,11 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
           actions: <Widget>[
             TextButton(
                 onPressed: () async{
+
+                  setState(() {
+                    isCreating = true;
+                  });
+
                   Map requestBody = {
                     'title': title,
                     'earningsIncentives':newIncentiveSheet['earningsIncentives']
@@ -70,18 +76,22 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                     });
                   }
 
+                  setState(() {
+                    isCreating = false;
+                  });
+
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SettingIncentivesSheets())
                   );
                 },
-                child:const Text(
+                child: !isCreating ? Text(
                   '作成',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,
                       fontWeight: FontWeight.bold
                   ),
-                )
+                ) : SizedBox(height: 0,)
             )
           ],
         ),
