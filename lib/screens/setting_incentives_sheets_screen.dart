@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:io' show Platform;
 
 import 'package:delivery_kun/screens/setting_update_incentives_sheet_screen.dart';
 import 'package:delivery_kun/screens/setting_create_incentive_sheet_screen.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 
 class SettingIncentivesSheets extends StatefulWidget {
@@ -29,6 +31,13 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
     return Scaffold(
       appBar: AppBar(
         title: Text('インセンティブ設定'),
+        leading: Platform.isAndroid ? IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: (){
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MapScreen()));
+          },
+        ):null,
       ),
       body: Column(
         children: [
