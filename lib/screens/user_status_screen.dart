@@ -101,7 +101,14 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                               Provider.of<Status>(context, listen: false).getStatusNextDate(user_id);
                             },
                             child: Icon(Icons.chevron_right))
-                        : TextButton(onPressed: () {}, child: Text('')),
+                        : IconButton(
+                          onPressed: () async {
+                            int user_id = context.read<Auth>().user!.id;
+                            await context.read<Status>().getStatusToday(user_id);
+                            context.read<Status>().getStatusToday(user_id);
+                          },
+                          icon: Icon(Icons.refresh)
+                      ),
                     ],
                   )),
                 StatusHourBarChart(data: status.status!.hourQty),

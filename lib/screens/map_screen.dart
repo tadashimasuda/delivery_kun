@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -153,10 +154,11 @@ class _MapScreenState extends State<MapScreen> {
         );
   }
 
-  Future<void> _getUser() async {
+  Future<void> _getUserData() async {
     String? token = await storage.read(key: 'token');
     if (token != null) {
-      await Provider.of<Auth>(context, listen: false).tryToken(token);
+      await context.read<Auth>().tryToken(token);
+      await context.read<IncentiveSheet>().getIncentives();
     }
   }
 
@@ -186,7 +188,7 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     _loading = true;
     _getUserLocation();
-    _getUser();
+    _getUserData();
     _initBannerAd();
   }
 

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:delivery_kun/constants.dart';
 
 import 'package:delivery_kun/services/incentive_sheet.dart';
+import 'package:delivery_kun/screens/setting_incentives_sheets_screen.dart';
 
 class SettingCreateIncentiveScreen extends StatefulWidget {
   const SettingCreateIncentiveScreen({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
 
   TextEditingController TitleContoller = TextEditingController();
   String title = '';
+  bool isCreating = false;
 
   @override
   void initState() {
@@ -53,14 +55,19 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
           actions: <Widget>[
             TextButton(
                 onPressed: () async{
+
+                  setState(() {
+                    isCreating = true;
+                  });
+
                   Map requestBody = {
                     'title': title,
                     'earningsIncentives':newIncentiveSheet['earningsIncentives']
                   };
-                  context.read<IncentiveSheet>().postIncentive(requestBody: requestBody);
+                  await context.read<IncentiveSheet>().postIncentive(requestBody: requestBody);
                   await context.read<IncentiveSheet>().getIncentives();
 
-                  bool _isError = await context.read<IncentiveSheet>().isError;
+                  bool _isError = await context.watch<IncentiveSheet>().isError;
                   if(_isError){
                     await showDialog(
                       context: context,
@@ -68,15 +75,28 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                         return ErrorDialog(childContext);
                     });
                   }
-                  Navigator.pop(context);
+
+                  setState(() {
+                    isCreating = false;
+                  });
+
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SettingIncentivesSheets())
+                  );
                 },
-                child:const Text(
+                child: !isCreating ? Text(
                   '作成',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,
                       fontWeight: FontWeight.bold
                   ),
+                ) : Container(
+                    width: 20.0,
+                    height: 20.0,
+                    child: new CircularProgressIndicator(
+                      color: Colors.white,
+                    )
                 )
             )
           ],

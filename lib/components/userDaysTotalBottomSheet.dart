@@ -1,3 +1,4 @@
+import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,8 +15,6 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int todayTotal = context.read<Status>().userDaysEarningsTotal;
-    todayTotal = context.watch<Status>().userDaysEarningsTotal;
 
     return Container(
       decoration: BoxDecoration(
@@ -27,7 +26,7 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
       child: Stack(
         children: [
           Center(
-            child:BottomSheetText(title: '¥${todayTotal}')
+            child:BottomSheetText(title: '¥${context.watch<Status>().userDaysEarningsTotal}')
           ),
           Positioned(
             child: IconButton(
