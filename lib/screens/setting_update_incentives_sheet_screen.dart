@@ -94,7 +94,13 @@ class _SettingUpdateIncentivesSheetScreenState
                   color: Colors.white,
                   fontSize: 17,
                   fontWeight: FontWeight.bold),
-              ) : SizedBox(height: 0,)
+              ) : Container(
+                  width: 20.0,
+                  height: 20.0,
+                  child: new CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+              )
             )
           ],
         ),
