@@ -1,5 +1,7 @@
+import 'package:delivery_kun/screens/announcement_screen.dart';
 import 'package:delivery_kun/screens/setting_update_incentives_sheet_screen.dart';
 import 'package:delivery_kun/screens/setting_incentives_sheets_screen.dart';
+import 'package:delivery_kun/services/announcement.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,6 +53,24 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
               ),
             ),
           ]),
+          ListTile(
+            title: drawerListText(title: '受信トレイ'),
+            trailing: CircleAvatar(
+              backgroundColor: Colors.red,
+              radius:13,
+              child: Text(
+                context.read<Announcement>().is_not_read_num.toString(),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AnnouncementScreen(),
+                  ));
+            },
+          ),
           ListTile(
             title: drawerListText(title: '配達ステータス'),
             onTap: () {

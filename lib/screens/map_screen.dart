@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:delivery_kun/services/announcement.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -183,6 +184,10 @@ class _MapScreenState extends State<MapScreen> {
     _bannerAd = admobLoad.createBarnnerAd();
   }
 
+  void _getAnnouncement() async{
+    await context.read<Announcement>().getAnnouncements();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -190,6 +195,7 @@ class _MapScreenState extends State<MapScreen> {
     _getUserLocation();
     _getUserData();
     _initBannerAd();
+    _getAnnouncement();
   }
 
   @override
