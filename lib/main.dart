@@ -1,4 +1,3 @@
-import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_config/flutter_config.dart';
@@ -11,6 +10,8 @@ import 'package:delivery_kun/services/todayIncentive.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/services/user_status.dart';
+import 'package:delivery_kun/services/announcement.dart';
+import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:delivery_kun/screens/map_screen.dart';
 
 void main() async {
@@ -29,6 +30,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => OrderList()),
         ChangeNotifierProvider(create: (context) => Incentive()),
         ChangeNotifierProvider(create: (context) => IncentiveSheet()),
+        ChangeNotifierProvider(create: (context) => Announcement()),
       ],
       child: MyApp(),
     ),
