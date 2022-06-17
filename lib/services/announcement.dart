@@ -7,7 +7,7 @@ class Announcement extends ChangeNotifier {
   late List<dynamic> _announcements;
   late int _is_not_read_num = 0;
 
-  List<dynamic> get announcement => _announcements;
+  List<dynamic> get announcements => _announcements;
   int get is_not_read_num => _is_not_read_num;
 
   Auth auth = Auth();
@@ -25,6 +25,7 @@ class Announcement extends ChangeNotifier {
       Map<String, dynamic> announcementsJson = Map<String, dynamic>.from(response.data);
       _announcements = announcementsJson["data"];
 
+      _is_not_read_num = 0;
       for(var i in _announcements){
         if(i['read'] == null){
           _is_not_read_num++;
@@ -33,7 +34,24 @@ class Announcement extends ChangeNotifier {
 
       notifyListeners();
     } on Dio.DioError catch (e) {
-      print(e.requestOptions.uri);
+      print(e);
+      notifyListeners();
+    }
+  }
+
+  Future<void> readAnnouncement({required int id}) async{
+    try {
+      String? token = await auth.getToken();
+
+      await dio().post(
+        '/announcement/' + id.toString(),
+        options: Dio.Options(
+            headers: {'Authorization': 'Bearer $token'}
+        ),
+      );
+
+      notifyListeners();
+    } on Dio.DioError catch (e) {
       print(e);
       notifyListeners();
     }
