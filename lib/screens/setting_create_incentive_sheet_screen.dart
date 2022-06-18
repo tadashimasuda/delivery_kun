@@ -1,3 +1,4 @@
+import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:delivery_kun/constants.dart';
@@ -104,6 +105,9 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
         body: SingleChildScrollView(
           child: Column(
             children:[
+              Positioned(
+                child: NendBanner()
+              ),
               SizedBox(height: 10,),
               Container(
                 width: MediaQuery.of(context).size.width * 0.9,

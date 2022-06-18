@@ -59,6 +59,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   change_app_package_name: ^1.0.0
   firebase_analytics: ^9.1.8
+  nend_plugin: ^1.0.2
 
 dev_dependencies:
   flutter_test:

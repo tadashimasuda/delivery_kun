@@ -1,3 +1,4 @@
+import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -41,7 +42,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
     _dropdownValue = _VehicleModelList[_selectVehicleModelId];
     _selectPrefectureId = auth.user!.prefectureId;
     _dropdownPrefectureValue = _prefectureList[_selectPrefectureId];
-    _initBannerAd();
+    // _initBannerAd();
     super.initState();
   }
 
@@ -57,10 +58,10 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
     }
   }
 
-  _initBannerAd() {
-    AdmobLoad admobLoad = AdmobLoad();
-    _bannerAd = admobLoad.createBarnnerAd();
-  }
+  // _initBannerAd() {
+  //   AdmobLoad admobLoad = AdmobLoad();
+  //   _bannerAd = admobLoad.createBarnnerAd();
+  // }
 
   void IOSPopup(){
     showCupertinoDialog(
@@ -328,11 +329,12 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
               ):Center(child: CircularProgressIndicator());
             })),
       ),
-      bottomNavigationBar:  Container(
-        height: _bannerAd.size.height.toDouble(),
-        width: _bannerAd.size.width.toDouble(),
-        child: AdWidget(ad: _bannerAd),
-      ),
+      // bottomNavigationBar:  Container(
+      //   height: _bannerAd.size.height.toDouble(),
+      //   width: _bannerAd.size.width.toDouble(),
+      //   child: AdWidget(ad: _bannerAd),
+      // ),
+      bottomNavigationBar: NendBanner()
     );
   }
 }
