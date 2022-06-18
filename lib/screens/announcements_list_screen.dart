@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'dart:io' show Platform;
+
+import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:delivery_kun/screens/announcement_screen.dart';
 import 'package:delivery_kun/services/announcement.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AnnouncementsListScreen extends StatelessWidget {
   @override
@@ -13,6 +16,13 @@ class AnnouncementsListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('受信トレイ'),
+        leading: Platform.isAndroid ? IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: (){
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MapScreen()));
+          },
+        ):null,
       ),
       body: Container(
         child: Column(
