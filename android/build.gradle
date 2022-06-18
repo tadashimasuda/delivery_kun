@@ -3,6 +3,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://fan-adn.github.io/nendSDK-Android-lib/library'
+        }
     }
 
     dependencies {
@@ -16,6 +19,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://fan-adn.github.io/nendSDK-Android-lib/library'
+        }
     }
 }
 

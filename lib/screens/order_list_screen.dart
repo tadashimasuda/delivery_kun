@@ -1,3 +1,4 @@
+import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,15 +24,15 @@ class OrderListScreen extends StatefulWidget {
 class _OrderListScreenState extends State<OrderListScreen> {
   late BannerAd _bannerAd;
 
-  _initBannerAd() {
-    AdmobLoad admobLoad = AdmobLoad();
-    _bannerAd = admobLoad.createBarnnerAd();
-  }
+  // _initBannerAd() {
+  //   AdmobLoad admobLoad = AdmobLoad();
+  //   _bannerAd = admobLoad.createBarnnerAd();
+  // }
 
   @override
   void initState() {
     super.initState();
-    _initBannerAd();
+    // _initBannerAd();
   }
 
   String getJPDate(DateTime createdAt) {
@@ -249,6 +250,9 @@ class _OrderListScreenState extends State<OrderListScreen> {
         ),
         body: Column(
           children: [
+            Positioned(
+              child:NendBanner()
+            ),
             SizedBox(
               height: 20,
             ),
