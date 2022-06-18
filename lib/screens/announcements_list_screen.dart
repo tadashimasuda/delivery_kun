@@ -27,9 +27,7 @@ class AnnouncementsListScreen extends StatelessWidget {
       body: Container(
         child: Column(
           children:[
-            Positioned(
-              child:NendBanner()
-            ),
+            NendBanner(),
             Expanded(
                 child: announcement_count > 0 ? ListView.builder(
                 itemCount : announcement_count,

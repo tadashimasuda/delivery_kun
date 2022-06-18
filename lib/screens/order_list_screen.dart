@@ -250,9 +250,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
         ),
         body: Column(
           children: [
-            Positioned(
-              child:NendBanner()
-            ),
+            NendBanner(),
             SizedBox(
               height: 20,
             ),

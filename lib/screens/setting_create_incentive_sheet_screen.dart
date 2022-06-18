@@ -105,9 +105,7 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
         body: SingleChildScrollView(
           child: Column(
             children:[
-              Positioned(
-                child: NendBanner()
-              ),
+              NendBanner(),
               SizedBox(height: 10,),
               Container(
                 width: MediaQuery.of(context).size.width * 0.9,

@@ -108,9 +108,7 @@ class _SettingUpdateIncentivesSheetScreenState
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Positioned(
-                child: NendBanner()
-              ),
+              NendBanner(),
               SizedBox(
                 height: 10,
               ),
