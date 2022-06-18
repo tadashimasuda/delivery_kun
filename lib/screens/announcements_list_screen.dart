@@ -17,46 +17,50 @@ class AnnouncementsListScreen extends StatelessWidget {
       body: Container(
         child: Column(
           children:[
-            NendBanner(),
-            announcement_count > 0 ? ListView.builder(
-              itemCount : announcement_count,
-              itemBuilder: (context,int index){
-                return InkWell(
-                  onTap: () async{
-                    await context.read<Announcement>().readAnnouncement(id: announcements[index]['id']);
-                    await context.read<Announcement>().getAnnouncements();
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => AnnouncementScreen(id:index)
-                    ));
-                  },
-                  child: Container(
-                    height: 60,
-                    margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey.withOpacity(0.5)),
-                      ),
-                    ),
-                    child: ListTile(
-                      isThreeLine:true,
-                      title: Text(
-                        announcements[index]['title'],
-                      ),
-                      subtitle: Text(
-                        announcements[index]['createdAt'],
-                        style: TextStyle(
-                            fontSize: 13
+            Positioned(
+              child:NendBanner()
+            ),
+            Expanded(
+                child: announcement_count > 0 ? ListView.builder(
+                itemCount : announcement_count,
+                itemBuilder: (context,int index){
+                  return InkWell(
+                    onTap: () async{
+                      await context.read<Announcement>().readAnnouncement(id: announcements[index]['id']);
+                      await context.read<Announcement>().getAnnouncements();
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => AnnouncementScreen(id:index)
+                      ));
+                    },
+                    child: Container(
+                      height: 60,
+                      margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey.withOpacity(0.5)),
                         ),
                       ),
-                      trailing: announcements[index]['read'] == null ? Icon(
-                        Icons.circle,
-                        size: 18,
-                        color: Colors.red.withOpacity(0.5),
-                      ) : null,
+                      child: ListTile(
+                        isThreeLine:true,
+                        title: Text(
+                          announcements[index]['title'],
+                        ),
+                        subtitle: Text(
+                          announcements[index]['createdAt'],
+                          style: TextStyle(
+                              fontSize: 13
+                          ),
+                        ),
+                        trailing: announcements[index]['read'] == null ? Icon(
+                          Icons.circle,
+                          size: 18,
+                          color: Colors.red.withOpacity(0.5),
+                        ) : null,
+                      ),
                     ),
-                  ),
-                );
-              }):Text('受信したメッセージはありません')
+                  );
+                }):Text('受信したメッセージはありません')
+            )
           ],
       ),
     ));

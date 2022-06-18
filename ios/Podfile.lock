@@ -146,6 +146,10 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - nend_plugin (0.0.1):
+    - Flutter
+    - NendSDK_iOS (~> 7.2.0)
+  - NendSDK_iOS (7.2.0)
   - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (2.1.0)
@@ -168,6 +172,7 @@ DEPENDENCIES:
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
   - location (from `.symlinks/plugins/location/ios`)
+  - nend_plugin (from `.symlinks/plugins/nend_plugin/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
@@ -192,6 +197,7 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - nanopb
+    - NendSDK_iOS
     - PromisesObjC
 
 EXTERNAL SOURCES:
@@ -217,6 +223,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in_ios/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
+  nend_plugin:
+    :path: ".symlinks/plugins/nend_plugin/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
   sign_in_with_apple:
@@ -255,6 +263,8 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 4577a4cc914a5a07c40a8a0ad0acc22080418c2d
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  nend_plugin: 9337de3ab8e1f1ed91015948a99749e43c5e0049
+  NendSDK_iOS: 035fd2568f837caaaeeaf18817632106b9355f10
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440

@@ -22,7 +22,7 @@ class OrderListScreen extends StatefulWidget {
 }
 
 class _OrderListScreenState extends State<OrderListScreen> {
-  late BannerAd _bannerAd;
+  // late BannerAd _bannerAd;
 
   // _initBannerAd() {
   //   AdmobLoad admobLoad = AdmobLoad();
@@ -275,11 +275,11 @@ class _OrderListScreenState extends State<OrderListScreen> {
                 ) : Center(child: CircularProgressIndicator()))
           ],
         ),
-        bottomNavigationBar:  Container(
-          height: _bannerAd.size.height.toDouble(),
-          width: _bannerAd.size.width.toDouble(),
-          child: AdWidget(ad: _bannerAd),
-        ),
+        // bottomNavigationBar:  Container(
+        //   height: _bannerAd.size.height.toDouble(),
+        //   width: _bannerAd.size.width.toDouble(),
+        //   child: AdWidget(ad: _bannerAd),
+        // ),
     );
   }
 
