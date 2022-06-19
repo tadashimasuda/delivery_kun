@@ -1,3 +1,4 @@
+import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
@@ -121,7 +122,8 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
             ):Center(child: Text('保存されているインセンティブシートがありません',)),
           ),
         ],
-      )
+      ),
+      bottomNavigationBar: NendBanner()
     );
   }
 }

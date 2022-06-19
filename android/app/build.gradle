@@ -58,7 +58,7 @@ android {
         applicationId "tadashi.deliveryKun"
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 4
+        versionCode 5
         versionName flutterVersionName
     }
 
@@ -88,4 +88,5 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.4.1')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.android.gms:play-services-ads:20.6.0'
+    implementation 'net.nend.android:nend-sdk:8.1.0'
 }

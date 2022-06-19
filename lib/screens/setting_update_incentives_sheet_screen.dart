@@ -1,3 +1,4 @@
+import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -107,6 +108,7 @@ class _SettingUpdateIncentivesSheetScreenState
         body: SingleChildScrollView(
           child: Column(
             children: [
+              NendBanner(),
               SizedBox(
                 height: 10,
               ),

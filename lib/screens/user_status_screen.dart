@@ -1,3 +1,4 @@
+import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -20,16 +21,16 @@ class UserStatusScreen extends StatefulWidget {
 }
 
 class _UserStatusScreenState extends State<UserStatusScreen> {
-  late BannerAd _bannerAd;
+  // late BannerAd _bannerAd;
 
-  _initBannerAd() {
-    AdmobLoad admobLoad = AdmobLoad();
-    _bannerAd = admobLoad.createBarnnerAd();
-  }
+  // _initBannerAd() {
+  //   AdmobLoad admobLoad = AdmobLoad();
+  //   _bannerAd = admobLoad.createBarnnerAd();
+  // }
 
   @override
   void initState() {
-    _initBannerAd();
+    // _initBannerAd();
     super.initState();
   }
 
@@ -45,11 +46,12 @@ class _UserStatusScreenState extends State<UserStatusScreen> {
                   user_id: auth.user!.id,
                 )
               : SignUpForm()),
-      bottomNavigationBar:  Container(
-        height: _bannerAd.size.height.toDouble(),
-        width: _bannerAd.size.width.toDouble(),
-        child: AdWidget(ad: _bannerAd),
-      ),
+      // bottomNavigationBar:  Container(
+      //   height: _bannerAd.size.height.toDouble(),
+      //   width: _bannerAd.size.width.toDouble(),
+      //   child: AdWidget(ad: _bannerAd),
+      // ),
+      bottomNavigationBar: NendBanner()
     );
   }
 }

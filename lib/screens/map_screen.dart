@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:delivery_kun/components/nend_banner.dart';
+import 'package:delivery_kun/services/announcement.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -178,9 +180,13 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  void _initBannerAd() {
-    AdmobLoad admobLoad = AdmobLoad();
-    _bannerAd = admobLoad.createBarnnerAd();
+  // void _initBannerAd() {
+  //   AdmobLoad admobLoad = AdmobLoad();
+  //   _bannerAd = admobLoad.createBarnnerAd();
+  // }
+
+  void _getAnnouncement() async{
+    await context.read<Announcement>().getAnnouncements();
   }
 
   @override
@@ -189,7 +195,8 @@ class _MapScreenState extends State<MapScreen> {
     _loading = true;
     _getUserLocation();
     _getUserData();
-    _initBannerAd();
+    // _initBannerAd();
+    _getAnnouncement();
   }
 
   @override
@@ -259,7 +266,8 @@ class _MapScreenState extends State<MapScreen> {
             child: _loading
                 ? CircularProgressIndicator()
                 : Container(
-                    child: Stack(children: <Widget>[
+                    child: Stack(
+                      children: <Widget>[
                       GoogleMap(
                         markers: Set<Marker>.of(_markers),
                         polylines: Set<Polyline>.of(_polylines.values),
@@ -369,15 +377,19 @@ class _MapScreenState extends State<MapScreen> {
                             bottom: 0,
                           )
                         : SizedBox.shrink()
-                  ])));
-      }),
-      bottomNavigationBar: _isAdLoaded
-          ? Container(
-              height: _bannerAd.size.height.toDouble(),
-              width: _bannerAd.size.width.toDouble(),
-              child: AdWidget(ad: _bannerAd),
+                    ]
+                )
             )
-          : SizedBox(),
+        );
+      }),
+      // bottomNavigationBar: _isAdLoaded
+      //     ? Container(
+      //         height: _bannerAd.size.height.toDouble(),
+      //         width: _bannerAd.size.width.toDouble(),
+      //         child: AdWidget(ad: _bannerAd),
+      //       )
+      //     : SizedBox(),
+      bottomNavigationBar: NendBanner()
     );
   }
 }
