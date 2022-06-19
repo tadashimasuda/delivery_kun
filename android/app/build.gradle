@@ -58,7 +58,7 @@ android {
         applicationId "tadashi.deliveryKun"
         minSdkVersion 23
         targetSdkVersion 31
-        versionCode 4
+        versionCode 5
         versionName flutterVersionName
     }
 
