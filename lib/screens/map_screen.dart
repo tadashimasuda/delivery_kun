@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'package:delivery_kun/components/nend_banner.dart';
-import 'package:delivery_kun/services/announcement.dart';
-import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -11,12 +8,16 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:app_review/app_review.dart';
 import 'dart:io' show Platform;
 
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
 import 'package:delivery_kun/services/user_status.dart';
+import 'package:delivery_kun/services/announcement.dart';
+import 'package:delivery_kun/services/incentive_sheet.dart';
+import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:delivery_kun/components/notLoggedIn_drawer.dart';
 import 'package:delivery_kun/components/loggedIn_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
@@ -189,6 +190,14 @@ class _MapScreenState extends State<MapScreen> {
     await context.read<Announcement>().getAnnouncements();
   }
 
+  void _requestReview() {
+    if(Platform.isIOS){
+      AppReview.requestReview.then((onValue) {
+        print(onValue);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -197,6 +206,7 @@ class _MapScreenState extends State<MapScreen> {
     _getUserData();
     // _initBannerAd();
     _getAnnouncement();
+    _requestReview();
   }
 
   @override
