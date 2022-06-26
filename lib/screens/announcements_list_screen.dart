@@ -15,19 +15,19 @@ class AnnouncementsListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('受信トレイ'),
+        title: const Text('受信トレイ'),
         leading: Platform.isAndroid ? IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: (){
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MapScreen()));
+                MaterialPageRoute(builder: (context) => const MapScreen()));
           },
         ):null,
       ),
       body: Container(
         child: Column(
           children:[
-            NendBanner(),
+            const NendBanner(),
             Expanded(
                 child: announcement_count > 0 ? ListView.builder(
                 itemCount : announcement_count,
@@ -55,7 +55,7 @@ class AnnouncementsListScreen extends StatelessWidget {
                         ),
                         subtitle: Text(
                           announcements[index]['createdAt'],
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 13
                           ),
                         ),
@@ -67,7 +67,7 @@ class AnnouncementsListScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                }):Text('受信したメッセージはありません')
+                }):const Text('受信したメッセージはありません')
             )
           ],
       ),

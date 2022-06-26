@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         locale,
       ],
       title: 'delivery-kun',
-      home: MapScreen(),
+      home: const MapScreen(),
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),

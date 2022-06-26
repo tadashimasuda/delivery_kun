@@ -38,20 +38,20 @@ class _UserStatusScreenState extends State<UserStatusScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('売上履歴'),
+        title: const Text('売上履歴'),
       ),
       body: Consumer<Auth>(
           builder: (context, auth, child) => auth.authenticated
               ? LoggedInUserStatus(
                   user_id: auth.user!.id,
                 )
-              : SignUpForm()),
+              : const SignUpForm()),
       // bottomNavigationBar:  Container(
       //   height: _bannerAd.size.height.toDouble(),
       //   width: _bannerAd.size.width.toDouble(),
       //   child: AdWidget(ad: _bannerAd),
       // ),
-      bottomNavigationBar: NendBanner()
+      bottomNavigationBar: const NendBanner()
     );
   }
 }
@@ -66,7 +66,7 @@ class LoggedInUserStatus extends StatefulWidget {
 }
 
 class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
-  TextEditingController _actualCostController = TextEditingController();
+  final TextEditingController _actualCostController = TextEditingController();
   late int _actualCostText;
   String validateMessage = '';
 
@@ -82,7 +82,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
               children: <Widget>[
                 Container(
                   alignment: Alignment.center,
-                  padding: EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -90,11 +90,11 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                         onPressed: () {
                           context.read<Status>().getStatusBeforeDate(user_id);
                         },
-                        child: Icon(Icons.chevron_left)),
+                        child: const Icon(Icons.chevron_left)),
                       Text(
                         DateFormat('yyyy年M月d日').format(status.date),
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold),
                       ),
                       DateFormat('yyyy年M月d日').format(DateTime.now()).toString() != DateFormat('yyyy年M月d日').format(status.date)
@@ -102,38 +102,38 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                             onPressed: () {
                               Provider.of<Status>(context, listen: false).getStatusNextDate(user_id);
                             },
-                            child: Icon(Icons.chevron_right))
+                            child: const Icon(Icons.chevron_right))
                         : IconButton(
                           onPressed: () async {
                             int user_id = context.read<Auth>().user!.id;
                             await context.read<Status>().getStatusToday(user_id);
                             context.read<Status>().getStatusToday(user_id);
                           },
-                          icon: Icon(Icons.refresh)
+                          icon: const Icon(Icons.refresh)
                       ),
                     ],
                   )),
                 StatusHourBarChart(data: status.status!.hourQty),
                 Container(
-                  margin: EdgeInsets.only(right: 15, left: 15),
+                  margin: const EdgeInsets.only(right: 15, left: 15),
                   child: Column(
                     children: [
                       Container(
                         alignment: Alignment.topLeft,
-                        margin: EdgeInsets.only(top: 10),
-                        child: Text(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: const Text(
                           'ステータス',
                           style: TextStyle(
                             fontSize: 25,
                           ),
                         )),
                       Table(
-                        border: TableBorder(
+                        border: const TableBorder(
                           bottom: BorderSide(
                               width: 0.5, color: Color(0xFF000000)),
                         ),
                         children: [
-                          TableRow(children: [
+                          const TableRow(children: [
                             Text(
                               'オンライン',
                               style: TextStyle(color: Colors.grey),
@@ -147,7 +147,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                 height: 50,
                                 child: Text(
                                   status.status!.onlineTime,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 20,
                                   ),
                                 ),
@@ -158,7 +158,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                 height: 50,
                                 child: Text(
                                   status.status!.daysEarningsQty.toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 20,
                                   ),
                                 ),
@@ -169,8 +169,8 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                       ),
                       Container(
                         alignment: Alignment.topLeft,
-                        margin: EdgeInsets.only(top: 10),
-                        child: Text(
+                        margin: const EdgeInsets.only(top: 10),
+                        child: const Text(
                           '明細',
                           style: TextStyle(
                             fontSize: 30,
@@ -178,7 +178,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                         )),
                       Table(children: [
                         TableRow(children: [
-                          Text(
+                          const Text(
                             '売上',
                             style: TextStyle(
                               color: Colors.black,
@@ -188,13 +188,13 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                           Text(
                             status.status!.daysEarningsTotal.toString(),
                             textAlign: TextAlign.right,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
                             ))
                         ]),
                         TableRow(children: [
-                          TableCell(
+                          const TableCell(
                             child: SizedBox(
                               height: 50,
                               child: Text(
@@ -213,19 +213,19 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                   context: context,
                                   builder: (context) {
                                     return CupertinoAlertDialog(
-                                      title: Text("支出を入力"),
+                                      title: const Text("支出を入力"),
                                       content: CupertinoTextField(
                                         controller: _actualCostController,
                                         keyboardType: TextInputType.number,
                                       ),
                                       actions: <Widget>[
                                         CupertinoDialogAction(
-                                          child: Text("キャンセル"),
+                                          child: const Text("キャンセル"),
                                           isDestructiveAction: true,
                                           onPressed: () => Navigator.pop(context),
                                         ),
                                         CupertinoDialogAction(
-                                          child: Text("完了",style: TextStyle(color: Colors.blueAccent)),
+                                          child: const Text("完了",style: TextStyle(color: Colors.blueAccent)),
                                           isDestructiveAction: true,
                                           onPressed: () async {
                                             int requestActualCost = int.parse(_actualCostController.text);
@@ -256,7 +256,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                     context: context,
                                     builder: (BuildContext context){
                                       return AlertDialog(
-                                        title:Text('支出を入力してください'),
+                                        title:const Text('支出を入力してください'),
                                         content: TextField(
                                           keyboardType: TextInputType.number,
                                           onChanged: (value){
@@ -268,7 +268,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                             onPressed: (){
                                               Navigator.pop(context);
                                             },
-                                            child: Text('キャンセル')
+                                            child: const Text('キャンセル')
                                           ),
                                           TextButton(
                                             onPressed: () async{
@@ -285,7 +285,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                                   builder: (_) => AlertWidght(title: 'エラーが発生しました'));
                                               }
                                             },
-                                            child: Text('完了')
+                                            child: const Text('完了')
                                           )
                                         ],
                                       );
@@ -297,7 +297,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                                 child: Text(
                                   status.status!.actualCost.toString(),
                                   textAlign: TextAlign.right,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 20,
                                   ),
                                 ),
@@ -305,7 +305,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                           ))
                         ]),
                         TableRow(children: [
-                          TableCell(
+                          const TableCell(
                             child: SizedBox(
                               height: 50,
                               child: Text(
@@ -322,7 +322,7 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                               child: Text(
                                 (status.status!.daysEarningsTotal - status.status!.actualCost).toString(),
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 20,
                                 ),
                               ),
@@ -343,18 +343,18 @@ class _LoggedInUserStatusState extends State<LoggedInUserStatus> {
                               context.read<Status>().getStatusDate(user_id);
                           });
                         },
-                        child: Text(
+                        child: const Text(
                           '受注履歴を見る',
                         ),
                         style: ElevatedButton.styleFrom(
                           primary: Colors.grey,
-                          minimumSize: Size(double.infinity, 55),
+                          minimumSize: const Size(double.infinity, 55),
                         ),
                       ),
                     ],
                   ))
               ],
-            ) : Center(child: CircularProgressIndicator())),
+            ) : const Center(child: CircularProgressIndicator())),
       ),
     );
   }

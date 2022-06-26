@@ -8,7 +8,6 @@ import 'dart:io' show Platform;
 import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
-import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/components/account_text_field.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
 
@@ -27,10 +26,10 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
   late BannerAd _bannerAd;
   late String _dropdownValue;
   late String _dropdownPrefectureValue;
-  TextEditingController _earningsBaseController = TextEditingController();
+  final TextEditingController _earningsBaseController = TextEditingController();
 
-  List<String> _prefectureList = prefectureList;
-  List<String> _VehicleModelList = VehicleModelList;
+  final List<String> _prefectureList = prefectureList;
+  final List<String> _VehicleModelList = VehicleModelList;
 
   @override
   void initState() {
@@ -48,13 +47,13 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
 
   Widget vehiceModelIcon(int vehiceModelId) {
     if (vehiceModelId == 0) {
-      return Icon(Icons.motorcycle);
+      return const Icon(Icons.motorcycle);
     } else if (vehiceModelId == 1) {
-      return Icon(Icons.directions_bike);
+      return const Icon(Icons.directions_bike);
     } else if (vehiceModelId == 2) {
-      return Icon(Icons.directions_car);
+      return const Icon(Icons.directions_car);
     } else {
-      return Icon(Icons.directions_walk);
+      return const Icon(Icons.directions_walk);
     }
   }
 
@@ -68,18 +67,18 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text(
+          title: const Text(
             '更新できませんでした',
             style: TextStyle(color: Colors.black),
           ),
-          content: Text(
+          content: const Text(
            'アプリのアップデートをお試しください',
             style: TextStyle(color: Colors.black),
           ),
           actions: [
             CupertinoDialogAction(
               isDestructiveAction: true,
-              child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
+              child: const Text('OK',style: TextStyle(color: Colors.blueAccent)),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -95,7 +94,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('更新できませんでした'),
-          content: Text(
+          content: const Text(
             'アプリのアップデートをお試しください',
             style: TextStyle(color: Colors.black),
           ),
@@ -119,7 +118,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       decoration: InputDecoration(
           labelText: '配達車両',
           suffixIcon: vehiceModelIcon(_selectVehicleModelId),
-          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))
+          border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))
       ),
       onTap: () {
         showModalBottomSheet(
@@ -173,7 +172,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
           hintText: _prefectureList[_selectPrefectureId],
           suffixIcon: Icon(Icons.location_on),
           labelText: '活動場所',
-          border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))),
+          border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)))),
       onTap: () {
         showModalBottomSheet(
             context: context,
@@ -222,7 +221,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'ユーザー設定',
           style: TextStyle(
             color: Colors.white,
@@ -260,7 +259,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.fromLTRB(24, 70, 24, 0),
+          padding: const EdgeInsets.fromLTRB(24, 70, 24, 0),
           child: Consumer<Auth>(builder: (context, auth, _) {
               return auth.user != null ? Column(
                 children: [
@@ -277,7 +276,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                   Column(
                     children: ValidateUserName(auth.validate_message),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   AccountTextField(
@@ -293,7 +292,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                   Column(
                     children: ValidateEmail(auth.validate_message),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   AccountTextField(
@@ -308,25 +307,25 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                   Column(
                     children: ValidateEarningsBase(auth.validate_message),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Platform.isIOS ? IOSPicker(context, auth) : AndroidDropDown(),
                   Column(
                     children: ValidateVehicleModel(auth.validate_message),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Platform.isIOS ? IOSPrefecturePicker(context, auth) :AndroidPrefectureDropDown(),
                   Column(
                     children: ValidatePrefecture(auth.validate_message),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                 ],
-              ):Center(child: CircularProgressIndicator());
+              ):const Center(child: CircularProgressIndicator());
             })),
       ),
       // bottomNavigationBar:  Container(
@@ -334,7 +333,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       //   width: _bannerAd.size.width.toDouble(),
       //   child: AdWidget(ad: _bannerAd),
       // ),
-      bottomNavigationBar: NendBanner()
+      bottomNavigationBar: const NendBanner()
     );
   }
 }

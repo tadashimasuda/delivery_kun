@@ -108,16 +108,16 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
           ? SingleChildScrollView(
         child: SafeArea(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(35, 40, 35, 0),
+                  padding: const EdgeInsets.fromLTRB(35, 40, 35, 0),
                   child: Column(children: [
-                    Text(
+                    const Text(
                       'ようこそ！',
                       style: TextStyle(
                           color: Colors.redAccent,
                           fontWeight: FontWeight.bold,
                           fontSize: 30),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Consumer<Auth>(
@@ -136,7 +136,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                               Column(
                                 children: ValidateUserName(auth.validate_message),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                               ),
                               AccountTextField(
@@ -150,7 +150,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                               Column(
                                 children: ValidateEmail(auth.validate_message),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                               ),
                               AccountTextField(
@@ -164,7 +164,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                               Column(
                                 children: ValidatePassword(auth.validate_message),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                               ),
                               AccountTextField(
@@ -175,7 +175,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                                   passwordConfirmation = value;
                                 },
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30,
                               ),
                             ]),
@@ -199,14 +199,14 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MapScreen()));
+                                    builder: (context) => const MapScreen()));
                           }
                         }),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    Text('または', textAlign: TextAlign.center),
-                    SizedBox(
+                    const Text('または', textAlign: TextAlign.center),
+                    const SizedBox(
                       height: 20,
                     ),
                     GestureDetector(
@@ -214,7 +214,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                         backgroundColor: Colors.white,
                         textColor: Colors.black,
                         title: 'Googleでログイン',
-                        image: DecorationImage(
+                        image: const DecorationImage(
                             image: NetworkImage(
                                 'https://github.com/sbis04/flutterfire-samples/blob/google-sign-in/assets/google_logo.png?raw=true')),
                       ),
@@ -232,7 +232,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MapScreen()));
+                                  builder: (context) => const MapScreen()));
                         } else {
                           setState(() {
                             isLoading = true;
@@ -241,10 +241,10 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                             context: context,
                             builder: (context) {
                               return CupertinoAlertDialog(
-                                title: Text("ログインに失敗しました。"),
+                                title: const Text("ログインに失敗しました。"),
                                 actions: <Widget>[
                                   CupertinoDialogAction(
-                                    child: Text("OK"),
+                                    child: const Text("OK"),
                                     isDestructiveAction: true,
                                     onPressed: () => Navigator.pop(context),
                                   ),
@@ -255,7 +255,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                         }
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Platform.isIOS ? GestureDetector(
@@ -263,7 +263,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                         backgroundColor: Colors.black,
                         textColor: Colors.white,
                         title: 'Appleでログイン',
-                        image: DecorationImage(
+                        image: const DecorationImage(
                             image: AssetImage("images/apple_login.png")),
                       ),
                       onTap: () async {
@@ -278,7 +278,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                             isLoading = true;
                           });
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => MapScreen()));
+                              MaterialPageRoute(builder: (context) => const MapScreen()));
                         } else {
                           setState(() {
                             isLoading = true;
@@ -287,10 +287,10 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                             context: context,
                             builder: (context) {
                               return CupertinoAlertDialog(
-                                title: Text("ログインに失敗しました。"),
+                                title: const Text("ログインに失敗しました。"),
                                 actions: <Widget>[
                                   CupertinoDialogAction(
-                                    child: Text(
+                                    child: const Text(
                                       "OK",
                                       style: TextStyle(color: Colors.black),
                                     ),
@@ -303,13 +303,13 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                           );
                         }
                       },
-                    ) : SizedBox.shrink(),
+                    ) : const SizedBox.shrink(),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SignInForm()));
+                                builder: (context) => const SignInForm()));
                       },
                       child: Row(
                         children: [
@@ -328,7 +328,7 @@ class _SignUpFormState extends State<SignUpForm> with ValidateText {
                 ),
               ),
           )
-          : Center(child: CircularProgressIndicator()),
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 }

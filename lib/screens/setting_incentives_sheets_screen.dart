@@ -31,12 +31,12 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('インセンティブ設定'),
+        title: const Text('インセンティブ設定'),
         leading: Platform.isAndroid ? IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: (){
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MapScreen()));
+                MaterialPageRoute(builder: (context) => const MapScreen()));
           },
         ):null,
         actions: [
@@ -44,13 +44,13 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
               onPressed: () async {
                 await context.read<IncentiveSheet>().getIncentives();
               },
-              icon: Icon(Icons.refresh)
+              icon: const Icon(Icons.refresh)
           ),
         ],
       ),
       body: Column(
         children: [
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           SizedBox(
             height: 45,
             width: MediaQuery.of(context).size.width * 0.8,
@@ -58,20 +58,20 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
                 onPressed: (){
                   if(_IncentivesSheetList.length < 8){
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SettingCreateIncentiveScreen())
+                        MaterialPageRoute(builder: (context) => const SettingCreateIncentiveScreen())
                     ).then((value) => setState(() {}));
                   }else{
                     showDialog(
                       context: context,
                       builder: (childContext) {
                         return SimpleDialog(
-                          title: Text("8シートまでしか登録できません。"),
+                          title: const Text("8シートまでしか登録できません。"),
                           children: <Widget>[
                             SimpleDialogOption(
                               onPressed: () {
                                 Navigator.pop(childContext);
                               },
-                              child: Text(
+                              child: const Text(
                                 "OK",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -85,7 +85,7 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
                     );
                   }
                 },
-                child: Text(
+                child: const Text(
                   '新規作成',
                   style: TextStyle(
                     fontSize: 18,
@@ -94,8 +94,8 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
                 )
             ),
           ),
-          SizedBox(height: 20,),
-          Text(
+          const SizedBox(height: 20,),
+          const Text(
             '保存しているインセンティブシート',
             style: TextStyle(
               color: Colors.grey
@@ -119,11 +119,11 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
                   trailing: Icon(Icons.arrow_right),
                 );
               }
-            ):Center(child: Text('保存されているインセンティブシートがありません',)),
+            ):const Center(child: Text('保存されているインセンティブシートがありません',)),
           ),
         ],
       ),
-      bottomNavigationBar: NendBanner()
+      bottomNavigationBar: const NendBanner()
     );
   }
 }

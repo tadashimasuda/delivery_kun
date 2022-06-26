@@ -36,10 +36,10 @@ class _SettingIncentiveScreenState extends State<SettingIncentiveScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: (){
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MapScreen()));
+                MaterialPageRoute(builder: (context) => const MapScreen()));
           },
         ):null,
-        title: Text(
+        title: const Text(
           '今日のインセンティブ',
           style: TextStyle(
             color: Colors.white,
@@ -51,7 +51,7 @@ class _SettingIncentiveScreenState extends State<SettingIncentiveScreen> {
             onPressed: () {
               context.read<Incentive>().postTodayIncentive(incentives: incentives);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MapScreen()));
+                  MaterialPageRoute(builder: (context) => const MapScreen()));
             },
             child:const Text(
               '更新',

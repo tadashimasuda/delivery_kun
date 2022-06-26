@@ -2,8 +2,6 @@ import 'package:delivery_kun/models/incentive_sheet.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:io' show Platform;
-import 'dart:async';
 import 'package:provider/provider.dart';
 
 import 'package:delivery_kun/services/auth.dart';
@@ -40,7 +38,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                     builder: (childContext) {
                   return SimpleDialog(
                     title: Text("反映するインセンティブを選択してください"),
-                    shape: RoundedRectangleBorder(
+                    shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20))
                     ),
                     children: <Widget>[
@@ -54,7 +52,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                               child: Container(
                                 height: 45,
                                 width: MediaQuery.of(context).size.width * 0.6,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Colors.red,
                                   borderRadius:
                                   BorderRadius.all(
@@ -64,7 +62,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                                 child: Center(
                                   child: Text(
                                     _IncentivesSheet.title,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
@@ -72,7 +70,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                                   ),
                                 )),
                             ),
-                            SizedBox(height: 6,)
+                            const SizedBox(height: 6,)
                           ],
                         ),
                     ],
@@ -93,7 +91,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           AlertDialog(
-                            title: Text(
+                            title: const Text(
                               "デリバリーくんに登録する",
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -102,22 +100,22 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                             ),
                             content: ListBody(
                               children: [
-                                ListTile(
+                                const ListTile(
                                   title: Text(
                                     '・ワンタッチで配達を記録',
                                   ),
                                 ),
-                                ListTile(
+                                const ListTile(
                                   title: Text(
                                     '・記録をグラフで確認',
                                   ),
                                 ),
-                                ListTile(
+                                const ListTile(
                                   title: Text(
                                     '・支出管理もできる',
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 40,
                                 ),
                                 Container(
@@ -136,8 +134,8 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                                 )
                               ],
                             ),
-                            insetPadding: EdgeInsets.all(20),
-                            shape: RoundedRectangleBorder(
+                            insetPadding: const EdgeInsets.all(20),
+                            shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(Radius.circular(20))
                             ),
                           ),
@@ -148,7 +146,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                 );
               }
             },
-              child: Text(
+              child: const Text(
                 '受注',
                 style: TextStyle(
                   fontSize: 28,
@@ -157,7 +155,7 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
                 primary: Colors.red,
-                minimumSize: Size(90, 90),
+                minimumSize: const Size(90, 90),
                 elevation: 15,
               ),
             ),

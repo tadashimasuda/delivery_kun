@@ -10,25 +10,25 @@ class NotLoggedInDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        SizedBox(height: 30,),
+        const SizedBox(height: 30,),
         ListTile(
-          title: drawerListText(title: 'ログイン',),
+          title: const drawerListText(title: 'ログイン',),
           onTap: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SignInForm(),
+                  builder: (context) => const SignInForm(),
                 ));
           },
         ),
-        SizedBox(height: 8,),
+        const SizedBox(height: 8,),
         ListTile(
-          title: drawerListText(title: '新規作成',),
+          title: const drawerListText(title: '新規作成',),
           onTap: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SignUpForm(),
+                  builder: (context) => const SignUpForm(),
                 ));
           },
         ),

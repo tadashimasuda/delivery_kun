@@ -3,10 +3,13 @@ import 'package:nend_plugin/nend_plugin.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'dart:io' show Platform;
 
-int spotId = Platform.isIOS ? int.parse(FlutterConfig.get('IOS_NEND_SPOT_ID'))
-    :int.parse(FlutterConfig.get('ANDROID_NEND_SPOT_ID'));
-String apiKey = Platform.isIOS ? FlutterConfig.get('IOS_NEND_API_KEY')
-    :FlutterConfig.get('ANDROID_NEND_API_KEY');
+// int spotId = Platform.isIOS ? int.parse(FlutterConfig.get('IOS_NEND_SPOT_ID'))
+//     :int.parse(FlutterConfig.get('ANDROID_NEND_SPOT_ID'));
+// String apiKey = Platform.isIOS ? FlutterConfig.get('IOS_NEND_API_KEY')
+//     :FlutterConfig.get('ANDROID_NEND_API_KEY');
+
+int spotId = 3172;
+String apiKey = 'a6eca9dd074372c898dd1df549301f277c53f2b9';
 
 class NendBanner extends StatefulWidget {
   const NendBanner({Key? key}) : super(key: key);
@@ -17,6 +20,7 @@ class NendBanner extends StatefulWidget {
 
 class _NendBannerState extends State<NendBanner> {
   late BannerAdController adController;
+
 
 
   @override

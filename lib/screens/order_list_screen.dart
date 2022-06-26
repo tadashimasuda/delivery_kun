@@ -241,7 +241,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
     return Scaffold(
         appBar: AppBar(
           leading: Platform.isAndroid ? IconButton(
-            icon: Icon(Icons.close, color: Colors.white),
+            icon: const Icon(Icons.close, color: Colors.white),
             onPressed: (){
               Navigator.pop(context);
             },
@@ -250,16 +250,16 @@ class _OrderListScreenState extends State<OrderListScreen> {
         ),
         body: Column(
           children: [
-            NendBanner(),
-            SizedBox(
+            const NendBanner(),
+            const SizedBox(
               height: 20,
             ),
-            Text('タップで編集・削除ができます'),
+            const Text('タップで編集・削除ができます'),
             Consumer<OrderList>(
                 builder: (context, orderList, child) => orderList.orders != null
                     ? Container(
                   child: orderList == null
-                      ? Text(' ')
+                      ?  const Text(' ')
                       : Expanded(
                         child: ListView.builder(
                         itemCount: orderList.orders?.length,
@@ -270,7 +270,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                           );
                         }),
                       ),
-                ) : Center(child: CircularProgressIndicator()))
+                ) :  const Center(child: CircularProgressIndicator()))
           ],
         ),
         // bottomNavigationBar:  Container(

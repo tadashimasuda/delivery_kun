@@ -105,20 +105,20 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
       body: SingleChildScrollView(
         child: SafeArea(
             child: Padding(
-          padding: EdgeInsets.fromLTRB(35, 40, 35, 0),
+          padding: const EdgeInsets.fromLTRB(35, 40, 35, 0),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
-              Text(
+              const Text(
                 'ログイン',
                 style: TextStyle(
                     color: Colors.redAccent,
                     fontWeight: FontWeight.bold,
                     fontSize: 30),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Consumer<Auth>(
@@ -137,7 +137,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                               Column(
                                 children: ValidateEmail(auth.validate_message),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               AccountTextField(
@@ -152,7 +152,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                                 children:
                                     ValidatePassword(auth.validate_message),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30,
                               ),
                             ]),
@@ -170,15 +170,15 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                           .login(creds: creds);
                   if (response) {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MapScreen()));
+                        MaterialPageRoute(builder: (context) => const MapScreen()));
                   }
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Text('または', textAlign: TextAlign.center),
-              SizedBox(
+              const Text('または', textAlign: TextAlign.center),
+              const SizedBox(
                 height: 15,
               ),
               GestureDetector(
@@ -186,7 +186,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                   backgroundColor: Colors.white,
                   textColor: Colors.black,
                   title: 'Googleでログイン',
-                  image: DecorationImage(
+                  image: const DecorationImage(
                     image: NetworkImage(
                         'https://github.com/sbis04/flutterfire-samples/blob/google-sign-in/assets/google_logo.png?raw=true'),
                   ),
@@ -203,7 +203,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                       isLoading = true;
                     });
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MapScreen()));
+                        MaterialPageRoute(builder: (context) => const MapScreen()));
                   } else {
                     setState(() {
                       isLoading = true;
@@ -212,7 +212,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                       context: context,
                       builder: (context) {
                         return CupertinoAlertDialog(
-                          title: Text("ログインに失敗しました。"),
+                          title: const Text("ログインに失敗しました。"),
                           actions: <Widget>[
                             CupertinoDialogAction(
                               child: Text("OK"),
@@ -226,7 +226,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                   }
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Platform.isIOS ? GestureDetector(
@@ -234,7 +234,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                   backgroundColor: Colors.black,
                   textColor: Colors.white,
                   title: 'Appleでログイン',
-                  image: DecorationImage(
+                  image: const DecorationImage(
                       image: AssetImage("images/apple_login.png")),
                 ),
                 onTap: () async {
@@ -249,7 +249,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                       isLoading = true;
                     });
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MapScreen()));
+                        MaterialPageRoute(builder: (context) => const MapScreen()));
                   } else {
                     setState(() {
                       isLoading = true;
@@ -258,10 +258,10 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                       context: context,
                       builder: (context) {
                         return CupertinoAlertDialog(
-                          title: Text("ログインに失敗しました。"),
+                          title: const Text("ログインに失敗しました。"),
                           actions: <Widget>[
                             CupertinoDialogAction(
-                              child: Text(
+                              child: const Text(
                                 "OK",
                                 style: TextStyle(color: Colors.black),
                               ),
@@ -278,7 +278,7 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
               TextButton(
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUpForm()));
+                      MaterialPageRoute(builder: (context) => const SignUpForm()));
                 },
                 child: Row(
                   children: [
@@ -333,14 +333,14 @@ class SocialSignInButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
+          const SizedBox(
             width: 50,
           ),
           Container(
             width: 25,
             decoration: BoxDecoration(image: image),
           ),
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
           Text(

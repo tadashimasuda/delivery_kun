@@ -14,22 +14,22 @@ class AnnouncementScreen extends StatelessWidget {
     List announcements = context.read<Announcement>().announcements;
     return Scaffold(
       appBar: AppBar(
-        title: Text('受信メッセージ'),
+        title: const Text('受信メッセージ'),
       ),
       body: Container(
-        margin: EdgeInsets.fromLTRB(30, 30, 30, 0),
+        margin: const EdgeInsets.fromLTRB(30, 30, 30, 0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 announcements[id]['title'],
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 30
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Container(
                 child: Text(
                   announcements[id]['description'],
@@ -42,7 +42,7 @@ class AnnouncementScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: NendBanner()
+      bottomNavigationBar: const NendBanner()
     );
   }
 }

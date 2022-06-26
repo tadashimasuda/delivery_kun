@@ -33,15 +33,15 @@ class MapScreen extends StatefulWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('このアプリを利用するには位置情報取得許可が必要です。'),
-          content: Text("位置情報を利用します"),
+          title: const Text('このアプリを利用するには位置情報取得許可が必要です。'),
+          content: const Text("位置情報を利用します"),
           actions: <Widget>[
             TextButton(
-              child: Text("キャンセル"),
+              child: const Text("キャンセル"),
               onPressed: () => Navigator.pop(context),
             ),
             TextButton(
-              child: Text("設定"),
+              child: const Text("設定"),
               onPressed: () async {
                 openAppSettings();
               },
@@ -88,7 +88,7 @@ class _MapScreenState extends State<MapScreen> {
   Map<PolylineId, Polyline> _polylines = {};
   List<Marker> _markers = [];
   PolylinePoints polylinePoints = PolylinePoints();
-  FlutterSecureStorage storage = FlutterSecureStorage();
+  FlutterSecureStorage storage = const FlutterSecureStorage();
   TextEditingController destinationController = TextEditingController();
 
   void _getUserLocation() async {
@@ -116,18 +116,18 @@ class _MapScreenState extends State<MapScreen> {
 
   CupertinoAlertDialog IOSPermissionAlertDialog(BuildContext context) {
     return CupertinoAlertDialog(
-         title: Text('このアプリを利用するには位置情報取得許可が必要です'),
-         content: Text('設定画面で位置情報の許可をしてください'),
+         title: const Text('このアプリを利用するには位置情報取得許可が必要です'),
+         content: const Text('設定画面で位置情報の許可をしてください'),
          actions: [
            CupertinoDialogAction(
              isDestructiveAction: true,
-             child: Text('キャンセル'),
+             child: const Text('キャンセル'),
              onPressed: () {
                Navigator.pop(context);
              },
            ),
            CupertinoDialogAction(
-             child: Text('設定'),
+             child: const Text('設定'),
              onPressed: () async{
                await openAppSettings();
                Navigator.pop(context);
@@ -139,15 +139,15 @@ class _MapScreenState extends State<MapScreen> {
 
   AlertDialog AndroidAlertPermissionDialog(BuildContext context){
     return AlertDialog(
-          title: Text('このアプリを利用するには位置情報取得許可が必要です'),
-          content: Text("位置情報を利用します"),
+          title: const Text('このアプリを利用するには位置情報取得許可が必要です'),
+          content: const Text("位置情報を利用します"),
           actions: <Widget>[
             TextButton(
-              child: Text("キャンセル"),
+              child: const Text("キャンセル"),
               onPressed: () => Navigator.pop(context),
             ),
             TextButton(
-              child: Text("設定"),
+              child: const Text("設定"),
               onPressed: () async {
                 await openAppSettings();
                 Navigator.pop(context);
@@ -274,7 +274,7 @@ class _MapScreenState extends State<MapScreen> {
         auth.authenticated ? context.read<Status>().getStatusToday(auth.user!.id) : false;
         return Center(
             child: _loading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : Container(
                     child: Stack(
                       children: <Widget>[
@@ -309,7 +309,7 @@ class _MapScreenState extends State<MapScreen> {
                               child: Container(
                                   height: deviceWidth * 0.18,
                                   width: deviceWidth * 0.18,
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.menu,
                                     color: Colors.black,
                                   ),
@@ -337,7 +337,7 @@ class _MapScreenState extends State<MapScreen> {
                                   hintText: "配達先を検索",
                                   border: InputBorder.none,
                                   suffixIcon: destinationController.text.isEmpty ? IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.search,
                                       color: Colors.grey,
                                     ),
@@ -350,7 +350,7 @@ class _MapScreenState extends State<MapScreen> {
                                       FocusScope.of(context).unfocus();
                                     },
                                   ):IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.close,
                                       color: Colors.grey,
                                     ),
@@ -368,7 +368,7 @@ class _MapScreenState extends State<MapScreen> {
                         top: 50,
                       ),
                       Positioned(
-                          child: MapScreenBottomBtn(),
+                          child: const MapScreenBottomBtn(),
                           bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02
                       ),
                       Positioned(
@@ -386,7 +386,7 @@ class _MapScreenState extends State<MapScreen> {
                             width: deviceWidth,
                             bottom: 0,
                           )
-                        : SizedBox.shrink()
+                        : const SizedBox.shrink()
                     ]
                 )
             )
@@ -399,7 +399,7 @@ class _MapScreenState extends State<MapScreen> {
       //         child: AdWidget(ad: _bannerAd),
       //       )
       //     : SizedBox(),
-      bottomNavigationBar: NendBanner()
+      bottomNavigationBar: const NendBanner()
     );
   }
 }
@@ -463,7 +463,7 @@ class currentLocationBtn extends StatelessWidget {
         ],
       ),
       child: IconButton(
-          icon: Icon(Icons.my_location_outlined), onPressed: onPressed),
+          icon: const Icon(Icons.my_location_outlined), onPressed: onPressed),
     );
   }
 }

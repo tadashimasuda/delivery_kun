@@ -100,7 +100,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                 FixedExtentScrollController(
                     initialItem: _selectHour),
               )),
-            Expanded(child: Text('時')),
+            const Expanded(child: Text('時')),
             Expanded(
               child: CupertinoPicker(
                 itemExtent: 30,
@@ -116,7 +116,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                 FixedExtentScrollController(
                     initialItem: _selectMinite),
               )),
-            Expanded(child: Text('分')),
+            const Expanded(child: Text('分')),
           ],
         );
       });
@@ -207,14 +207,14 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                     context: context,
                     builder: (context) {
                       return CupertinoAlertDialog(
-                        title: Text(
+                        title: const Text(
                           'エラーが発生しました',
                           style: TextStyle(color: Colors.black),
                         ),
                         actions: [
                           CupertinoDialogAction(
                             isDestructiveAction: true,
-                            child: Text('OK',style: TextStyle(color: Colors.blueAccent)),
+                            child: const Text('OK',style: TextStyle(color: Colors.blueAccent)),
                             onPressed: () {
                               Navigator.pop(context);
                               Navigator.pop(context);
@@ -281,7 +281,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                   )
                 ],
               ),
-              SizedBox(height: 30,),
+              const SizedBox(height: 30,),
             ],
           ),
         ));

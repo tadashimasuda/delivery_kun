@@ -36,8 +36,8 @@ class _SettingUpdateIncentivesSheetScreenState
 
   SimpleDialog ErrorDialog(BuildContext childContext) {
     return SimpleDialog(
-      title: Text("エラーが発生しました"),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      title: const Text("エラーが発生しました"),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       children: <Widget>[
         SimpleDialogOption(
           onPressed: () {
@@ -45,7 +45,7 @@ class _SettingUpdateIncentivesSheetScreenState
 
             Navigator.pop(childContext);
           },
-          child: Text("OK"),
+          child: const Text("OK"),
         ),
       ],
     );
@@ -55,7 +55,7 @@ class _SettingUpdateIncentivesSheetScreenState
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('インセンティブ設定'),
+          title: const Text('インセンティブ設定'),
           actions: <Widget>[
             TextButton(
               onPressed: () async{
@@ -89,7 +89,7 @@ class _SettingUpdateIncentivesSheetScreenState
 
                 Navigator.pop(context);
               },
-              child: !isCreating ? Text(
+              child: !isCreating ? const Text(
                 '更新',
                 style: TextStyle(
                   color: Colors.white,
@@ -98,7 +98,7 @@ class _SettingUpdateIncentivesSheetScreenState
               ) : Container(
                   width: 20.0,
                   height: 20.0,
-                  child: new CircularProgressIndicator(
+                  child: const CircularProgressIndicator(
                     color: Colors.white,
                   )
               )
@@ -108,8 +108,8 @@ class _SettingUpdateIncentivesSheetScreenState
         body: SingleChildScrollView(
           child: Column(
             children: [
-              NendBanner(),
-              SizedBox(
+              const NendBanner(),
+              const SizedBox(
                 height: 10,
               ),
               Container(
@@ -122,13 +122,13 @@ class _SettingUpdateIncentivesSheetScreenState
                   },
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Text(
+              const Text(
                 '倍率をタップしてください',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               IncentivesSheet != null
@@ -170,8 +170,8 @@ class _SettingUpdateIncentivesSheetScreenState
                                               context: context,
                                               builder: (childContext) {
                                                 return SimpleDialog(
-                                                  title: Text("インセンティブをタップしてください"),
-                                                  shape: RoundedRectangleBorder(
+                                                  title: const Text("インセンティブをタップしてください"),
+                                                  shape: const RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.all(Radius.circular(20))
                                                   ),
                                                   children: <Widget>[
@@ -185,7 +185,7 @@ class _SettingUpdateIncentivesSheetScreenState
                                                             child: Container(
                                                                 height: 45,
                                                                 width: MediaQuery.of(context).size.width * 0.6,
-                                                                decoration: BoxDecoration(
+                                                                decoration: const BoxDecoration(
                                                                   color: Colors.redAccent,
                                                                   borderRadius:
                                                                     BorderRadius.all(
@@ -195,7 +195,7 @@ class _SettingUpdateIncentivesSheetScreenState
                                                                 child: Center(
                                                                   child: Text(
                                                                     i.toString() + "倍",
-                                                                    style: TextStyle(
+                                                                    style: const TextStyle(
                                                                       fontSize: 22,
                                                                       fontWeight: FontWeight.bold,
                                                                       color: Colors.white,
@@ -203,7 +203,7 @@ class _SettingUpdateIncentivesSheetScreenState
                                                                   ),
                                                                 )),
                                                           ),
-                                                          SizedBox(height: 6,)
+                                                          const SizedBox(height: 6,)
                                                         ],
                                                       ),
                                                   ],
@@ -218,12 +218,12 @@ class _SettingUpdateIncentivesSheetScreenState
                                         }),
                                   )
                                 ]),
-                              SizedBox(height: 10,)
+                              const SizedBox(height: 10,)
                             ],
                           ),
                         );
                       })
-                  : Center(child: CircularProgressIndicator()),
+                  : const Center(child: CircularProgressIndicator()),
               TextButton(
                 child: Text('このインセンティブシートを削除する'),
                 onPressed: () async{
@@ -231,8 +231,8 @@ class _SettingUpdateIncentivesSheetScreenState
                     context: context,
                     builder: (childContext) {
                       return SimpleDialog(
-                        title: Text("削除しますか？"),
-                        shape: RoundedRectangleBorder(
+                        title: const Text("削除しますか？"),
+                        shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         children: <Widget>[
@@ -254,20 +254,20 @@ class _SettingUpdateIncentivesSheetScreenState
 
                               Navigator.pop(context);
                             },
-                            child: Text("削除"),
+                            child: const Text("削除"),
                           ),
                           SimpleDialogOption(
                             onPressed: () {
                               Navigator.pop(childContext);
                             },
-                            child: Text("キャンセル"),
+                            child: const Text("キャンセル"),
                           ),
                         ],
                       );
                     });
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               )
             ],

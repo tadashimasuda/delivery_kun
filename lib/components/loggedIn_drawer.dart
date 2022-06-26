@@ -1,5 +1,4 @@
 import 'package:delivery_kun/screens/announcements_list_screen.dart';
-import 'package:delivery_kun/screens/setting_update_incentives_sheet_screen.dart';
 import 'package:delivery_kun/screens/setting_incentives_sheets_screen.dart';
 import 'package:delivery_kun/services/announcement.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
@@ -10,9 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:delivery_kun/screens/setting_screen.dart';
-import 'package:delivery_kun/screens/setting_incentive_screen.dart';
 import 'package:delivery_kun/components/drawer_list_text.dart';
-import 'package:delivery_kun/services/todayIncentive.dart';
 
 class LoggedInDrawer extends StatefulWidget {
   const LoggedInDrawer({Key? key}) : super(key: key);
@@ -22,8 +19,8 @@ class LoggedInDrawer extends StatefulWidget {
 }
 
 class _LoggedInDrawerState extends State<LoggedInDrawer> {
-  String _url = 'https://twitter.com/deliveryKun';
-  String _noteUrl = 'https://note.com/deliverykun/n/n143325d75507';
+  final String _url = 'https://twitter.com/deliveryKun';
+  final String _noteUrl = 'https://note.com/deliverykun/n/n143325d75507';
 
   void _launchURL() async {
     if (!await launch(_url)) throw 'Could not launch $_url';
@@ -35,34 +32,34 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    int read_cnt = context.watch<Announcement>().is_not_read_num;
+    int readCnt = context.watch<Announcement>().is_not_read_num;
 
     return Consumer<Auth>(builder: (context, auth, child) {
       return ListView(
         // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.only(top: 50.0),
+        padding: const EdgeInsets.only(top: 50.0),
         children: [
           Column(children: [
             UserAccountsDrawerHeader(
               accountName: Text(
                 auth.user!.name,
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
-              accountEmail: Text(''),
-              currentAccountPicture: CircleAvatar(
+              accountEmail: const Text(''),
+              currentAccountPicture: const CircleAvatar(
                 backgroundColor: Colors.white,
                 backgroundImage: AssetImage("images/user.png")
               ),
             ),
           ]),
           ListTile(
-            title: drawerListText(title: '受信トレイ'),
-            trailing:  read_cnt > 0 ? CircleAvatar(
+            title: const drawerListText(title: '受信トレイ'),
+            trailing:  readCnt > 0 ? CircleAvatar(
               backgroundColor: Colors.red,
               radius:13,
               child:Text(
-                read_cnt.toString(),
-                style: TextStyle(color: Colors.white),
+                readCnt.toString(),
+                style: const TextStyle(color: Colors.white),
               ),
             ):null,
             onTap: () {
@@ -74,50 +71,50 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
             },
           ),
           ListTile(
-            title: drawerListText(title: '配達ステータス'),
+            title: const drawerListText(title: '配達ステータス'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => UserStatusScreen(),
+                  builder: (context) => const UserStatusScreen(),
                 ));
             },
           ),
-          SizedBox(height: 8,),
+          const SizedBox(height: 8,),
           ListTile(
-            title: drawerListText(title: 'インセンティブシート設定'),
+            title: const drawerListText(title: 'インセンティブシート設定'),
             onTap: () async {
               await context.read<IncentiveSheet>().getIncentives();
 
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingIncentivesSheets())
+                  MaterialPageRoute(builder: (context) => const SettingIncentivesSheets())
               );
             },
           ),
-          SizedBox(height: 8,),
+          const SizedBox(height: 8,),
           ListTile(
-            title: drawerListText(title: 'ユーザー設定'),
+            title: const drawerListText(title: 'ユーザー設定'),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingScreen())
+                  MaterialPageRoute(builder: (context) => const SettingScreen())
               );
             },
           ),
-          SizedBox(height: 8,),
+          const SizedBox(height: 8,),
           ListTile(
-              title: drawerListText(title: 'アプリの使い方'),
+              title: const drawerListText(title: 'アプリの使い方'),
               onTap: _launchNoteURL
           ),
-          SizedBox(height: 8,),
+          const SizedBox(height: 8,),
           ListTile(
-            title: drawerListText(title: 'ログアウト'),
+            title: const drawerListText(title: 'ログアウト'),
             onTap: () {
               Provider.of<Auth>(context, listen: false).logout();
             },
           ),
-          SizedBox(height: 8,),
+          const SizedBox(height: 8,),
           ListTile(
-            title: drawerListText(title: 'お問い合わせ'),
+            title: const drawerListText(title: 'お問い合わせ'),
             onTap: _launchURL
           ),
         ],

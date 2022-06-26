@@ -1,4 +1,3 @@
-import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,9 +14,9 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    int total = context.watch<Status>().userDaysEarningsTotal;
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20)),
@@ -26,7 +25,7 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
       child: Stack(
         children: [
           Center(
-            child:BottomSheetText(title: '¥${context.watch<Status>().userDaysEarningsTotal}')
+            child:BottomSheetText(title: '¥${total}')
           ),
           Positioned(
             child: IconButton(
@@ -35,14 +34,14 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
                   context: context,
                   isScrollControlled: true,
                   builder: (context) {
-                    return FractionallySizedBox(
+                    return const FractionallySizedBox(
                         heightFactor: 0.90,
                         child: UserStatusScreen()
                     );
                   }
                 );
               },
-              icon: Icon(Icons.list)
+              icon: const Icon(Icons.list)
             ),
             height: deviceHeight * 0.10,
             right: 0
@@ -63,7 +62,7 @@ class BottomSheetText extends StatelessWidget {
     return Text(
       title,
       textAlign: TextAlign.center,
-      style: TextStyle(
+      style: const TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w500
       ),

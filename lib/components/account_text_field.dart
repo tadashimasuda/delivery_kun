@@ -28,7 +28,7 @@ class AccountTextField extends StatelessWidget {
       onChanged: onChange,
       decoration: InputDecoration(
           labelText: title,
-          border: isBorder ? OutlineInputBorder(
+          border: isBorder ? const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10))
           ) :null
       )

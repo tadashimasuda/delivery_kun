@@ -33,8 +33,8 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
 
   SimpleDialog ErrorDialog(BuildContext childContext) {
     return SimpleDialog(
-      title: Text("エラーが発生しました"),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      title: const Text("エラーが発生しました"),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       children: <Widget>[
         SimpleDialogOption(
           onPressed: () {
@@ -42,7 +42,7 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
 
             Navigator.pop(childContext);
           },
-          child: Text("OK"),
+          child: const Text("OK"),
         ),
       ],
     );
@@ -52,7 +52,7 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('インセンティブ設定'),
+          title: const Text('インセンティブ設定'),
           actions: <Widget>[
             TextButton(
                 onPressed: () async{
@@ -82,10 +82,10 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                   });
 
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SettingIncentivesSheets())
+                      MaterialPageRoute(builder: (context) => const SettingIncentivesSheets())
                   );
                 },
-                child: !isCreating ? Text(
+                child: !isCreating ? const Text(
                   '作成',
                   style: TextStyle(
                       color: Colors.white,
@@ -95,7 +95,7 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                 ) : Container(
                     width: 20.0,
                     height: 20.0,
-                    child: new CircularProgressIndicator(
+                    child: const CircularProgressIndicator(
                       color: Colors.white,
                     )
                 )
@@ -105,8 +105,8 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
         body: SingleChildScrollView(
           child: Column(
             children:[
-              NendBanner(),
-              SizedBox(height: 10,),
+              const NendBanner(),
+              const SizedBox(height: 10,),
               Container(
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: TextField(
@@ -117,13 +117,13 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                   },
                 ),
               ),
-              SizedBox(height:10),
-              Text('倍率をタップしてください',),
-              SizedBox(height:10),
+              const SizedBox(height:10),
+              const Text('倍率をタップしてください',),
+              const SizedBox(height:10),
 
               IncentivesSheet != null ? ListView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: 17,
                   itemBuilder: (context, int index) {
                     final hour = newIncentiveSheet['earningsIncentives'].keys.elementAt(index);
@@ -141,7 +141,7 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                                 width: MediaQuery.of(context).size.width * 0.4,
                                 child: Text(
                                   hour.toString()+'時',
-                                  style: TextStyle(fontSize: 25),
+                                  style: const TextStyle(fontSize: 25),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -151,7 +151,7 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                                 child: InkWell(
                                   child:Text(
                                     incentive.toStringAsFixed(1).toString() + "倍",
-                                    style: TextStyle(fontSize: 25),
+                                    style: const TextStyle(fontSize: 25),
                                     textAlign: TextAlign.center,
                                   ),
                                   onTap: () async{
@@ -159,8 +159,8 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                                         context: context,
                                         builder: (childContext) {
                                           return SimpleDialog(
-                                            title: Text("インセンティブをタップしてください"),
-                                            shape: RoundedRectangleBorder(
+                                            title: const Text("インセンティブをタップしてください"),
+                                            shape: const RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.all(Radius.circular(20))),
                                             children: <Widget>[
                                               for(var i in incentiveList)
@@ -173,14 +173,14 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                                                       child: Container(
                                                         height:45,
                                                         width:MediaQuery.of(context).size.width * 0.6,
-                                                        decoration: BoxDecoration(
+                                                        decoration: const BoxDecoration(
                                                           color: Colors.redAccent,
                                                           borderRadius: BorderRadius.all(Radius.circular(20))
                                                         ),
                                                         child: Center(
                                                           child: Text(
                                                             i.toString()+"倍",
-                                                            style: TextStyle(
+                                                            style: const TextStyle(
                                                               fontSize: 22,
                                                               fontWeight: FontWeight.bold,
                                                               color: Colors.white,
@@ -189,7 +189,7 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                                                         )
                                                       ),
                                                     ),
-                                                    SizedBox(height: 6,)
+                                                    const SizedBox(height: 6,)
                                                   ],
                                                 ),
                                             ],
@@ -205,12 +205,12 @@ class _SettingCreateIncentiveScreenState extends State<SettingCreateIncentiveScr
                               )
                             ]
                           ),
-                          SizedBox(height: 10,)
+                          const SizedBox(height: 10,)
                         ],
                       ),
                     );
                   }
-              ):Center(child: CircularProgressIndicator()),
+              ):const Center(child: CircularProgressIndicator()),
             ],
           ),
         )
