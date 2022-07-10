@@ -1,27 +1,26 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:app_review/app_review.dart';
 import 'dart:io' show Platform;
 
-import 'package:delivery_kun/services/admob.dart';
-import 'package:delivery_kun/services/auth.dart';
-import 'package:delivery_kun/services/direction.dart';
-import 'package:delivery_kun/services/user_status.dart';
-import 'package:delivery_kun/services/announcement.dart';
-import 'package:delivery_kun/services/incentive_sheet.dart';
-import 'package:delivery_kun/components/nend_banner.dart';
-import 'package:delivery_kun/components/notLoggedIn_drawer.dart';
+import 'package:app_review/app_review.dart';
+import 'package:delivery_kun/components/adBanner.dart';
 import 'package:delivery_kun/components/loggedIn_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
+import 'package:delivery_kun/components/notLoggedIn_drawer.dart';
 import 'package:delivery_kun/components/userDaysTotalBottomSheet.dart';
+import 'package:delivery_kun/services/announcement.dart';
+import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/services/direction.dart';
+import 'package:delivery_kun/services/incentive_sheet.dart';
+import 'package:delivery_kun/services/user_status.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 Completer<GoogleMapController> _controller = Completer();
 
@@ -30,25 +29,25 @@ class MapScreen extends StatefulWidget {
 
   static void showAlert(BuildContext context) async {
     await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('このアプリを利用するには位置情報取得許可が必要です。'),
-          content: const Text("位置情報を利用します"),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("キャンセル"),
-              onPressed: () => Navigator.pop(context),
-            ),
-            TextButton(
-              child: const Text("設定"),
-              onPressed: () async {
-                openAppSettings();
-              },
-            ),
-          ],
-        );
-      });
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('このアプリを利用するには位置情報取得許可が必要です。'),
+            content: const Text("位置情報を利用します"),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("キャンセル"),
+                onPressed: () => Navigator.pop(context),
+              ),
+              TextButton(
+                child: const Text("設定"),
+                onPressed: () async {
+                  openAppSettings();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   static Future<bool> handlePermission() async {
@@ -94,17 +93,18 @@ class _MapScreenState extends State<MapScreen> {
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
 
-    if (!hasPermission){
-       Platform.isIOS ? showCupertinoDialog(
-           context: context,
-           builder: (context) {
-         return  IOSPermissionAlertDialog(context);
-       }
-    ):showDialog(
-        context: context,
-        builder: (context) {
-          return AndroidAlertPermissionDialog(context);
-        });
+    if (!hasPermission) {
+      Platform.isIOS
+          ? showCupertinoDialog(
+              context: context,
+              builder: (context) {
+                return IOSPermissionAlertDialog(context);
+              })
+          : showDialog(
+              context: context,
+              builder: (context) {
+                return AndroidAlertPermissionDialog(context);
+              });
     }
 
     LatLng locaiton = await _getCurrentLocation();
@@ -116,45 +116,45 @@ class _MapScreenState extends State<MapScreen> {
 
   CupertinoAlertDialog IOSPermissionAlertDialog(BuildContext context) {
     return CupertinoAlertDialog(
-         title: const Text('このアプリを利用するには位置情報取得許可が必要です'),
-         content: const Text('設定画面で位置情報の許可をしてください'),
-         actions: [
-           CupertinoDialogAction(
-             isDestructiveAction: true,
-             child: const Text('キャンセル'),
-             onPressed: () {
-               Navigator.pop(context);
-             },
-           ),
-           CupertinoDialogAction(
-             child: const Text('設定'),
-             onPressed: () async{
-               await openAppSettings();
-               Navigator.pop(context);
-             },
-           ),
-         ],
-       );
+      title: const Text('このアプリを利用するには位置情報取得許可が必要です'),
+      content: const Text('設定画面で位置情報の許可をしてください'),
+      actions: [
+        CupertinoDialogAction(
+          isDestructiveAction: true,
+          child: const Text('キャンセル'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        CupertinoDialogAction(
+          child: const Text('設定'),
+          onPressed: () async {
+            await openAppSettings();
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
   }
 
-  AlertDialog AndroidAlertPermissionDialog(BuildContext context){
+  AlertDialog AndroidAlertPermissionDialog(BuildContext context) {
     return AlertDialog(
-          title: const Text('このアプリを利用するには位置情報取得許可が必要です'),
-          content: const Text("位置情報を利用します"),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("キャンセル"),
-              onPressed: () => Navigator.pop(context),
-            ),
-            TextButton(
-              child: const Text("設定"),
-              onPressed: () async {
-                await openAppSettings();
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
+      title: const Text('このアプリを利用するには位置情報取得許可が必要です'),
+      content: const Text("位置情報を利用します"),
+      actions: <Widget>[
+        TextButton(
+          child: const Text("キャンセル"),
+          onPressed: () => Navigator.pop(context),
+        ),
+        TextButton(
+          child: const Text("設定"),
+          onPressed: () async {
+            await openAppSettings();
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
   }
 
   Future<void> _getUserData() async {
@@ -167,8 +167,7 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<LatLng> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high
-    );
+        desiredAccuracy: LocationAccuracy.high);
     return LatLng(position.latitude, position.longitude);
   }
 
@@ -177,21 +176,15 @@ class _MapScreenState extends State<MapScreen> {
     final GoogleMapController controller = await _controller.future;
 
     controller.animateCamera(CameraUpdate.newLatLngZoom(
-        LatLng(locaiton.latitude, locaiton.longitude), 14.4746)
-    );
+        LatLng(locaiton.latitude, locaiton.longitude), 14.4746));
   }
 
-  // void _initBannerAd() {
-  //   AdmobLoad admobLoad = AdmobLoad();
-  //   _bannerAd = admobLoad.createBarnnerAd();
-  // }
-
-  void _getAnnouncement() async{
+  void _getAnnouncement() async {
     await context.read<Announcement>().getAnnouncements();
   }
 
   void _requestReview() {
-    if(Platform.isIOS){
+    if (Platform.isIOS) {
       AppReview.requestReview.then((onValue) {
         print(onValue);
       });
@@ -204,7 +197,6 @@ class _MapScreenState extends State<MapScreen> {
     _loading = true;
     _getUserLocation();
     _getUserData();
-    // _initBannerAd();
     _getAnnouncement();
     _requestReview();
   }
@@ -236,20 +228,21 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     void _requestDestination(LatLng origin, String destinationText) async {
-      var result = await Direction().getDirections(origin: origin, destination: destinationText);
+      var result = await Direction()
+          .getDirections(origin: origin, destination: destinationText);
 
       LatLng end_location = LatLng(
           result.data["routes"][0]["legs"][0]["end_location"]['lat'],
-          result.data["routes"][0]["legs"][0]["end_location"]['lng']
-      );
-      String start_address = result.data["routes"][0]["legs"][0]["start_address"];
+          result.data["routes"][0]["legs"][0]["end_location"]['lng']);
+      String start_address =
+          result.data["routes"][0]["legs"][0]["start_address"];
 
-      List<PointLatLng> points = polylinePoints.decodePolyline(result.data["routes"][0]["overview_polyline"]["points"]);
+      List<PointLatLng> points = polylinePoints.decodePolyline(
+          result.data["routes"][0]["overview_polyline"]["points"]);
       List<LatLng> polylineCoordinates = [];
       points.forEach((point) {
-        polylineCoordinates.add(
-            LatLng(point.latitude.toDouble(), point.longitude.toDouble())
-        );
+        polylineCoordinates
+            .add(LatLng(point.latitude.toDouble(), point.longitude.toDouble()));
       });
 
       _addPolyLine(polylineCoordinates);
@@ -262,22 +255,23 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      drawerEnableOpenDragGesture: false,
-      drawer: Drawer(
-        child: Consumer<Auth>(builder: (context, auth, child) {
-          return auth.authenticated ? LoggedInDrawer() : NotLoggedInDrawer();
-        }),
-      ),
-      backgroundColor: Colors.grey.shade200,
-      body: Consumer<Auth>(builder: (context, auth, child) {
-        auth.authenticated ? context.read<Status>().getStatusToday(auth.user!.id) : false;
-        return Center(
-            child: _loading
-                ? const CircularProgressIndicator()
-                : Container(
-                    child: Stack(
-                      children: <Widget>[
+        resizeToAvoidBottomInset: false,
+        drawerEnableOpenDragGesture: false,
+        drawer: Drawer(
+          child: Consumer<Auth>(builder: (context, auth, child) {
+            return auth.authenticated ? LoggedInDrawer() : NotLoggedInDrawer();
+          }),
+        ),
+        backgroundColor: Colors.grey.shade200,
+        body: Consumer<Auth>(builder: (context, auth, child) {
+          auth.authenticated
+              ? context.read<Status>().getStatusToday(auth.user!.id)
+              : false;
+          return Center(
+              child: _loading
+                  ? const CircularProgressIndicator()
+                  : Container(
+                      child: Stack(children: <Widget>[
                       GoogleMap(
                         markers: Set<Marker>.of(_markers),
                         polylines: Set<Polyline>.of(_polylines.values),
@@ -336,30 +330,36 @@ class _MapScreenState extends State<MapScreen> {
                                 decoration: InputDecoration(
                                   hintText: "配達先を検索",
                                   border: InputBorder.none,
-                                  suffixIcon: destinationController.text.isEmpty ? IconButton(
-                                    icon: const Icon(
-                                      Icons.search,
-                                      color: Colors.grey,
-                                    ),
-                                    onPressed: () async {
-                                      print(destinationController.text.isEmpty);
-                                      LatLng origin = await _getCurrentLocation();
-                                      destinationController.text.isNotEmpty
-                                          ? _requestDestination(origin, destinationController.text)
-                                          : _clearPolylineMaker();
-                                      FocusScope.of(context).unfocus();
-                                    },
-                                  ):IconButton(
-                                    icon: const Icon(
-                                      Icons.close,
-                                      color: Colors.grey,
-                                    ),
-                                    onPressed: () {
-                                      destinationController.clear();
-                                      _clearPolylineMaker();
-                                      FocusScope.of(context).unfocus();
-                                    },
-                                  ),
+                                  suffixIcon: destinationController.text.isEmpty
+                                      ? IconButton(
+                                          icon: const Icon(
+                                            Icons.search,
+                                            color: Colors.grey,
+                                          ),
+                                          onPressed: () async {
+                                            print(destinationController
+                                                .text.isEmpty);
+                                            LatLng origin =
+                                                await _getCurrentLocation();
+                                            destinationController
+                                                    .text.isNotEmpty
+                                                ? _requestDestination(origin,
+                                                    destinationController.text)
+                                                : _clearPolylineMaker();
+                                            FocusScope.of(context).unfocus();
+                                          },
+                                        )
+                                      : IconButton(
+                                          icon: const Icon(
+                                            Icons.close,
+                                            color: Colors.grey,
+                                          ),
+                                          onPressed: () {
+                                            destinationController.clear();
+                                            _clearPolylineMaker();
+                                            FocusScope.of(context).unfocus();
+                                          },
+                                        ),
                                 ),
                               ),
                             ),
@@ -369,38 +369,31 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                       Positioned(
                           child: const MapScreenBottomBtn(),
-                          bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02
-                      ),
+                          bottom: auth.authenticated != false
+                              ? deviceHeight * 0.12
+                              : deviceHeight * 0.02),
                       Positioned(
                         child: currentLocationBtn(
                           deviceHeight: deviceHeight,
                           onPressed: _currentLocation,
                         ),
-                        bottom: auth.authenticated != false ? deviceHeight * 0.12 : deviceHeight * 0.02,
+                        bottom: auth.authenticated != false
+                            ? deviceHeight * 0.12
+                            : deviceHeight * 0.02,
                         right: 10,
                       ),
                       auth.authenticated != false
-                        ? Positioned(
-                          child: DaysEarningsTotalBottomSheet(deviceHeight: deviceHeight),
-                            height: deviceHeight * 0.10,
-                            width: deviceWidth,
-                            bottom: 0,
-                          )
-                        : const SizedBox.shrink()
-                    ]
-                )
-            )
-        );
-      }),
-      // bottomNavigationBar: _isAdLoaded
-      //     ? Container(
-      //         height: _bannerAd.size.height.toDouble(),
-      //         width: _bannerAd.size.width.toDouble(),
-      //         child: AdWidget(ad: _bannerAd),
-      //       )
-      //     : SizedBox(),
-      bottomNavigationBar: const NendBanner()
-    );
+                          ? Positioned(
+                              child: DaysEarningsTotalBottomSheet(
+                                  deviceHeight: deviceHeight),
+                              height: deviceHeight * 0.10,
+                              width: deviceWidth,
+                              bottom: 0,
+                            )
+                          : const SizedBox.shrink()
+                    ])));
+        }),
+        bottomNavigationBar: const AdBanner());
   }
 }
 
@@ -427,10 +420,10 @@ class destinationTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10.0,
-            spreadRadius: 1.0,
-            offset: Offset(10, 10))
+              color: Colors.black12,
+              blurRadius: 10.0,
+              spreadRadius: 1.0,
+              offset: Offset(10, 10))
         ],
       ),
       child: TextFormField,
@@ -456,10 +449,10 @@ class currentLocationBtn extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10.0,
-            spreadRadius: 1.0,
-            offset: Offset(10, 10))
+              color: Colors.black12,
+              blurRadius: 10.0,
+              spreadRadius: 1.0,
+              offset: Offset(10, 10))
         ],
       ),
       child: IconButton(

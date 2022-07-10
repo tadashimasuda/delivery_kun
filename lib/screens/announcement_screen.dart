@@ -1,3 +1,4 @@
+import 'package:delivery_kun/components/adBanner.dart';
 import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class AnnouncementScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const NendBanner()
+      bottomNavigationBar: const AdBanner()
     );
   }
 }
