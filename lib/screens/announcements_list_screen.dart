@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class AnnouncementsListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    int announcement_count = context.watch<Announcement>().announcements.length;
+    int announcementCount = context.watch<Announcement>().announcements.length;
     List announcements = context.watch<Announcement>().announcements;
 
     return Scaffold(
@@ -31,11 +31,10 @@ class AnnouncementsListScreen extends StatelessWidget {
         body: Container(
           child: Column(
             children: [
-              const AdBanner(),
               Expanded(
-                  child: announcement_count > 0
+                  child: announcementCount > 0
                       ? ListView.builder(
-                          itemCount: announcement_count,
+                          itemCount: announcementCount,
                           itemBuilder: (context, int index) {
                             return InkWell(
                               onTap: () async {
@@ -84,6 +83,8 @@ class AnnouncementsListScreen extends StatelessWidget {
                       : const Text('受信したメッセージはありません'))
             ],
           ),
-        ));
+        ),
+        bottomNavigationBar:const AdBanner(),
+    );
   }
 }
