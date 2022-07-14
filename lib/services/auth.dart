@@ -194,4 +194,27 @@ class Auth extends ChangeNotifier {
     _token = '';
     await storage.delete(key: 'token');
   }
+
+  Future<bool> deleteAccount() async {
+    try {
+      await dio().delete(
+        '/user',
+        options: Dio.Options(headers: {'Authorization': 'Bearer $_token'})
+      );
+
+      _user = null;
+      _isLoggedIn = false;
+      _token = '';
+      await storage.delete(key: 'token');
+
+      notifyListeners();
+
+      return true;
+
+    } on Dio.DioError catch (e) {
+      print(e);
+
+      return false;
+    }
+  }
 }

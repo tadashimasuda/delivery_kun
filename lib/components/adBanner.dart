@@ -36,9 +36,10 @@ class _AdBannerState extends State<AdBanner> {
       height: 55,
       width: MediaQuery.of(context).size.width,
       child: Center(
-          child: Platform.isIOS
-              ? _bannerNend
-              : Admob.AdWidget(ad: _bannerAdmob)),
-    );
+        child: Admob.AdWidget(ad: _bannerAdmob),
+          // child: Platform.isIOS
+          //     ? _bannerNend
+          //     : Admob.AdWidget(ad: _bannerAdmob)),
+      ));
   }
 }

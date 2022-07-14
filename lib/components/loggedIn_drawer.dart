@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/screens/user_status_screen.dart';
-import 'package:delivery_kun/screens/setting_screen.dart';
+import 'package:delivery_kun/screens/setting_user_screen.dart';
 import 'package:delivery_kun/components/drawer_list_text.dart';
 
 class LoggedInDrawer extends StatefulWidget {
@@ -96,7 +96,7 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
             title: const drawerListText(title: 'ユーザー設定'),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SettingScreen())
+                  MaterialPageRoute(builder: (context) => const SettingUserScreen())
               );
             },
           ),

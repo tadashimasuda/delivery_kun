@@ -2,28 +2,28 @@ import 'dart:io' show Platform;
 
 import 'package:delivery_kun/components/account_text_field.dart';
 import 'package:delivery_kun/components/adBanner.dart';
-import 'package:delivery_kun/components/nend_banner.dart';
 import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
+import 'package:delivery_kun/screens/delete_account_screen.dart';
+import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
-class SettingScreen extends StatefulWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+class SettingUserScreen extends StatefulWidget {
+  const SettingUserScreen({Key? key}) : super(key: key);
 
   @override
-  _SettingScreenState createState() => _SettingScreenState();
+  _SettingUserScreenState createState() => _SettingUserScreenState();
 }
 
-class _SettingScreenState extends State<SettingScreen> with ValidateText {
+class _SettingUserScreenState extends State<SettingUserScreen>
+    with ValidateText {
   late String _name;
   late String _email;
   late int _selectVehicleModelId;
   late int _selectPrefectureId;
-  late BannerAd _bannerAd;
   late String _dropdownValue;
   late String _dropdownPrefectureValue;
   final TextEditingController _earningsBaseController = TextEditingController();
@@ -41,7 +41,6 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
     _dropdownValue = _VehicleModelList[_selectVehicleModelId];
     _selectPrefectureId = auth.user!.prefectureId;
     _dropdownPrefectureValue = _prefectureList[_selectPrefectureId];
-    // _initBannerAd();
     super.initState();
   }
 
@@ -56,11 +55,6 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       return const Icon(Icons.directions_walk);
     }
   }
-
-  // _initBannerAd() {
-  //   AdmobLoad admobLoad = AdmobLoad();
-  //   _bannerAd = admobLoad.createBarnnerAd();
-  // }
 
   void IOSPopup() {
     showCupertinoDialog(
@@ -169,7 +163,7 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
       readOnly: true,
       decoration: InputDecoration(
           hintText: _prefectureList[_selectPrefectureId],
-          suffixIcon: Icon(Icons.location_on),
+          suffixIcon: const Icon(Icons.location_on),
           labelText: '活動場所',
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)))),
@@ -327,6 +321,16 @@ class _SettingScreenState extends State<SettingScreen> with ValidateText {
                           const SizedBox(
                             height: 20,
                           ),
+                          TextButton(
+                              onPressed: () async {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const DeleteAccountScreen();
+                                  },
+                                );
+                              },
+                              child: const Text('アカウント削除'))
                         ],
                       )
                     : const Center(child: CircularProgressIndicator());
