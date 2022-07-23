@@ -3,6 +3,9 @@ import 'dart:io' show Platform;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdmobLoad {
+  int num_of_attempt_load = 0;
+  late InterstitialAd _interstitialAd;
+
   BannerAd createBannerAd() {
     return BannerAd(
         size: AdSize.banner,
@@ -20,4 +23,48 @@ class AdmobLoad {
         request: AdRequest())
       ..load();
   }
-}
+
+  void createInterad(){
+    InterstitialAd.load(
+        adUnitId: 'ca-app-pub-3940256099942544/4411468910', //test
+//        adUnitId: 'ca-app-pub-3940256099942544/4411468910',
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad){
+            print('ssss');
+            showAd(ad);
+            num_of_attempt_load = 0;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print(error);
+
+            num_of_attempt_load+1;
+
+            if(num_of_attempt_load<=2){
+              createInterad();
+            }
+          },
+        )
+    );
+  }
+
+  void showAd(InterstitialAd ad){
+    if(ad != null){
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad){
+        print('onAdShowedFullScreenContent');
+      },
+      onAdDismissedFullScreenContent: (InterstitialAd ad){
+        print('onAdDismissedFullScreenContent');
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad,AdError adError){
+        print(adError);
+        ad.dispose();
+        createInterad();
+      },
+    );
+
+    ad.show();
+    }
+  }
+  }

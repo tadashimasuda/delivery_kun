@@ -4,10 +4,12 @@ import 'package:delivery_kun/components/adBanner.dart';
 import 'package:delivery_kun/components/days_hour_bar_chart.dart';
 import 'package:delivery_kun/screens/order_list_screen.dart';
 import 'package:delivery_kun/screens/sign_up_screen.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +21,15 @@ class UserStatusScreen extends StatefulWidget {
 }
 
 class _UserStatusScreenState extends State<UserStatusScreen> {
+
+  late AdmobLoad admobLoad;
+
+  @override
+  void initState() {
+    super.initState();
+    admobLoad = AdmobLoad();
+    admobLoad.createInterad();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

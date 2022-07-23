@@ -7,6 +7,7 @@ import 'package:delivery_kun/components/loggedIn_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
 import 'package:delivery_kun/components/notLoggedIn_drawer.dart';
 import 'package:delivery_kun/components/userDaysTotalBottomSheet.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/announcement.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
@@ -84,6 +85,7 @@ class _MapScreenState extends State<MapScreen> {
   late BannerAd _bannerAd;
   late bool isAuthenticated;
   bool _isAdLoaded = true;
+  late AdmobLoad admobLoad;
   Map<PolylineId, Polyline> _polylines = {};
   List<Marker> _markers = [];
   PolylinePoints polylinePoints = PolylinePoints();
@@ -199,6 +201,9 @@ class _MapScreenState extends State<MapScreen> {
     _getUserData();
     _getAnnouncement();
     _requestReview();
+
+    admobLoad = AdmobLoad();
+    admobLoad.createInterad();
   }
 
   @override
