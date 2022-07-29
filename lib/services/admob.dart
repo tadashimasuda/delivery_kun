@@ -26,12 +26,14 @@ class AdmobLoad {
 
   void createInterad(){
     InterstitialAd.load(
-        adUnitId: 'ca-app-pub-3940256099942544/4411468910', //test
-//        adUnitId: 'ca-app-pub-3940256099942544/4411468910',
+     // adUnitId: Platform.isIOS ? 'ca-app-pub-8624775791237653/6141994994'
+      // : 'ca-app-pub-8624775791237653/8846412908',
+        adUnitId: Platform.isIOS
+            ? 'ca-app-pub-3940256099942544/4411468910'
+            :'ca-app-pub-3940256099942544/1033173712', //test
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad){
-            print('ssss');
             showAd(ad);
             num_of_attempt_load = 0;
           },
