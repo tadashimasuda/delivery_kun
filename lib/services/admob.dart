@@ -4,17 +4,16 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdmobLoad {
   int num_of_attempt_load = 0;
-  late InterstitialAd _interstitialAd;
 
   BannerAd createBannerAd() {
     return BannerAd(
         size: AdSize.banner,
-        // adUnitId: Platform.isIOS
-        //     ? 'ca-app-pub-8624775791237653/7710222023'
-        //     : 'ca-app-pub-8624775791237653/4702574836',
         adUnitId: Platform.isIOS
-            ? "ca-app-pub-3940256099942544/2934735716"
-            : "ca-app-pub-3940256099942544/6300978111", //test
+            ? 'ca-app-pub-8624775791237653/7710222023'
+            : 'ca-app-pub-8624775791237653/4702574836',
+        // adUnitId: Platform.isIOS
+        //     ? "ca-app-pub-3940256099942544/2934735716"
+        //     : "ca-app-pub-3940256099942544/6300978111", //test
         listener: BannerAdListener(
             onAdLoaded: (ad) {},
             onAdFailedToLoad: (ad, error) {
@@ -26,8 +25,8 @@ class AdmobLoad {
 
   void createInterad(){
     InterstitialAd.load(
-        adUnitId: 'ca-app-pub-3940256099942544/4411468910', //test
-//        adUnitId: 'ca-app-pub-3940256099942544/4411468910',
+       adUnitId: 'ca-app-pub-8624775791237653/6141994994',
+        // adUnitId: 'ca-app-pub-3940256099942544/4411468910', //test
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad){
