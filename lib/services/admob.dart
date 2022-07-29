@@ -18,13 +18,13 @@ class AdmobLoad {
         listener: BannerAdListener(
             onAdLoaded: (ad) {},
             onAdFailedToLoad: (ad, error) {
-              print(error);
+              // print(error);
             }),
         request: AdRequest())
       ..load();
   }
 
-  void createInterad(){
+  void interstitialUserStatus(){
     InterstitialAd.load(
      // adUnitId: Platform.isIOS ? 'ca-app-pub-8624775791237653/6141994994'
       // : 'ca-app-pub-8624775791237653/8846412908',
@@ -38,12 +38,37 @@ class AdmobLoad {
             num_of_attempt_load = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            print(error);
+            // print(error);
 
             num_of_attempt_load+1;
 
             if(num_of_attempt_load<=2){
-              createInterad();
+              interstitialUserStatus();
+            }
+          },
+        )
+    );
+  }
+  void interstitialIncetiveSheeet(){
+    InterstitialAd.load(
+      // adUnitId: Platform.isIOS ? 'ca-app-pub-8624775791237653/3889599692'
+      // : 'ca-app-pub-8624775791237653/2289028823',
+        adUnitId: Platform.isIOS
+            ? 'ca-app-pub-3940256099942544/4411468910'
+            :'ca-app-pub-3940256099942544/1033173712', //test
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad){
+            showAd(ad);
+            num_of_attempt_load = 0;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            // print(error);
+
+            num_of_attempt_load+1;
+
+            if(num_of_attempt_load<=2){
+              interstitialUserStatus();
             }
           },
         )
@@ -60,9 +85,9 @@ class AdmobLoad {
         print('onAdDismissedFullScreenContent');
       },
       onAdFailedToShowFullScreenContent: (InterstitialAd ad,AdError adError){
-        print(adError);
+        // print(adError);
         ad.dispose();
-        createInterad();
+        interstitialUserStatus();
       },
     );
 
