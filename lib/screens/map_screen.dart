@@ -203,7 +203,7 @@ class _MapScreenState extends State<MapScreen> {
     _requestReview();
 
     admobLoad = AdmobLoad();
-    admobLoad.createInterad();
+    admobLoad.interstitialUserStatus();
   }
 
   @override

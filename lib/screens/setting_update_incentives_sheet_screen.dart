@@ -1,6 +1,7 @@
 import 'package:delivery_kun/components/adBanner.dart';
 import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/models/incentive_sheet.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,10 @@ class _SettingUpdateIncentivesSheetScreenState
     IncentivesSheet = context.read<IncentiveSheet>().IncentivesSheet;
     TitleContoller.text = IncentivesSheet.title;
     title = IncentivesSheet.title;
+
+    AdmobLoad admobLoad = AdmobLoad();
+    admobLoad.interstitialIncetiveSheeet();
+
     super.initState();
   }
 

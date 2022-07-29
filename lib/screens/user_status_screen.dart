@@ -28,7 +28,7 @@ class _UserStatusScreenState extends State<UserStatusScreen> {
   void initState() {
     super.initState();
     admobLoad = AdmobLoad();
-    admobLoad.createInterad();
+    admobLoad.interstitialUserStatus();
   }
   @override
   Widget build(BuildContext context) {
