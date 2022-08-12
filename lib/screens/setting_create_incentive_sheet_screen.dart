@@ -1,6 +1,7 @@
 import 'package:delivery_kun/components/adBanner.dart';
 import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/screens/setting_incentives_sheets_screen.dart';
+import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,9 @@ class _SettingCreateIncentiveScreenState
     TitleContoller.text = newIncentiveSheet['title'];
     title = newIncentiveSheet['title'];
 
-    print(newIncentiveSheet);
+    AdmobLoad admobLoad = AdmobLoad();
+    admobLoad.interstitialIncetiveSheeet();
+
     super.initState();
   }
 
