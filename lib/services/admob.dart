@@ -19,11 +19,11 @@ class AdmobLoad {
             onAdFailedToLoad: (ad, error) {
               // print(error);
             }),
-        request: AdRequest())
+        request: const AdRequest())
       ..load();
   }
 
-  void interstitialUserStatus(){
+  void interstitialUserStatus() {
     InterstitialAd.load(
      adUnitId: Platform.isIOS
          ? 'ca-app-pub-8624775791237653/6141994994'
@@ -33,23 +33,23 @@ class AdmobLoad {
       //       :'ca-app-pub-3940256099942544/1033173712', //test
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad){
+          onAdLoaded: (InterstitialAd ad) {
             showAd(ad);
             num_of_attempt_load = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
             // print(error);
 
-            num_of_attempt_load+1;
+            num_of_attempt_load + 1;
 
-            if(num_of_attempt_load<=2){
+            if (num_of_attempt_load <= 2) {
               interstitialUserStatus();
             }
           },
-        )
-    );
+        ));
   }
-  void interstitialIncetiveSheeet(){
+
+  void interstitialIncetiveSheeet() {
     InterstitialAd.load(
       adUnitId: Platform.isIOS ? 'ca-app-pub-8624775791237653/3889599692'
       : 'ca-app-pub-8624775791237653/2289028823',
@@ -58,40 +58,40 @@ class AdmobLoad {
       //       :'ca-app-pub-3940256099942544/1033173712', //test
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad){
+          onAdLoaded: (InterstitialAd ad) {
             showAd(ad);
             num_of_attempt_load = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
             // print(error);
 
-            num_of_attempt_load+1;
+            num_of_attempt_load + 1;
 
-            if(num_of_attempt_load<=2){
+            if (num_of_attempt_load <= 2) {
               interstitialUserStatus();
             }
           },
-        )
-    );
+        ));
   }
 
-  void showAd(InterstitialAd ad){
-    if(ad != null){
-    ad.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad){
-        print('onAdShowedFullScreenContent');
-      },
-      onAdDismissedFullScreenContent: (InterstitialAd ad){
-        print('onAdDismissedFullScreenContent');
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad,AdError adError){
-        // print(adError);
-        ad.dispose();
-        interstitialUserStatus();
-      },
-    );
+  void showAd(InterstitialAd ad) {
+    if (ad != null) {
+      ad.fullScreenContentCallback = FullScreenContentCallback(
+        onAdShowedFullScreenContent: (InterstitialAd ad) {
+          print('onAdShowedFullScreenContent');
+        },
+        onAdDismissedFullScreenContent: (InterstitialAd ad) {
+          print('onAdDismissedFullScreenContent');
+        },
+        onAdFailedToShowFullScreenContent:
+            (InterstitialAd ad, AdError adError) {
+          // print(adError);
+          ad.dispose();
+          interstitialUserStatus();
+        },
+      );
 
-    ad.show();
+      ad.show();
     }
   }
-  }
+}
