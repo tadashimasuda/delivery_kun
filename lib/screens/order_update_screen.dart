@@ -211,6 +211,23 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
     );
   }
 
+  DropdownButton androidDeliveryDistanceForm(){
+    return DropdownButton(
+      value: deliveryDistanceList[distanceType],
+      items: deliveryDistanceList.map((e) {
+        return DropdownMenuItem<String>(
+          value: e,
+          child: Text(e),
+        );
+      }).toList(),
+      onChanged: (val){
+        setState(() {
+          distanceType = deliveryDistanceList.indexOf(val);
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -328,7 +345,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                         children: [
                           UpdateTitleCell(title: '距離選択'),
                           TableCell(
-                              child: Platform.isIOS ? iosDeliveryDistanceForm() : androidIncentiveTextForm()
+                              child: Platform.isIOS ? iosDeliveryDistanceForm() : androidDeliveryDistanceForm()
                           )
                         ]
                     )
