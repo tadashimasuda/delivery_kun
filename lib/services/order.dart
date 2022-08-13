@@ -70,7 +70,7 @@ class OrderList extends ChangeNotifier {
     String? token = await auth.getToken();
 
     try {
-      Dio.Response response = await dio().patch('/order/$id',
+      await dio().patch('/order/$id',
           data: requestData,
           options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
 

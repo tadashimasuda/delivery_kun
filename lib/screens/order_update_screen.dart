@@ -236,6 +236,12 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                   'update_date_time': time
                 };
 
+                if(distanceType != -1){
+                  requestData.addAll(
+                    {'earnings_distance_base_type' : distanceType}
+                  );
+                }
+
                 bool response =
                 await Provider.of<OrderList>(context, listen: false)
                     .updateOrder(requestData: requestData, id: id);
