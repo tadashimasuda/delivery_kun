@@ -1,3 +1,6 @@
+
+const List<String> deliveryDistanceList = ['〜0.9km', '1.0〜1.9km', '2.0〜2.9km', '3.0km〜'];
+
 const List<String> incentiveList = [
   '1.0',
   '1.1',

@@ -1,3 +1,4 @@
+import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/models/incentive_sheet.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
@@ -31,13 +32,13 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
           ElevatedButton(
             onPressed: () async{
               if (context.read<Auth>().authenticated) {
-                late List<IncentiveSheetModel>  _IncentivesSheetList = context.read<IncentiveSheet>().IncentivesSheets;
+                late List<IncentiveSheetModel> _IncentivesSheetList = context.read<IncentiveSheet>().IncentivesSheets;
 
                 var sheetId = await showDialog(
                     context: context,
                     builder: (childContext) {
                   return SimpleDialog(
-                    title: Text("反映するインセンティブを選択してください"),
+                    title: const Text("反映するインセンティブを選択してください"),
                     shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20))
                     ),
@@ -76,11 +77,57 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                     ],
                   );
                 });
-                if(sheetId != null){
-                  int user_id = context.read<Auth>().user!.id;
 
-                  await context.read<OrderList>().postOrder(sheetId:sheetId);
-                  await context.read<Status>().getStatusToday(user_id);
+                if (sheetId != null){
+
+                int distanceType = await showDialog(
+                    context: context,
+                    builder: (childContext) {
+                      return SimpleDialog(
+                        title: const Text("配達距離を選択してください"),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20))
+                        ),
+                        children: <Widget>[
+                          for (String deliveryDistance in deliveryDistanceList)
+                            Column(
+                              children: [
+                                SimpleDialogOption(
+                                  onPressed: () {
+                                    Navigator.pop(childContext,deliveryDistanceList.indexOf(deliveryDistance));
+                                  },
+                                  child: Container(
+                                      height: 45,
+                                      width: MediaQuery.of(context).size.width * 0.6,
+                                      decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                          BorderRadius.all(
+                                              Radius.circular(20)
+                                          )
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          deliveryDistance,
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      )),
+                                ),
+                                const SizedBox(height: 6,)
+                              ],
+                            ),
+                        ],
+                      );
+                    });
+                  if(distanceType != null){
+                    int userId = context.read<Auth>().user!.id;
+                    await context.read<OrderList>().postOrder(distanceType: distanceType,sheetId:sheetId);
+                    await context.read<Status>().getStatusToday(userId);
+                  }
                 }
               } else {
                 showDialog(
@@ -118,19 +165,17 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                                 const SizedBox(
                                   height: 40,
                                 ),
-                                Container(
-                                  child: SubmitBtn(
-                                    title: 'アカウント登録',
-                                    color: Colors.lightBlue,
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SignUpForm()
-                                        )
-                                      );
-                                    },
-                                  )
+                                SubmitBtn(
+                                  title: 'アカウント登録',
+                                  color: Colors.lightBlue,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const SignUpForm()
+                                      )
+                                    );
+                                  },
                                 )
                               ],
                             ),
