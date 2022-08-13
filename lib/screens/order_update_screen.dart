@@ -11,11 +11,13 @@ class OrderUpdateScreen extends StatefulWidget {
       {required this.id,
       required this.earningsIncentive,
       required this.earningsBase,
+        required this.distanceType,
       required this.orderReceivedAt});
 
   int id;
   double earningsIncentive;
   num earningsBase;
+  int distanceType;
   String orderReceivedAt;
 
   @override
@@ -23,6 +25,7 @@ class OrderUpdateScreen extends StatefulWidget {
       id: id,
       earningsIncentive: earningsIncentive,
       earningsBase:earningsBase,
+      distanceType:distanceType,
       orderReceivedAt: orderReceivedAt);
 }
 
@@ -31,55 +34,58 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
       {required this.id,
       required this.earningsIncentive,
       required this.earningsBase,
+      required this.distanceType,
       required this.orderReceivedAt});
 
   int id;
   double earningsIncentive;
   num earningsBase;
+  int distanceType;
   String orderReceivedAt;
 
-  List<String> _incentiveList = incentiveList;
+  final List<String> _incentiveList = incentiveList;
   late int _selectIncentiveId =
       _incentiveList.indexWhere((val) => val == earningsIncentive.toString());
   int _selectHour = 0;
-  int _selectMinite = 0;
-  List<int> _hourList = [];
-  List<int> _miniteList = [];
+  int _selectMinute = 0;
+  final List<int> _hourList = [];
+  final List<int> _minuteList = [];
 
   TextEditingController incentiveController = TextEditingController();
+  TextEditingController distanceTypeController = TextEditingController();
   TextEditingController baseController = TextEditingController();
 
   @override
   void initState() {
     DateTime orderReceivedAtParse = DateTime.parse(orderReceivedAt).toLocal();
     _selectHour = orderReceivedAtParse.hour;
-    _selectMinite = orderReceivedAtParse.minute;
+    _selectMinute = orderReceivedAtParse.minute;
     for (int h = 0; h < 24; h++) {
       _hourList.add(h);
     }
     for (int m = 0; m < 60; m++) {
-      _miniteList.add(m);
+      _minuteList.add(m);
     }
     baseController.text = earningsBase.toString();
     super.initState();
   }
 
-  Future _AndroidSelectTime(BuildContext context) async {
-   final initialTime = TimeOfDay(hour: _selectHour, minute: _selectMinite);
+  Future _androidSelectTime(BuildContext context) async {
+   final initialTime = TimeOfDay(hour: _selectHour, minute: _selectMinute);
 
    final newTime = await showTimePicker(context: context, initialTime: initialTime);
 
    if(newTime != null){
      setState(() {
        _selectHour = newTime.hour;
-       _selectMinite = newTime.minute;
+       _selectMinute = newTime.minute;
      });
    }else{
      return;
    }
   }
 
-  Future _IOSSelectTime(){
+  Future _iOSSelectTime(){
     return showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -106,15 +112,15 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                 itemExtent: 30,
                 onSelectedItemChanged: (val) {
                   setState(() {
-                    _selectMinite = val;
+                    _selectMinute = val;
                   });
                 },
-                children: _miniteList.map((e) =>
+                children: _minuteList.map((e) =>
                     Text(e.toString())
                 ).toList(),
                 scrollController:
                 FixedExtentScrollController(
-                    initialItem: _selectMinite),
+                    initialItem: _selectMinute),
               )),
             const Expanded(child: Text('分')),
           ],
@@ -122,7 +128,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
       });
   }
 
-  Widget IOSIncentiveTextForm(){
+  Widget iosIncentiveTextForm(){
     return TextField(
         controller: TextEditingController(
             text: _incentiveList[_selectIncentiveId]
@@ -133,7 +139,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
           showModalBottomSheet(
               context: context,
               builder: (BuildContext context) {
-                return Container(
+                return SizedBox(
                   height: MediaQuery.of(context).size.height / 3,
                   child: CupertinoPicker(
                     itemExtent: 30,
@@ -155,10 +161,42 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
               });
         });
   }
+  Widget iosDeliveryDistanceForm(){
+    return TextField(
+        controller: TextEditingController(
+            text: deliveryDistanceList[distanceType].toString()
+        ),
+        readOnly: true,
+        onTap: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: CupertinoPicker(
+                    itemExtent: 30,
+                    onSelectedItemChanged: (val) {
+                      setState(() {
+                        distanceType = val;
+                        distanceTypeController.text =
+                            deliveryDistanceList[val].toString();
+                      });
+                    },
+                    children: deliveryDistanceList
+                        .map((e) => Text(e))
+                        .toList(),
+                    scrollController:
+                    FixedExtentScrollController(
+                        initialItem: distanceType),
+                  ),
+                );
+              });
+        });
+  }
 
-  DropdownButton AndroidIncentiveTextForm(){
+  DropdownButton androidIncentiveTextForm(){
     return DropdownButton(
-      value: "${_incentiveList[_selectIncentiveId]}",
+      value: _incentiveList[_selectIncentiveId],
       items: _incentiveList.map((e) {
         return DropdownMenuItem<String>(
           value: e,
@@ -189,7 +227,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
               onPressed: () async {
                 String time = orderReceivedAt.substring(0, 10) +
                     ' ' + _selectHour.toString().padLeft(2, "0") +
-                    ':' + _selectMinite.toString().padLeft(2, "0") +
+                    ':' + _selectMinute.toString().padLeft(2, "0") +
                     ':00';
 
                 Map requestData = {
@@ -253,11 +291,11 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                         controller: TextEditingController(
                           text: _selectHour.toString() +
                               '時' +
-                              _selectMinite.toString() +
+                              _selectMinute.toString() +
                               '分'),
                         readOnly: true,
                         onTap: () {
-                          Platform.isIOS ? _IOSSelectTime():_AndroidSelectTime(context);
+                          Platform.isIOS ? _iOSSelectTime():_androidSelectTime(context);
                         },
                       ),
                     ),
@@ -275,10 +313,19 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
                     children: [
                       UpdateTitleCell(title: 'インセンティブ'),
                       TableCell(
-                        child: Platform.isIOS ? IOSIncentiveTextForm() : AndroidIncentiveTextForm()
+                        child: Platform.isIOS ? iosIncentiveTextForm() : androidIncentiveTextForm()
                       )
                     ]
-                  )
+                  ),
+                  if(distanceType != -1)
+                    TableRow(
+                        children: [
+                          UpdateTitleCell(title: '距離選択'),
+                          TableCell(
+                              child: Platform.isIOS ? iosDeliveryDistanceForm() : androidIncentiveTextForm()
+                          )
+                        ]
+                    )
                 ],
               ),
               const SizedBox(height: 30,),
@@ -289,7 +336,7 @@ class _OrderUpdateScreenState extends State<OrderUpdateScreen> {
 }
 
 class UpdateTitleCell extends StatelessWidget {
-  UpdateTitleCell({required this.title});
+  UpdateTitleCell({Key? key, required this.title}) : super(key: key);
 
   String title;
 
