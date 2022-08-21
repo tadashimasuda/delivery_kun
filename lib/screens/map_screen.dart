@@ -400,7 +400,8 @@ class _MapScreenState extends State<MapScreen> {
                           : const SizedBox.shrink()
                     ])));
         }),
-        bottomNavigationBar: const AdBanner());
+        bottomNavigationBar: const AdBanner()
+    );
   }
 }
 
