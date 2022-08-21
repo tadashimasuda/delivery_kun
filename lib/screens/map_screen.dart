@@ -202,8 +202,10 @@ class _MapScreenState extends State<MapScreen> {
     _getAnnouncement();
     _requestReview();
 
-    admobLoad = AdmobLoad();
-    admobLoad.interstitialUserStatus();
+    if(Platform.isIOS){
+      admobLoad = AdmobLoad();
+      admobLoad.interstitialUserStatus();
+    }
   }
 
   @override
