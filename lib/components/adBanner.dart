@@ -33,7 +33,7 @@ class _AdBannerState extends State<AdBanner> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 55,
+      height: 52,
       width: MediaQuery.of(context).size.width,
       child: Center(
         child: Admob.AdWidget(ad: _bannerAdmob),

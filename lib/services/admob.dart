@@ -4,7 +4,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdmobLoad {
   int num_of_attempt_load = 0;
-  late InterstitialAd _interstitialAd;
 
   BannerAd createBannerAd() {
     return BannerAd(
@@ -20,7 +19,7 @@ class AdmobLoad {
             onAdFailedToLoad: (ad, error) {
               // print(error);
             }),
-        request: AdRequest())
+        request: const AdRequest())
       ..load();
   }
 

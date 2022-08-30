@@ -1,17 +1,14 @@
-import 'package:delivery_kun/components/adBanner.dart';
-import 'package:delivery_kun/components/nend_banner.dart';
-import 'package:delivery_kun/screens/user_status_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
+
+import 'package:delivery_kun/components/adBanner.dart';
+import 'package:delivery_kun/constants.dart';
+import 'package:delivery_kun/screens/order_update_screen.dart';
+import 'package:delivery_kun/services/order.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-
-import 'package:delivery_kun/screens/order_update_screen.dart';
-import 'package:delivery_kun/services/admob.dart';
-import 'package:delivery_kun/services/order.dart';
 
 class OrderListScreen extends StatefulWidget {
   OrderListScreen({required this.date});
@@ -23,19 +20,6 @@ class OrderListScreen extends StatefulWidget {
 }
 
 class _OrderListScreenState extends State<OrderListScreen> {
-  // late BannerAd _bannerAd;
-
-  // _initBannerAd() {
-  //   AdmobLoad admobLoad = AdmobLoad();
-  //   _bannerAd = admobLoad.createBarnnerAd();
-  // }
-
-  @override
-  void initState() {
-    super.initState();
-    // _initBannerAd();
-  }
-
   String getJPDate(DateTime createdAt) {
     initializeDateFormatting('ja');
     return DateFormat.Hm('ja').format(createdAt.toLocal()).toString();
@@ -46,8 +30,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
     context.read<OrderList>().getOrders(date);
   }
 
-  void IOSPopup(
-      int id, num earningsIncentive, num earningsBase, String orderReceivedAt) {
+  void iosPopUp(int id, num earningsIncentive, num earningsBase,
+      int? distanceType, String orderReceivedAt) {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
@@ -63,6 +47,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         earningsIncentive:
                             double.parse(earningsIncentive.toString()),
                         earningsBase: earningsBase,
+                        distanceType: distanceType ?? -1,
                         orderReceivedAt: orderReceivedAt),
                     fullscreenDialog: true,
                   )).then((val) {
@@ -77,14 +62,14 @@ class _OrderListScreenState extends State<OrderListScreen> {
               showCupertinoDialog(
                   context: context,
                   builder: (context) => CupertinoAlertDialog(
-                        title: Text(
+                        title: const Text(
                           '削除しますか？',
                           style: TextStyle(color: Colors.black),
                         ),
                         actions: [
                           CupertinoDialogAction(
                             isDestructiveAction: true,
-                            child: Text(
+                            child: const Text(
                               '削除',
                               style: TextStyle(color: Colors.lightBlue),
                             ),
@@ -100,13 +85,13 @@ class _OrderListScreenState extends State<OrderListScreen> {
                                 showCupertinoDialog(
                                     context: context,
                                     builder: (context) =>
-                                        IOSAlertDialog(context));
+                                        iosAlertDialog(context));
                               }
                             },
                           ),
                           CupertinoDialogAction(
                             isDestructiveAction: true,
-                            child: Text(
+                            child: const Text(
                               'キャンセル',
                               style: TextStyle(color: Colors.redAccent),
                             ),
@@ -120,7 +105,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
           )
         ],
         cancelButton: CupertinoActionSheetAction(
-          child: Text(
+          child: const Text(
             "キャンセル",
             style: TextStyle(color: Colors.redAccent),
           ),
@@ -132,14 +117,14 @@ class _OrderListScreenState extends State<OrderListScreen> {
     );
   }
 
-  void AndroidPopUp(
-      int id, num earningsIncentive, num earningsBase, String orderReceivedAt) {
+  void androidPopUp(int id, num earningsIncentive, num earningsBase,
+      int? distanceType, String orderReceivedAt) {
     showDialog<int>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: Text('選択してください'),
+          title: const Text('選択してください'),
           children: <Widget>[
             SimpleDialogOption(
               child: const Text(
@@ -155,6 +140,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                           earningsIncentive:
                               double.parse(earningsIncentive.toString()),
                           earningsBase: earningsBase,
+                          distanceType: distanceType ?? -1,
                           orderReceivedAt: orderReceivedAt),
                       fullscreenDialog: true,
                     )).then((val) {
@@ -180,7 +166,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return AndroidAlertDialog(context);
+                        return androidAlertDialog(context);
                       });
                 }
               },
@@ -200,10 +186,10 @@ class _OrderListScreenState extends State<OrderListScreen> {
     );
   }
 
-  AlertDialog AndroidAlertDialog(BuildContext context) {
+  AlertDialog androidAlertDialog(BuildContext context) {
     return AlertDialog(
       title: const Text('更新できませんでした'),
-      content: Text('もう一度お試しください'),
+      content: const Text('もう一度お試しください'),
       actions: <Widget>[
         TextButton(
           child: const Text('OK'),
@@ -215,16 +201,16 @@ class _OrderListScreenState extends State<OrderListScreen> {
     );
   }
 
-  CupertinoAlertDialog IOSAlertDialog(BuildContext context) {
+  CupertinoAlertDialog iosAlertDialog(BuildContext context) {
     return CupertinoAlertDialog(
-      title: Text(
+      title: const Text(
         'エラーが発生しました',
         style: TextStyle(color: Colors.black),
       ),
       actions: [
         CupertinoDialogAction(
           isDestructiveAction: true,
-          child: Text(
+          child: const Text(
             'OK',
             style: TextStyle(color: Colors.lightBlue),
           ),
@@ -262,29 +248,20 @@ class _OrderListScreenState extends State<OrderListScreen> {
           const Text('タップで編集・削除ができます'),
           Consumer<OrderList>(
               builder: (context, orderList, child) => orderList.orders != null
-                  ? Container(
-                      child: orderList == null
-                          ? const Text(' ')
-                          : Expanded(
-                              child: ListView.builder(
-                                  itemCount: orderList.orders?.length,
-                                  itemBuilder: (context, int index) {
-                                    return Container(
-                                      height: 55,
-                                      child: _orderItem(
-                                          orderList.orders?[index], index),
-                                    );
-                                  }),
-                            ),
-                    )
+                  ? Expanded(
+                          child: ListView.builder(
+                              itemCount: orderList.orders?.length,
+                              itemBuilder: (context, int index) {
+                                return SizedBox(
+                                  height: 55,
+                                  child: _orderItem(
+                                      orderList.orders?[index], index),
+                                );
+                              }),
+                        )
                   : const Center(child: CircularProgressIndicator()))
         ],
       ),
-      // bottomNavigationBar:  Container(
-      //   height: _bannerAd.size.height.toDouble(),
-      //   width: _bannerAd.size.width.toDouble(),
-      //   child: AdWidget(ad: _bannerAd),
-      // ),
     );
   }
 
@@ -292,37 +269,45 @@ class _OrderListScreenState extends State<OrderListScreen> {
     num earningsIncentive = order['earnings_incentive'];
     num earningsTotal = order['earnings_total'];
     num earningsBase = order['earnings_base'];
+    int? distanceType = order['earnings_distance_base_type'];
     String orderReceivedAt = order['order_received_at'].toString();
 
     return InkWell(
       onTap: () {
         Platform.isIOS
-            ? IOSPopup(
-                order['id'], earningsIncentive, earningsBase, orderReceivedAt)
-            : AndroidPopUp(
-                order['id'], earningsIncentive, earningsBase, orderReceivedAt);
+            ? iosPopUp(order['id'], earningsIncentive, earningsBase,
+                distanceType, orderReceivedAt)
+            : androidPopUp(order['id'], earningsIncentive, earningsBase,
+                distanceType, orderReceivedAt);
       },
       child: Row(
         children: [
           Expanded(
-            child: Container(
-                child: Text(
+            child: Text(
               '${index + 1}',
               textAlign: TextAlign.center,
-            )),
+            ),
           ),
           Expanded(
-            child: Container(
-                child: Text(
-                    getJPDate(DateTime.parse(order['order_received_at'])),
-                    textAlign: TextAlign.center)),
+            child: Text(
+                getJPDate(DateTime.parse(order['order_received_at'])),
+                textAlign: TextAlign.center),
           ),
+          distanceType != null
+              ? Expanded(
+                  child: Text(
+                    deliveryDistanceList[distanceType],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                )
+              : const SizedBox(),
           Expanded(
             child: Text('×${double.parse(earningsIncentive.toString())}',
                 textAlign: TextAlign.center),
           ),
           Expanded(
-            child: Text('¥${earningsTotal}', textAlign: TextAlign.center),
+            child: Text('¥${earningsTotal.toString()}', textAlign: TextAlign.center),
           ),
         ],
       ),
