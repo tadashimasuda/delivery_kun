@@ -53,7 +53,7 @@ dependencies:
   flutter_launcher_icons: ^0.9.2
   webview_flutter: ^3.0.1
   url_launcher: ^6.0.20
-  google_mobile_ads: ^1.1.0
+  google_mobile_ads: ^2.0.1
   sign_in_with_apple: ^3.3.0
   firebase_auth: ^3.3.15
   flutter_polyline_points: ^1.0.0

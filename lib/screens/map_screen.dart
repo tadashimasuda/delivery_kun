@@ -201,11 +201,6 @@ class _MapScreenState extends State<MapScreen> {
     _getUserData();
     _getAnnouncement();
     _requestReview();
-
-    if(Platform.isIOS){
-      admobLoad = AdmobLoad();
-      admobLoad.interstitialUserStatus();
-    }
   }
 
   @override
@@ -400,8 +395,7 @@ class _MapScreenState extends State<MapScreen> {
                           : const SizedBox.shrink()
                     ])));
         }),
-        bottomNavigationBar: const AdBanner()
-    );
+        bottomNavigationBar: const AdBanner());
   }
 }
 
