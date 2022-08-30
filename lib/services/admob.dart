@@ -25,8 +25,9 @@ class AdmobLoad {
 
   void interstitialUserStatus() {
     InterstitialAd.load(
-     adUnitId: Platform.isIOS ? 'ca-app-pub-8624775791237653/6141994994'
-      : 'ca-app-pub-8624775791237653/8846412908',
+        adUnitId: Platform.isIOS
+            ? 'ca-app-pub-8624775791237653/6141994994'
+            : 'ca-app-pub-8624775791237653/8846412908',
         // adUnitId: Platform.isIOS
         //     ? 'ca-app-pub-3940256099942544/4411468910'
         //     :'ca-app-pub-3940256099942544/1033173712', //test
@@ -50,8 +51,9 @@ class AdmobLoad {
 
   void interstitialIncetiveSheeet() {
     InterstitialAd.load(
-      adUnitId: Platform.isIOS ? 'ca-app-pub-8624775791237653/3889599692'
-      : 'ca-app-pub-8624775791237653/2289028823',
+        adUnitId: Platform.isIOS
+            ? 'ca-app-pub-8624775791237653/3889599692'
+            : 'ca-app-pub-8624775791237653/2289028823',
         // adUnitId: Platform.isIOS
         //     ? 'ca-app-pub-3940256099942544/4411468910'
         //     :'ca-app-pub-3940256099942544/1033173712', //test
