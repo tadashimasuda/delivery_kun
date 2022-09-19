@@ -8,12 +8,12 @@ class AdmobLoad {
   BannerAd createBannerAd() {
     return BannerAd(
         size: AdSize.banner,
-        // adUnitId: Platform.isIOS
-        //     ? 'ca-app-pub-8624775791237653/7710222023'
-        //     : 'ca-app-pub-8624775791237653/4702574836',
         adUnitId: Platform.isIOS
-            ? "ca-app-pub-3940256099942544/2934735716"
-            : "ca-app-pub-3940256099942544/6300978111", //test
+            ? 'ca-app-pub-8624775791237653/7710222023'
+            : 'ca-app-pub-8624775791237653/4702574836',
+        // adUnitId: Platform.isIOS
+        //     ? "ca-app-pub-3940256099942544/2934735716"
+        //     : "ca-app-pub-3940256099942544/6300978111", //test
         listener: BannerAdListener(
             onAdLoaded: (ad) {},
             onAdFailedToLoad: (ad, error) {
@@ -25,12 +25,12 @@ class AdmobLoad {
 
   void interstitialUserStatus() {
     InterstitialAd.load(
-        // adUnitId: Platform.isIOS
-        //     ? 'ca-app-pub-8624775791237653/6141994994'
-        //     : 'ca-app-pub-8624775791237653/8846412908',
         adUnitId: Platform.isIOS
-            ? 'ca-app-pub-3940256099942544/4411468910'
-            : 'ca-app-pub-3940256099942544/1033173712', //test
+            ? 'ca-app-pub-8624775791237653/6141994994'
+            : 'ca-app-pub-8624775791237653/8846412908',
+        // adUnitId: Platform.isIOS
+        //     ? 'ca-app-pub-3940256099942544/4411468910'
+        //     : 'ca-app-pub-3940256099942544/1033173712', //test
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
@@ -51,12 +51,12 @@ class AdmobLoad {
 
   void interstitialIncetiveSheeet() {
     InterstitialAd.load(
-        // adUnitId: Platform.isIOS
-        //     ? 'ca-app-pub-8624775791237653/3889599692'
-        //     : 'ca-app-pub-8624775791237653/2289028823',
         adUnitId: Platform.isIOS
-            ? 'ca-app-pub-3940256099942544/4411468910'
-            : 'ca-app-pub-3940256099942544/1033173712', //test
+            ? 'ca-app-pub-8624775791237653/3889599692'
+            : 'ca-app-pub-8624775791237653/2289028823',
+        // adUnitId: Platform.isIOS
+        //     ? 'ca-app-pub-3940256099942544/4411468910'
+        //     : 'ca-app-pub-3940256099942544/1033173712', //test
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
