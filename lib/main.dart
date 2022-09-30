@@ -16,8 +16,6 @@ import 'package:delivery_kun/services/announcement.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:delivery_kun/screens/map_screen.dart';
 
-final _configuration =
-    PurchasesConfiguration('appl_KRXRWulsZtPDAChvMBZwSXilfBN');
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterConfig.loadEnvVariables();
@@ -26,6 +24,10 @@ void main() async {
   await Firebase.initializeApp();
 
   await Purchases.setDebugLogsEnabled(true);
+
+  String revenuecatApiKey = FlutterConfig.get('REVENUECAT_API_KEY');
+  final _configuration = PurchasesConfiguration(revenuecatApiKey);
+
   await Purchases.configure(_configuration);
 
   runApp(
@@ -54,7 +56,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       locale: locale,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

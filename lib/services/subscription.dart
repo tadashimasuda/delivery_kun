@@ -19,14 +19,6 @@ class Subscription extends ChangeNotifier {
     }
   }
 
-  Future<void> initPlatformState() async {
-    await Purchases.setDebugLogsEnabled(true);
-
-    PurchasesConfiguration configuration =
-        PurchasesConfiguration('appl_KRXRWulsZtPDAChvMBZwSXilfBN');
-    await Purchases.configure(configuration);
-  }
-
   Future<void> getCustomerInfo(String entitlementID) async {
     try {
       CustomerInfo customerInfo = await Purchases.getCustomerInfo();
