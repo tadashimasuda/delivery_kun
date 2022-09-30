@@ -3,6 +3,7 @@ import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/screens/setting_incentives_sheets_screen.dart';
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
+import 'package:delivery_kun/services/subscription.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,7 @@ class _SettingCreateIncentiveScreenState
   TextEditingController TitleContoller = TextEditingController();
   String title = '';
   bool isCreating = false;
+  bool _hasSubscribed = false;
 
   @override
   void initState() {
@@ -28,8 +30,11 @@ class _SettingCreateIncentiveScreenState
     TitleContoller.text = newIncentiveSheet['title'];
     title = newIncentiveSheet['title'];
 
-    AdmobLoad admobLoad = AdmobLoad();
-    admobLoad.interstitialIncetiveSheeet();
+    _hasSubscribed = context.read<Subscription>().hasSubscribed;
+    if (!_hasSubscribed) {
+      AdmobLoad admobLoad = AdmobLoad();
+      admobLoad.interstitialIncetiveSheeet();
+    }
 
     super.initState();
   }
@@ -87,11 +92,7 @@ class _SettingCreateIncentiveScreenState
                     isCreating = false;
                   });
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const SettingIncentivesSheets()));
+                  Navigator.pop(context);
                 },
                 child: !isCreating
                     ? const Text(
@@ -112,11 +113,11 @@ class _SettingCreateIncentiveScreenState
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const AdBanner(),
+              if (!_hasSubscribed) const AdBanner(),
               const SizedBox(
                 height: 10,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: TextField(
                   controller: TitleContoller,

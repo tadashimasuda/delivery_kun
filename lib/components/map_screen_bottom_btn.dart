@@ -2,7 +2,6 @@ import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/models/incentive_sheet.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:delivery_kun/services/auth.dart';
@@ -24,91 +23,45 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       width: size.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           ElevatedButton(
-            onPressed: () async{
+            onPressed: () async {
               if (context.read<Auth>().authenticated) {
-                late List<IncentiveSheetModel> _IncentivesSheetList = context.read<IncentiveSheet>().IncentivesSheets;
+                late List<IncentiveSheetModel> _incentivesSheetList =
+                    context.read<IncentiveSheet>().IncentivesSheets;
 
                 var sheetId = await showDialog(
                     context: context,
                     builder: (childContext) {
-                  return SimpleDialog(
-                    title: const Text("反映するインセンティブを選択してください"),
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20))
-                    ),
-                    children: <Widget>[
-                      for (var _IncentivesSheet in _IncentivesSheetList)
-                        Column(
-                          children: [
-                            SimpleDialogOption(
-                              onPressed: () {
-                                Navigator.pop(childContext,_IncentivesSheet.id);
-                              },
-                              child: Container(
-                                height: 45,
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius:
-                                  BorderRadius.all(
-                                      Radius.circular(20)
-                                  )
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    _IncentivesSheet.title,
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                )),
-                            ),
-                            const SizedBox(height: 6,)
-                          ],
-                        ),
-                    ],
-                  );
-                });
-
-                if (sheetId != null){
-
-                int distanceType = await showDialog(
-                    context: context,
-                    builder: (childContext) {
                       return SimpleDialog(
-                        title: const Text("配達距離を選択してください"),
+                        title: const Text("反映するインセンティブを選択してください"),
                         shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20))
-                        ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
                         children: <Widget>[
-                          for (String deliveryDistance in deliveryDistanceList)
+                          for (var _incentivesSheet in _incentivesSheetList)
                             Column(
                               children: [
                                 SimpleDialogOption(
                                   onPressed: () {
-                                    Navigator.pop(childContext,deliveryDistanceList.indexOf(deliveryDistance));
+                                    Navigator.pop(
+                                        childContext, _incentivesSheet.id);
                                   },
                                   child: Container(
                                       height: 45,
-                                      width: MediaQuery.of(context).size.width * 0.6,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.6,
                                       decoration: const BoxDecoration(
                                           color: Colors.red,
-                                          borderRadius:
-                                          BorderRadius.all(
-                                              Radius.circular(20)
-                                          )
-                                      ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
                                       child: Center(
                                         child: Text(
-                                          deliveryDistance,
+                                          _incentivesSheet.title,
                                           style: const TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold,
@@ -117,93 +70,143 @@ class _MapScreenBottomBtnState extends State<MapScreenBottomBtn> {
                                         ),
                                       )),
                                 ),
-                                const SizedBox(height: 6,)
+                                const SizedBox(
+                                  height: 6,
+                                )
                               ],
                             ),
                         ],
                       );
                     });
-                  if(distanceType != null){
+
+                if (sheetId != null) {
+                  int distanceType = await showDialog(
+                      context: context,
+                      builder: (childContext) {
+                        return SimpleDialog(
+                          title: const Text("配達距離を選択してください"),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          children: <Widget>[
+                            for (String deliveryDistance
+                                in deliveryDistanceList)
+                              Column(
+                                children: [
+                                  SimpleDialogOption(
+                                    onPressed: () {
+                                      Navigator.pop(
+                                          childContext,
+                                          deliveryDistanceList
+                                              .indexOf(deliveryDistance));
+                                    },
+                                    child: Container(
+                                        height: 45,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        decoration: const BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20))),
+                                        child: Center(
+                                          child: Text(
+                                            deliveryDistance,
+                                            style: const TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )),
+                                  ),
+                                  const SizedBox(
+                                    height: 6,
+                                  )
+                                ],
+                              ),
+                          ],
+                        );
+                      });
+                  if (distanceType != null) {
                     int userId = context.read<Auth>().user!.id;
-                    await context.read<OrderList>().postOrder(distanceType: distanceType,sheetId:sheetId);
+                    await context.read<OrderList>().postOrder(
+                        distanceType: distanceType, sheetId: sheetId);
                     await context.read<Status>().getStatusToday(userId);
                   }
                 }
               } else {
                 showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          AlertDialog(
-                            title: const Text(
-                              "デリバリーくんに登録する",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20),
-                            ),
-                            content: ListBody(
-                              children: [
-                                const ListTile(
-                                  title: Text(
-                                    '・ワンタッチで配達を記録',
+                    context: context,
+                    builder: (context) {
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            AlertDialog(
+                              title: const Text(
+                                "デリバリーくんに登録する",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 20),
+                              ),
+                              content: ListBody(
+                                children: [
+                                  const ListTile(
+                                    title: Text(
+                                      '・ワンタッチで配達を記録',
+                                    ),
                                   ),
-                                ),
-                                const ListTile(
-                                  title: Text(
-                                    '・記録をグラフで確認',
+                                  const ListTile(
+                                    title: Text(
+                                      '・記録をグラフで確認',
+                                    ),
                                   ),
-                                ),
-                                const ListTile(
-                                  title: Text(
-                                    '・支出管理もできる',
+                                  const ListTile(
+                                    title: Text(
+                                      '・支出管理もできる',
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 40,
-                                ),
-                                SubmitBtn(
-                                  title: 'アカウント登録',
-                                  color: Colors.lightBlue,
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const SignUpForm()
-                                      )
-                                    );
-                                  },
-                                )
-                              ],
+                                  const SizedBox(
+                                    height: 40,
+                                  ),
+                                  SubmitBtn(
+                                    title: 'アカウント登録',
+                                    color: Colors.lightBlue,
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const SignUpForm()));
+                                    },
+                                  )
+                                ],
+                              ),
+                              insetPadding: const EdgeInsets.all(20),
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
                             ),
-                            insetPadding: const EdgeInsets.all(20),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20))
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                );
+                          ],
+                        ),
+                      );
+                    });
               }
             },
-              child: const Text(
-                '受注',
-                style: TextStyle(
-                  fontSize: 28,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                primary: Colors.red,
-                minimumSize: const Size(90, 90),
-                elevation: 15,
+            child: const Text(
+              '受注',
+              style: TextStyle(
+                fontSize: 28,
               ),
             ),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              primary: Colors.red,
+              minimumSize: const Size(90, 90),
+              elevation: 15,
+            ),
+          ),
         ],
       ),
     );

@@ -61,6 +61,7 @@ dependencies:
   firebase_analytics: ^9.1.8
   nend_plugin: ^1.0.2
   app_review: ^2.1.1+1
+  purchases_flutter: ^4.2.1
 
 dev_dependencies:
   flutter_test:

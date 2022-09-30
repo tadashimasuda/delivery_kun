@@ -1,0 +1,53 @@
+{
+  "identifier" : "9DFDF011",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_locale" : "ja",
+    "_storefront" : "JPN"
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "B7E909A8",
+      "localizations" : [
+
+      ],
+      "name" : "subscription",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "600",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "F31FCC5B",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "サブスクリプション",
+              "displayName" : "サブスクリプション",
+              "locale" : "ja"
+            }
+          ],
+          "productID" : "subscription_1m",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "サブスクリプション",
+          "subscriptionGroupID" : "B7E909A8",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 1,
+    "minor" : 2
+  }
+}

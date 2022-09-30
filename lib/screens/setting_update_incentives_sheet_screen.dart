@@ -3,7 +3,7 @@ import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/models/incentive_sheet.dart';
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:delivery_kun/services/subscription.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,19 +21,23 @@ class _SettingUpdateIncentivesSheetScreenState
     extends State<SettingUpdateIncentivesSheetScreen> {
   late IncentiveSheetModel IncentivesSheet;
   bool isIncentivesSheet = false;
+  bool _hasSubscribed = false;
 
-  TextEditingController TitleContoller = TextEditingController();
+  TextEditingController titleContoller = TextEditingController();
   String title = '';
   bool isCreating = false;
 
   @override
   void initState() {
     IncentivesSheet = context.read<IncentiveSheet>().IncentivesSheet;
-    TitleContoller.text = IncentivesSheet.title;
+    titleContoller.text = IncentivesSheet.title;
     title = IncentivesSheet.title;
 
-    AdmobLoad admobLoad = AdmobLoad();
-    admobLoad.interstitialIncetiveSheeet();
+    _hasSubscribed = context.read<Subscription>().hasSubscribed;
+    if (!_hasSubscribed) {
+      AdmobLoad admobLoad = AdmobLoad();
+      admobLoad.interstitialIncetiveSheeet();
+    }
 
     super.initState();
   }
@@ -111,14 +115,14 @@ class _SettingUpdateIncentivesSheetScreenState
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const AdBanner(),
+              if (!_hasSubscribed) const AdBanner(),
               const SizedBox(
                 height: 10,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: TextField(
-                  controller: TitleContoller,
+                  controller: titleContoller,
                   autofocus: true,
                   onChanged: (value) {
                     title = value;
@@ -134,10 +138,11 @@ class _SettingUpdateIncentivesSheetScreenState
               const SizedBox(
                 height: 20,
               ),
+              // ignore: unnecessary_null_comparison
               IncentivesSheet != null
                   ? ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: 17,
                       itemBuilder: (context, int index) {
                         final hour = IncentivesSheet.earningsIncentives.keys
@@ -146,8 +151,7 @@ class _SettingUpdateIncentivesSheetScreenState
                             .earningsIncentives.values
                             .elementAt(index)
                             .toDouble();
-
-                        return Container(
+                        return SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: Column(
                             children: [
@@ -155,17 +159,17 @@ class _SettingUpdateIncentivesSheetScreenState
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       height: 35,
                                       width: MediaQuery.of(context).size.width *
                                           0.4,
                                       child: Text(
                                         hour.toString() + '時',
-                                        style: TextStyle(fontSize: 25),
+                                        style: const TextStyle(fontSize: 25),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: 35,
                                       width: MediaQuery.of(context).size.width *
                                           0.4,
@@ -175,7 +179,8 @@ class _SettingUpdateIncentivesSheetScreenState
                                                     .toStringAsFixed(1)
                                                     .toString() +
                                                 "倍",
-                                            style: TextStyle(fontSize: 25),
+                                            style:
+                                                const TextStyle(fontSize: 25),
                                             textAlign: TextAlign.center,
                                           ),
                                           onTap: () async {
@@ -259,7 +264,7 @@ class _SettingUpdateIncentivesSheetScreenState
                       })
                   : const Center(child: CircularProgressIndicator()),
               TextButton(
-                child: Text('このインセンティブシートを削除する'),
+                child: const Text('このインセンティブシートを削除する'),
                 onPressed: () async {
                   await showDialog(
                       context: context,
@@ -281,9 +286,8 @@ class _SettingUpdateIncentivesSheetScreenState
 
                                 Navigator.pop(childContext);
 
-                                bool _isError = await context
-                                    .read<IncentiveSheet>()
-                                    .isError;
+                                bool _isError =
+                                    context.read<IncentiveSheet>().isError;
                                 if (_isError) {
                                   await showDialog(
                                       context: context,

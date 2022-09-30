@@ -12,17 +12,13 @@ class Incentive extends ChangeNotifier {
   List<dynamic>? get incentives => _incentives;
   bool get is_incentives => _is_incentives;
 
-  Future<void> getTodayIncentive() async{
+  Future<void> getTodayIncentive() async {
     String? token = await auth.getToken();
     try {
-      Dio.Response response = await dio().get(
-        '/incentive',
-        options: Dio.Options(headers: {
-          'Authorization': 'Bearer $token'
-        })
-      );
+      Dio.Response response = await dio().get('/incentive',
+          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
 
-      if(response.statusCode != 204){
+      if (response.statusCode != 204) {
         _is_incentives = true;
         _incentives = response.data['data'];
 
@@ -36,19 +32,13 @@ class Incentive extends ChangeNotifier {
     }
   }
 
-  void postTodayIncentive({required List<dynamic>? incentives}) async{
+  void postTodayIncentive({required List<dynamic>? incentives}) async {
     String? token = await auth.getToken();
 
     try {
-      await dio().post(
-        '/incentive',
-        data: {'data':incentives},
-        options: Dio.Options(
-          headers: {
-            'Authorization': 'Bearer $token'
-          }
-        )
-      );
+      await dio().post('/incentive',
+          data: {'data': incentives},
+          options: Dio.Options(headers: {'Authorization': 'Bearer $token'}));
 
       notifyListeners();
     } on Dio.DioError catch (e) {

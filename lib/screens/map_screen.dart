@@ -12,6 +12,7 @@ import 'package:delivery_kun/services/announcement.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/direction.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
+import 'package:delivery_kun/services/subscription.dart';
 import 'package:delivery_kun/services/user_status.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,6 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -82,15 +82,14 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   late LatLng _initialPosition;
   late bool _loading;
-  late BannerAd _bannerAd;
   late bool isAuthenticated;
-  bool _isAdLoaded = true;
   late AdmobLoad admobLoad;
-  Map<PolylineId, Polyline> _polylines = {};
-  List<Marker> _markers = [];
+  final Map<PolylineId, Polyline> _polylines = {};
+  final List<Marker> _markers = [];
   PolylinePoints polylinePoints = PolylinePoints();
   FlutterSecureStorage storage = const FlutterSecureStorage();
   TextEditingController destinationController = TextEditingController();
+  bool _isSubscribed = false;
 
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
@@ -114,6 +113,10 @@ class _MapScreenState extends State<MapScreen> {
       _initialPosition = LatLng(locaiton.latitude, locaiton.longitude);
       _loading = false;
     });
+  }
+
+  void _hasSubscription() async {
+    await context.read<Subscription>().getCustomerInfo('subscription_1m');
   }
 
   CupertinoAlertDialog IOSPermissionAlertDialog(BuildContext context) {
@@ -200,16 +203,18 @@ class _MapScreenState extends State<MapScreen> {
     _getUserLocation();
     _getUserData();
     _getAnnouncement();
-    _requestReview();
+    _hasSubscription();
+    // _requestReview();
   }
 
   @override
   Widget build(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double deviceHeight = MediaQuery.of(context).size.height;
+    _isSubscribed = context.watch<Subscription>().hasSubscribed;
 
     void _addPolyLine(List<LatLng> polylineCoordinates) {
-      PolylineId id = PolylineId("poly");
+      PolylineId id = const PolylineId("poly");
       setState(() {
         Polyline polyline = Polyline(
           polylineId: id,
@@ -221,11 +226,11 @@ class _MapScreenState extends State<MapScreen> {
       });
     }
 
-    void _addEndLocationPoint(LatLng point, String start_address) {
+    void _addEndLocationPoint(LatLng point, String startAddress) {
       _markers.add(Marker(
-        markerId: MarkerId("marker1"),
+        markerId: const MarkerId("marker1"),
         position: point,
-        infoWindow: InfoWindow(title: start_address),
+        infoWindow: InfoWindow(title: startAddress),
       ));
     }
 
@@ -233,10 +238,10 @@ class _MapScreenState extends State<MapScreen> {
       var result = await Direction()
           .getDirections(origin: origin, destination: destinationText);
 
-      LatLng end_location = LatLng(
+      LatLng endLocation = LatLng(
           result.data["routes"][0]["legs"][0]["end_location"]['lat'],
           result.data["routes"][0]["legs"][0]["end_location"]['lng']);
-      String start_address =
+      String startAddress =
           result.data["routes"][0]["legs"][0]["start_address"];
 
       List<PointLatLng> points = polylinePoints.decodePolyline(
@@ -248,7 +253,7 @@ class _MapScreenState extends State<MapScreen> {
       });
 
       _addPolyLine(polylineCoordinates);
-      _addEndLocationPoint(end_location, start_address);
+      _addEndLocationPoint(endLocation, startAddress);
     }
 
     void _clearPolylineMaker() {
@@ -261,7 +266,9 @@ class _MapScreenState extends State<MapScreen> {
         drawerEnableOpenDragGesture: false,
         drawer: Drawer(
           child: Consumer<Auth>(builder: (context, auth, child) {
-            return auth.authenticated ? LoggedInDrawer() : NotLoggedInDrawer();
+            return auth.authenticated
+                ? const LoggedInDrawer()
+                : NotLoggedInDrawer();
           }),
         ),
         backgroundColor: Colors.grey.shade200,
@@ -272,8 +279,7 @@ class _MapScreenState extends State<MapScreen> {
           return Center(
               child: _loading
                   ? const CircularProgressIndicator()
-                  : Container(
-                      child: Stack(children: <Widget>[
+                  : Stack(children: <Widget>[
                       GoogleMap(
                         markers: Set<Marker>.of(_markers),
                         polylines: Set<Polyline>.of(_polylines.values),
@@ -314,14 +320,14 @@ class _MapScreenState extends State<MapScreen> {
                                     borderRadius: BorderRadius.circular(70),
                                   )),
                             ),
-                            destinationTextField(
+                            DestinationTextField(
                               deviceHeight: deviceHeight,
                               deviceWidth: deviceWidth,
-                              TextFormField: TextFormField(
+                              textFormField: TextFormField(
                                 textInputAction: TextInputAction.search,
                                 onFieldSubmitted: (value) async {
                                   LatLng origin = await _getCurrentLocation();
-                                  if (value != null) {
+                                  if (value != '') {
                                     value.isNotEmpty
                                         ? _requestDestination(origin, value)
                                         : _clearPolylineMaker();
@@ -339,8 +345,6 @@ class _MapScreenState extends State<MapScreen> {
                                             color: Colors.grey,
                                           ),
                                           onPressed: () async {
-                                            print(destinationController
-                                                .text.isEmpty);
                                             LatLng origin =
                                                 await _getCurrentLocation();
                                             destinationController
@@ -375,7 +379,7 @@ class _MapScreenState extends State<MapScreen> {
                               ? deviceHeight * 0.12
                               : deviceHeight * 0.02),
                       Positioned(
-                        child: currentLocationBtn(
+                        child: CurrentLocationBtn(
                           deviceHeight: deviceHeight,
                           onPressed: _currentLocation,
                         ),
@@ -393,23 +397,23 @@ class _MapScreenState extends State<MapScreen> {
                               bottom: 0,
                             )
                           : const SizedBox.shrink()
-                    ])));
+                    ]));
         }),
-        bottomNavigationBar: const AdBanner());
+        bottomNavigationBar: _isSubscribed != true ? const AdBanner() : null);
   }
 }
 
-class destinationTextField extends StatelessWidget {
-  const destinationTextField(
+class DestinationTextField extends StatelessWidget {
+  const DestinationTextField(
       {Key? key,
       required this.deviceHeight,
       required this.deviceWidth,
-      required this.TextFormField})
+      required this.textFormField})
       : super(key: key);
 
   final double deviceHeight;
   final double deviceWidth;
-  final Widget TextFormField;
+  final Widget textFormField;
 
   @override
   Widget build(BuildContext context) {
@@ -420,7 +424,7 @@ class destinationTextField extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
               color: Colors.black12,
               blurRadius: 10.0,
@@ -428,13 +432,13 @@ class destinationTextField extends StatelessWidget {
               offset: Offset(10, 10))
         ],
       ),
-      child: TextFormField,
+      child: textFormField,
     );
   }
 }
 
-class currentLocationBtn extends StatelessWidget {
-  const currentLocationBtn(
+class CurrentLocationBtn extends StatelessWidget {
+  const CurrentLocationBtn(
       {Key? key, required this.deviceHeight, required this.onPressed})
       : super(key: key);
 
@@ -449,7 +453,7 @@ class currentLocationBtn extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: Colors.white,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
               color: Colors.black12,
               blurRadius: 10.0,

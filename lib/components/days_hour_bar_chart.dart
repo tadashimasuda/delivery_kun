@@ -18,7 +18,8 @@ class StatusHourBarChart extends StatelessWidget {
     List<hourQty> desktopDalsesData = [];
 
     data.forEach((val) {
-      desktopDalsesData.add(hourQty(hour: val['hour'].toString()+'時', qty: val['count']));
+      desktopDalsesData
+          .add(hourQty(hour: val['hour'].toString() + '時', qty: val['count']));
     });
 
     List<charts.Series<dynamic, String>> seriesList = [
@@ -27,12 +28,13 @@ class StatusHourBarChart extends StatelessWidget {
           domainFn: (hourQty hourqty, _) => hourqty.hour,
           measureFn: (hourQty hourqty, _) => hourqty.qty,
           data: desktopDalsesData,
-          labelAccessorFn: (hourQty hourqty, _) => '\$${hourqty.qty.toString()}',
-          colorFn:  (_,__)=>charts.ColorUtil.fromDartColor(Colors.red.shade500)
-      )
+          labelAccessorFn: (hourQty hourqty, _) =>
+              '\$${hourqty.qty.toString()}',
+          colorFn: (_, __) =>
+              charts.ColorUtil.fromDartColor(Colors.red.shade500))
     ];
 
-    return Container(
+    return SizedBox(
       height: 220,
       child: charts.BarChart(seriesList, animate: true, vertical: true),
     );
