@@ -15,16 +15,7 @@ class Subscription extends ChangeNotifier {
     final errorCode = PurchasesErrorHelper.getErrorCode(e);
     if (errorCode != PurchasesErrorCode.purchaseCancelledError) {
       print(errorCode);
-      print(e);
     }
-  }
-
-  Future<void> initPlatformState() async {
-    await Purchases.setDebugLogsEnabled(true);
-
-    PurchasesConfiguration configuration =
-        PurchasesConfiguration('appl_KRXRWulsZtPDAChvMBZwSXilfBN');
-    await Purchases.configure(configuration);
   }
 
   Future<void> getCustomerInfo(String entitlementID) async {
@@ -50,11 +41,13 @@ class Subscription extends ChangeNotifier {
   Future<void> makePurchase(Package package) async {
     try {
       CustomerInfo purchaserInfo = await Purchases.purchasePackage(package);
-      bool isActive = purchaserInfo.entitlements.all["subscriptions"]!.isActive;
+      bool isActive =
+          purchaserInfo.entitlements.all["subscription_1m"]!.isActive;
 
       if (isActive) {
         _isSubscribed = true;
       }
+
       notifyListeners();
     } on PlatformException catch (e) {
       errorLog(e);

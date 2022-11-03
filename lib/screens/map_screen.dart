@@ -1,7 +1,16 @@
 import 'dart:async';
 import 'dart:io' show Platform;
-
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:app_review/app_review.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+
 import 'package:delivery_kun/components/adBanner.dart';
 import 'package:delivery_kun/components/loggedIn_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
@@ -14,14 +23,6 @@ import 'package:delivery_kun/services/direction.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:delivery_kun/services/subscription.dart';
 import 'package:delivery_kun/services/user_status.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 
 Completer<GoogleMapController> _controller = Completer();
 
@@ -89,7 +90,7 @@ class _MapScreenState extends State<MapScreen> {
   PolylinePoints polylinePoints = PolylinePoints();
   FlutterSecureStorage storage = const FlutterSecureStorage();
   TextEditingController destinationController = TextEditingController();
-  bool _isSubscribed = false;
+  bool _hasSubscribed = false;
 
   void _getUserLocation() async {
     final hasPermission = await MapScreen.handlePermission();
@@ -188,22 +189,35 @@ class _MapScreenState extends State<MapScreen> {
     await context.read<Announcement>().getAnnouncements();
   }
 
-  void _requestReview() {
-    if (Platform.isIOS) {
-      AppReview.requestReview.then((onValue) {
-        print(onValue);
-      });
-    }
+  // void _requestReview() {
+  //   if (Platform.isIOS) {
+  //     AppReview.requestReview.then((onValue) {
+  //       print(onValue);
+  //     });
+  //   }
+  // }
+
+  void _adOpen() {
+    AppOpenAdManager appOpenAdManager = AppOpenAdManager();
+    appOpenAdManager.loadAd();
   }
 
   @override
   void initState() {
+    if (Platform.isIOS) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    }
     super.initState();
     _loading = true;
     _getUserLocation();
     _getUserData();
     _getAnnouncement();
     _hasSubscription();
+    _hasSubscribed = context.read<Subscription>().hasSubscribed;
+    if (!_hasSubscribed) {
+      _adOpen();
+    }
+
     // _requestReview();
   }
 
@@ -211,7 +225,6 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double deviceHeight = MediaQuery.of(context).size.height;
-    _isSubscribed = context.watch<Subscription>().hasSubscribed;
 
     void _addPolyLine(List<LatLng> polylineCoordinates) {
       PolylineId id = const PolylineId("poly");
@@ -399,7 +412,7 @@ class _MapScreenState extends State<MapScreen> {
                           : const SizedBox.shrink()
                     ]));
         }),
-        bottomNavigationBar: _isSubscribed != true ? const AdBanner() : null);
+        bottomNavigationBar: _hasSubscribed != true ? const AdBanner() : null);
   }
 }
 

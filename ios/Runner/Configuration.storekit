@@ -1,5 +1,5 @@
 {
-  "identifier" : "9DFDF011",
+  "identifier" : "69BFE3FF",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -12,7 +12,7 @@
   },
   "subscriptionGroups" : [
     {
-      "id" : "B7E909A8",
+      "id" : "ED4B73ED",
       "localizations" : [
 
       ],
@@ -25,22 +25,22 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "600",
+          "displayPrice" : "500",
           "familyShareable" : false,
           "groupNumber" : 1,
-          "internalID" : "F31FCC5B",
+          "internalID" : "38C51E91",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "サブスクリプション",
-              "displayName" : "サブスクリプション",
+              "description" : "",
+              "displayName" : "",
               "locale" : "ja"
             }
           ],
           "productID" : "subscription_1m",
           "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "サブスクリプション",
-          "subscriptionGroupID" : "B7E909A8",
+          "referenceName" : "subscription",
+          "subscriptionGroupID" : "ED4B73ED",
           "type" : "RecurringSubscription"
         }
       ]

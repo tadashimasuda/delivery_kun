@@ -88,8 +88,9 @@ class _PurchaseSubscriptionScreenState
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () async {
-                await context.read<Subscription>().makePurchase(
-                    offerings!.all['subscriptions']!.availablePackages[0]);
+                Package packeage =
+                    offerings!.all['subscription_1m']!.availablePackages[0];
+                await context.read<Subscription>().makePurchase(packeage);
                 _hasSubscribed = context.read<Subscription>().hasSubscribed;
                 if (!mounted) return;
               },
@@ -110,10 +111,17 @@ class _PurchaseSubscriptionScreenState
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          '${offerings?.all['subscriptions']!.availablePackages[0].storeProduct.price.round()}円',
-                          style: const TextStyle(fontSize: 12),
-                        ),
+                        offerings!.all['subscription_1m']!.availablePackages[0]
+                                    .storeProduct.price ==
+                                500.00
+                            ? Text(
+                                '${offerings!.all['subscription_1m']!.availablePackages[0].storeProduct.price.round()}円/1ヶ月',
+                                style: const TextStyle(fontSize: 12),
+                              )
+                            : Text(
+                                '￥${offerings!.all['subscription_1m']!.availablePackages[0].storeProduct.price}/1ヶ月',
+                                style: const TextStyle(fontSize: 12),
+                              ),
                         const SizedBox(
                           height: 5,
                         )
