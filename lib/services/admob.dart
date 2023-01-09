@@ -1,19 +1,22 @@
 import 'dart:io' show Platform;
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AdmobLoad {
   int numOfAttemptLoad = 0;
-
+  String interstitialUserStatusAdId = Platform.isIOS
+      ? dotenv.get("IOS_ADMOB_INTERSTITIAL_USER_STATUS")
+      : dotenv.get("ANDROID_ADMOB_INTERSTITIAL_USER_STATUS");
   BannerAd createBannerAd() {
     return BannerAd(
         size: AdSize.banner,
-        adUnitId: Platform.isIOS
-            ? 'ca-app-pub-8624775791237653/7710222023'
-            : 'ca-app-pub-8624775791237653/4702574836',
         // adUnitId: Platform.isIOS
-        //     ? "ca-app-pub-3940256099942544/2934735716"
-        //     : "ca-app-pub-3940256099942544/6300978111", //test
+        //     ? 'ca-app-pub-8624775791237653/7710222023'
+        //     : 'ca-app-pub-8624775791237653/4702574836',
+        adUnitId: Platform.isIOS
+            ? "ca-app-pub-3940256099942544/2934735716"
+            : "ca-app-pub-3940256099942544/6300978111", //test
         listener: BannerAdListener(
             onAdLoaded: (ad) {},
             onAdFailedToLoad: (ad, error) {
@@ -25,21 +28,15 @@ class AdmobLoad {
 
   void interstitialUserStatus() {
     InterstitialAd.load(
-        adUnitId: Platform.isIOS
-            ? 'ca-app-pub-8624775791237653/6141994994'
-            : 'ca-app-pub-8624775791237653/8846412908',
-        // adUnitId: Platform.isIOS
-        //     ? 'ca-app-pub-3940256099942544/4411468910'
-        //     : 'ca-app-pub-3940256099942544/1033173712', //test
+        adUnitId: interstitialUserStatusAdId,
         request: const AdRequest(),
-
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             showAd(ad);
             numOfAttemptLoad = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            // print(error);
+            print(error);
 
             numOfAttemptLoad + 1;
 
@@ -59,7 +56,6 @@ class AdmobLoad {
         //     ? 'ca-app-pub-3940256099942544/4411468910'
         //     : 'ca-app-pub-3940256099942544/1033173712', //test
         request: const AdRequest(),
-
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             showAd(ad);
@@ -97,8 +93,8 @@ class AdmobLoad {
 }
 
 class AppOpenAdManager {
-  String adUnitId = 'ca-app-pub-8624775791237653/2681201404'; //release
-  // String adUnitId = 'ca-app-pub-3940256099942544/5662855259'; //test
+  // String adUnitId = 'ca-app-pub-8624775791237653/2681201404'; //release
+  String adUnitId = 'ca-app-pub-3940256099942544/5662855259'; //test
 
   AppOpenAd? _appOpenAd;
   bool _isShowingAd = false;
