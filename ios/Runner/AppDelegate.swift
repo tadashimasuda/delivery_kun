@@ -1,6 +1,6 @@
 import UIKit
 import Flutter
-import flutter_config  //import忘れずに
+import flutter_config
 import GoogleMaps
 
 @UIApplicationMain

@@ -5,6 +5,7 @@ import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/screens/setting_create_incentive_sheet_screen.dart';
 import 'package:delivery_kun/screens/setting_update_incentives_sheet_screen.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
+import 'package:delivery_kun/services/subscription.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,13 +18,16 @@ class SettingIncentivesSheets extends StatefulWidget {
 }
 
 class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
-  late List _IncentivesSheetList;
-  bool _IsIncentivesSheet = false;
+  late List _incentivesSheetList;
+  bool _isIncentivesSheet = false;
+  bool _hasSubscribed = false;
 
   @override
   void initState() {
-    _IncentivesSheetList = context.read<IncentiveSheet>().IncentivesSheets;
-    _IsIncentivesSheet = context.read<IncentiveSheet>().isInsentivesSheet;
+    _incentivesSheetList = context.read<IncentiveSheet>().IncentivesSheets;
+    _isIncentivesSheet = context.read<IncentiveSheet>().isInsentivesSheet;
+    _hasSubscribed = context.read<Subscription>().hasSubscribed;
+
     super.initState();
   }
 
@@ -61,7 +65,7 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
               width: MediaQuery.of(context).size.width * 0.8,
               child: ElevatedButton(
                   onPressed: () {
-                    if (_IncentivesSheetList.length < 8) {
+                    if (_incentivesSheetList.length < 8) {
                       Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -104,27 +108,27 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
               style: TextStyle(color: Colors.grey),
             ),
             Expanded(
-              child: _IsIncentivesSheet
+              child: _isIncentivesSheet
                   ? ListView.builder(
-                      itemCount: _IncentivesSheetList.length,
+                      itemCount: _incentivesSheetList.length,
                       itemBuilder: (context, int index) {
                         return ListTile(
                           onTap: () async {
                             await context.read<IncentiveSheet>().getIncentive(
-                                id: _IncentivesSheetList[index].id);
+                                id: _incentivesSheetList[index].id);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         SettingUpdateIncentivesSheetScreen(
-                                          id: _IncentivesSheetList[index].id,
+                                          id: _incentivesSheetList[index].id,
                                         ))).then((value) => setState(() {}));
                           },
                           title: Text(
-                            _IncentivesSheetList[index].title,
+                            _incentivesSheetList[index].title,
                             textAlign: TextAlign.center,
                           ),
-                          trailing: Icon(Icons.arrow_right),
+                          trailing: const Icon(Icons.arrow_right),
                         );
                       })
                   : const Center(
@@ -134,6 +138,6 @@ class _SettingIncentivesSheetsState extends State<SettingIncentivesSheets> {
             ),
           ],
         ),
-        bottomNavigationBar: const AdBanner());
+        bottomNavigationBar: _hasSubscribed != true ? const AdBanner() : null);
   }
 }

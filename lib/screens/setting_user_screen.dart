@@ -5,8 +5,8 @@ import 'package:delivery_kun/components/adBanner.dart';
 import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
 import 'package:delivery_kun/screens/delete_account_screen.dart';
-import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/services/auth.dart';
+import 'package:delivery_kun/services/subscription.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +29,9 @@ class _SettingUserScreenState extends State<SettingUserScreen>
   final TextEditingController _earningsBaseController = TextEditingController();
 
   final List<String> _prefectureList = prefectureList;
-  final List<String> _VehicleModelList = VehicleModelList;
+  final List<String> _vehicleModelList = VehicleModelList;
+
+  bool _hasSubscribed = false;
 
   @override
   void initState() {
@@ -38,9 +40,11 @@ class _SettingUserScreenState extends State<SettingUserScreen>
     _email = auth.user!.email;
     _earningsBaseController.text = auth.user!.earningsBase.toString();
     _selectVehicleModelId = auth.user!.vehicleModel;
-    _dropdownValue = _VehicleModelList[_selectVehicleModelId];
+    _dropdownValue = _vehicleModelList[_selectVehicleModelId];
     _selectPrefectureId = auth.user!.prefectureId;
     _dropdownPrefectureValue = _prefectureList[_selectPrefectureId];
+
+    _hasSubscribed = context.read<Subscription>().hasSubscribed;
     super.initState();
   }
 
@@ -108,7 +112,7 @@ class _SettingUserScreenState extends State<SettingUserScreen>
   TextField IOSPicker(BuildContext context, Auth auth) {
     return TextField(
       controller:
-          TextEditingController(text: _VehicleModelList[_selectVehicleModelId]),
+          TextEditingController(text: _vehicleModelList[_selectVehicleModelId]),
       readOnly: true,
       decoration: InputDecoration(
           labelText: '配達車両',
@@ -119,7 +123,7 @@ class _SettingUserScreenState extends State<SettingUserScreen>
         showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              return Container(
+              return SizedBox(
                   height: MediaQuery.of(context).size.height / 3,
                   child: CupertinoPicker(
                     itemExtent: 30,
@@ -128,7 +132,7 @@ class _SettingUserScreenState extends State<SettingUserScreen>
                         _selectVehicleModelId = val;
                       });
                     },
-                    children: _VehicleModelList.map((e) => Text(e)).toList(),
+                    children: _vehicleModelList.map((e) => Text(e)).toList(),
                     scrollController: FixedExtentScrollController(
                         initialItem: auth.user!.vehicleModel),
                   ));
@@ -140,7 +144,7 @@ class _SettingUserScreenState extends State<SettingUserScreen>
   DropdownButton<String> AndroidDropDown() {
     return DropdownButton(
       value: _dropdownValue,
-      items: _VehicleModelList.map<DropdownMenuItem<String>>((String value) {
+      items: _vehicleModelList.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -148,8 +152,8 @@ class _SettingUserScreenState extends State<SettingUserScreen>
       }).toList(),
       onChanged: (String? val) {
         setState(() {
-          _selectVehicleModelId = _VehicleModelList.indexOf(val!);
-          _dropdownValue = _VehicleModelList[_selectVehicleModelId];
+          _selectVehicleModelId = _vehicleModelList.indexOf(val!);
+          _dropdownValue = _vehicleModelList[_selectVehicleModelId];
         });
       },
       isExpanded: true,
@@ -171,7 +175,7 @@ class _SettingUserScreenState extends State<SettingUserScreen>
         showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              return Container(
+              return SizedBox(
                 height: MediaQuery.of(context).size.height / 3,
                 child: CupertinoPicker(
                   itemExtent: 30,
@@ -336,6 +340,6 @@ class _SettingUserScreenState extends State<SettingUserScreen>
                     : const Center(child: CircularProgressIndicator());
               })),
         ),
-        bottomNavigationBar: const AdBanner());
+        bottomNavigationBar: _hasSubscribed != true ? const AdBanner() : null);
   }
 }

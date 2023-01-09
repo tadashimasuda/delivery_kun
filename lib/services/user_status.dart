@@ -17,57 +17,53 @@ class Status extends ChangeNotifier {
 
   Auth auth = Auth();
 
-  void getStatusDate(int user_id) async {
+  void getStatusDate(int userId) async {
     String date = DateFormat('yyyyMMdd').format(_date).toString();
 
-    getStatus(user_id,date);
+    getStatus(userId, date);
   }
 
-  void getStatusBeforeDate(int user_id) async {
-    _date = _date.add(Duration(days: -1));
+  void getStatusPreviousDate(int userId) async {
+    _date = _date.add(const Duration(days: -1));
+
     String date = DateFormat('yyyyMMdd').format(_date).toString();
-
-    getStatus(user_id,date);
+    getStatus(userId, date);
   }
 
-  void getStatusNextDate(int user_id) async {
-    if (DateFormat('yyyy年M月d日').format(DateTime.now()).toString() != DateFormat('yyyy年M月d日').format(date)) {
-      _date = _date.add(Duration(days: 1));
+  void getStatusNextDate(int userId) async {
+    if (DateFormat('yyyy年M月d日').format(DateTime.now()).toString() !=
+        DateFormat('yyyy年M月d日').format(date)) {
+      _date = _date.add(const Duration(days: 1));
+
       String date = DateFormat('yyyyMMdd').format(_date).toString();
 
-      getStatus(user_id,date);
+      getStatus(userId, date);
     }
   }
 
-  Future<void> getStatusToday(int user_id) async{
+  Future<void> getStatusToday(int userId) async {
     String date = DateFormat('yyyyMMdd').format(DateTime.now()).toString();
 
-    await getStatus(user_id,date);
+    await getStatus(userId, date);
   }
 
-  Future<void> getStatus(int user_id,String date) async {
+  Future<void> getStatus(int userId, String date) async {
     try {
-      Dio.Response response = await dio().get(
-        '/status',
-        queryParameters: {
-          'date': date,
-          'user_id': user_id
-        }
-      );
+      Dio.Response response = await dio()
+          .get('/status', queryParameters: {'date': date, 'user_id': userId});
 
       if (response.statusCode == 204) {
         _userStatus = UserStatus(
-          onlineTime: 'データがありません',
-          actualCost: 0,
-          daysEarningsQty: 0,
-          daysEarningsTotal: 0,
-          vehicleModel: '不明',
-          hourQty: []
-        );
-      }else{
+            onlineTime: 'データがありません',
+            actualCost: 0,
+            daysEarningsQty: 0,
+            daysEarningsTotal: 0,
+            vehicleModel: '不明',
+            hourQty: []);
+      } else {
         _userStatus = UserStatus.fromJson(response.data);
 
-        if(date == DateFormat('yyyyMMdd').format(DateTime.now()).toString()){
+        if (date == DateFormat('yyyyMMdd').format(DateTime.now()).toString()) {
           _userDaysEarningsTotal = _userStatus!.daysEarningsTotal;
         }
       }
@@ -76,12 +72,12 @@ class Status extends ChangeNotifier {
     } on Dio.DioError catch (e) {
       if (e.response?.statusCode == 429) {
         _userStatus = UserStatus(
-          onlineTime: 'アクセス過多',
-          actualCost: 0,
-          daysEarningsQty: 0,
-          daysEarningsTotal: 0,
-          vehicleModel: '不明',
-          hourQty: []);
+            onlineTime: 'アクセス過多',
+            actualCost: 0,
+            daysEarningsQty: 0,
+            daysEarningsTotal: 0,
+            vehicleModel: '不明',
+            hourQty: []);
       }
       _userStatus = UserStatus(
           onlineTime: 'エラー',
@@ -103,16 +99,14 @@ class Status extends ChangeNotifier {
 
     try {
       await dio().patch(
-          '/actual_cost',
-          data:{
-            'actual_cost':actualCost,
-          },
-          options: Dio.Options(
-              headers: {'Authorization': 'Bearer $token'},
-              ),
-          queryParameters: {
-            'date': date
-          },
+        '/actual_cost',
+        data: {
+          'actual_cost': actualCost,
+        },
+        options: Dio.Options(
+          headers: {'Authorization': 'Bearer $token'},
+        ),
+        queryParameters: {'date': date},
       );
 
       notifyListeners();

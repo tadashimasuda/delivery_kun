@@ -1,9 +1,9 @@
 import 'dart:io' show Platform;
-
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdmobLoad {
-  int num_of_attempt_load = 0;
+  int numOfAttemptLoad = 0;
 
   BannerAd createBannerAd() {
     return BannerAd(
@@ -31,18 +31,19 @@ class AdmobLoad {
         // adUnitId: Platform.isIOS
         //     ? 'ca-app-pub-3940256099942544/4411468910'
         //     : 'ca-app-pub-3940256099942544/1033173712', //test
-        request: AdRequest(),
+        request: const AdRequest(),
+
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             showAd(ad);
-            num_of_attempt_load = 0;
+            numOfAttemptLoad = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
             // print(error);
 
-            num_of_attempt_load + 1;
+            numOfAttemptLoad + 1;
 
-            if (num_of_attempt_load <= 2) {
+            if (numOfAttemptLoad <= 2) {
               interstitialUserStatus();
             }
           },
@@ -57,18 +58,19 @@ class AdmobLoad {
         // adUnitId: Platform.isIOS
         //     ? 'ca-app-pub-3940256099942544/4411468910'
         //     : 'ca-app-pub-3940256099942544/1033173712', //test
-        request: AdRequest(),
+        request: const AdRequest(),
+
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             showAd(ad);
-            num_of_attempt_load = 0;
+            numOfAttemptLoad = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
             // print(error);
 
-            num_of_attempt_load + 1;
+            numOfAttemptLoad + 1;
 
-            if (num_of_attempt_load <= 2) {
+            if (numOfAttemptLoad <= 2) {
               interstitialUserStatus();
             }
           },
@@ -76,23 +78,67 @@ class AdmobLoad {
   }
 
   void showAd(InterstitialAd ad) {
-    if (ad != null) {
-      ad.fullScreenContentCallback = FullScreenContentCallback(
-        onAdShowedFullScreenContent: (InterstitialAd ad) {
-          print('onAdShowedFullScreenContent');
-        },
-        onAdDismissedFullScreenContent: (InterstitialAd ad) {
-          print('onAdDismissedFullScreenContent');
-        },
-        onAdFailedToShowFullScreenContent:
-            (InterstitialAd ad, AdError adError) {
-          // print(adError);
-          ad.dispose();
-          interstitialUserStatus();
-        },
-      );
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) {
+        print('onAdShowedFullScreenContent');
+      },
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('onAdDismissedFullScreenContent');
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError adError) {
+        // print(adError);
+        ad.dispose();
+        interstitialUserStatus();
+      },
+    );
 
-      ad.show();
-    }
+    ad.show();
+  }
+}
+
+class AppOpenAdManager {
+  String adUnitId = 'ca-app-pub-8624775791237653/2681201404'; //release
+  // String adUnitId = 'ca-app-pub-3940256099942544/5662855259'; //test
+
+  AppOpenAd? _appOpenAd;
+  bool _isShowingAd = false;
+
+  void loadAd() {
+    AppOpenAd.load(
+      adUnitId: adUnitId,
+      orientation: AppOpenAd.orientationPortrait,
+      request: const AdRequest(),
+      adLoadCallback: AppOpenAdLoadCallback(
+        onAdLoaded: (ad) {
+          _appOpenAd = ad;
+          _appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
+            onAdShowedFullScreenContent: (ad) {
+              _isShowingAd = true;
+              print('$ad onAdShowedFullScreenContent');
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              print('$ad onAdFailedToShowFullScreenContent: $error');
+              _isShowingAd = false;
+              ad.dispose();
+              _appOpenAd = null;
+            },
+            onAdDismissedFullScreenContent: (ad) {
+              if (Platform.isIOS) {
+                SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                    overlays: SystemUiOverlay.values);
+              }
+              print('$ad onAdDismissedFullScreenContent');
+              _isShowingAd = false;
+              ad.dispose();
+              _appOpenAd = null;
+            },
+          );
+          _appOpenAd!.show();
+        },
+        onAdFailedToLoad: (error) {
+          print('AppOpenAd failed to load: $error');
+        },
+      ),
+    );
   }
 }
