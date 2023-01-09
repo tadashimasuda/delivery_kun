@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
 
 import 'package:delivery_kun/constants.dart';
-import 'package:delivery_kun/services/todayIncentive.dart';
+import 'package:delivery_kun/services/today_incentive.dart';
 import 'package:delivery_kun/screens/map_screen.dart';
 
 class SettingIncentiveScreen extends StatefulWidget {

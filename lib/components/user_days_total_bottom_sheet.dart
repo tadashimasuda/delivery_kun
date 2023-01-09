@@ -18,34 +18,26 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20)),
+            topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         color: Colors.white,
       ),
       child: Stack(
         children: [
-          Center(
-            child:BottomSheetText(title: '¥${total}')
-          ),
+          Center(child: BottomSheetText(title: '¥$total')),
           Positioned(
-            child: IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) {
-                    return const FractionallySizedBox(
-                        heightFactor: 0.90,
-                        child: UserStatusScreen()
-                    );
-                  }
-                );
-              },
-              icon: const Icon(Icons.list)
-            ),
-            height: deviceHeight * 0.10,
-            right: 0
-          ),
+              child: IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return const FractionallySizedBox(
+                              heightFactor: 0.90, child: UserStatusScreen());
+                        });
+                  },
+                  icon: const Icon(Icons.list)),
+              height: deviceHeight * 0.10,
+              right: 0),
         ],
       ),
     );
@@ -53,7 +45,7 @@ class DaysEarningsTotalBottomSheet extends StatelessWidget {
 }
 
 class BottomSheetText extends StatelessWidget {
-  BottomSheetText({required this.title});
+  const BottomSheetText({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -62,10 +54,7 @@ class BottomSheetText extends StatelessWidget {
     return Text(
       title,
       textAlign: TextAlign.center,
-      style: const TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.w500
-      ),
+      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 
-import 'package:delivery_kun/components/adBanner.dart';
+import 'package:delivery_kun/components/ad_banner.dart';
 import 'package:delivery_kun/components/days_hour_bar_chart.dart';
 import 'package:delivery_kun/components/icon_and_Text.dart';
 import 'package:delivery_kun/screens/order_list_screen.dart';

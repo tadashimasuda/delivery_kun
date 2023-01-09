@@ -1,4 +1,4 @@
-import 'package:delivery_kun/components/adBanner.dart';
+import 'package:delivery_kun/components/ad_banner.dart';
 import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/screens/setting_incentives_sheets_screen.dart';
 import 'package:delivery_kun/services/admob.dart';

@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:delivery_kun/services/nend.dart';
 import 'package:delivery_kun/services/admob.dart';
 import 'package:flutter/material.dart';
@@ -33,13 +31,13 @@ class _AdBannerState extends State<AdBanner> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 52,
-      width: MediaQuery.of(context).size.width,
-      child: Center(
-        child: Admob.AdWidget(ad: _bannerAdmob),
+        height: 52,
+        width: MediaQuery.of(context).size.width,
+        child: Center(
+          child: Admob.AdWidget(ad: _bannerAdmob),
           // child: Platform.isIOS
           //     ? _bannerNend
           //     : Admob.AdWidget(ad: _bannerAdmob)),
-      ));
+        ));
   }
 }

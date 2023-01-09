@@ -114,6 +114,7 @@ class Status extends ChangeNotifier {
       return true;
     } on Dio.DioError catch (e) {
       notifyListeners();
+      print(e);
 
       return false;
     }

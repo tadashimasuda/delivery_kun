@@ -12,14 +12,14 @@ import 'package:delivery_kun/screens/user_status_screen.dart';
 import 'package:delivery_kun/screens/setting_user_screen.dart';
 import 'package:delivery_kun/components/drawer_list_text.dart';
 
-class LoggedInDrawer extends StatefulWidget {
-  const LoggedInDrawer({Key? key}) : super(key: key);
+class LogInDrawer extends StatefulWidget {
+  const LogInDrawer({Key? key}) : super(key: key);
 
   @override
-  _LoggedInDrawerState createState() => _LoggedInDrawerState();
+  _LogInDrawerState createState() => _LogInDrawerState();
 }
 
-class _LoggedInDrawerState extends State<LoggedInDrawer> {
+class _LogInDrawerState extends State<LogInDrawer> {
   final String _url = 'https://twitter.com/deliveryKun';
   final String _noteUrl = 'https://note.com/deliverykun/n/n143325d75507';
 

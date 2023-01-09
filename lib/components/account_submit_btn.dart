@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class SubmitBtn extends StatelessWidget {
-  SubmitBtn({required this.title, required this.color, required this.onTap});
+  const SubmitBtn(
+      {Key? key, required this.title, required this.color, required this.onTap})
+      : super(key: key);
 
   final String title;
   final Color color;

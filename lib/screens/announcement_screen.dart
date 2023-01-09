@@ -1,4 +1,4 @@
-import 'package:delivery_kun/components/adBanner.dart';
+import 'package:delivery_kun/components/ad_banner.dart';
 import 'package:delivery_kun/services/subscription.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 
-import 'package:delivery_kun/components/adBanner.dart';
+import 'package:delivery_kun/components/ad_banner.dart';
 import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/screens/setting_create_incentive_sheet_screen.dart';
 import 'package:delivery_kun/screens/setting_update_incentives_sheet_screen.dart';

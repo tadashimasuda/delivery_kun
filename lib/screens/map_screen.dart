@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:app_review/app_review.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,11 +10,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
-import 'package:delivery_kun/components/adBanner.dart';
-import 'package:delivery_kun/components/loggedIn_drawer.dart';
+import 'package:delivery_kun/components/ad_banner.dart';
+import 'package:delivery_kun/components/log_in_drawer.dart';
 import 'package:delivery_kun/components/map_screen_bottom_btn.dart';
-import 'package:delivery_kun/components/notLoggedIn_drawer.dart';
-import 'package:delivery_kun/components/userDaysTotalBottomSheet.dart';
+import 'package:delivery_kun/components/log_out_drawer.dart';
+import 'package:delivery_kun/components/user_days_total_bottom_sheet.dart';
 import 'package:delivery_kun/services/admob.dart';
 import 'package:delivery_kun/services/announcement.dart';
 import 'package:delivery_kun/services/auth.dart';
@@ -100,12 +99,12 @@ class _MapScreenState extends State<MapScreen> {
           ? showCupertinoDialog(
               context: context,
               builder: (context) {
-                return IOSPermissionAlertDialog(context);
+                return iosPermissionAlertDialog(context);
               })
           : showDialog(
               context: context,
               builder: (context) {
-                return AndroidAlertPermissionDialog(context);
+                return androidAlertPermissionDialog(context);
               });
     }
 
@@ -120,7 +119,7 @@ class _MapScreenState extends State<MapScreen> {
     await context.read<Subscription>().getCustomerInfo('subscription_1m');
   }
 
-  CupertinoAlertDialog IOSPermissionAlertDialog(BuildContext context) {
+  CupertinoAlertDialog iosPermissionAlertDialog(BuildContext context) {
     return CupertinoAlertDialog(
       title: const Text('このアプリを利用するには位置情報取得許可が必要です'),
       content: const Text('設定画面で位置情報の許可をしてください'),
@@ -143,7 +142,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  AlertDialog AndroidAlertPermissionDialog(BuildContext context) {
+  AlertDialog androidAlertPermissionDialog(BuildContext context) {
     return AlertDialog(
       title: const Text('このアプリを利用するには位置情報取得許可が必要です'),
       content: const Text("位置情報を利用します"),
@@ -260,10 +259,10 @@ class _MapScreenState extends State<MapScreen> {
       List<PointLatLng> points = polylinePoints.decodePolyline(
           result.data["routes"][0]["overview_polyline"]["points"]);
       List<LatLng> polylineCoordinates = [];
-      points.forEach((point) {
+      for (var point in points) {
         polylineCoordinates
             .add(LatLng(point.latitude.toDouble(), point.longitude.toDouble()));
-      });
+      }
 
       _addPolyLine(polylineCoordinates);
       _addEndLocationPoint(endLocation, startAddress);
@@ -280,8 +279,8 @@ class _MapScreenState extends State<MapScreen> {
         drawer: Drawer(
           child: Consumer<Auth>(builder: (context, auth, child) {
             return auth.authenticated
-                ? const LoggedInDrawer()
-                : NotLoggedInDrawer();
+                ? const LogInDrawer()
+                : const LogOutDrawer();
           }),
         ),
         backgroundColor: Colors.grey.shade200,

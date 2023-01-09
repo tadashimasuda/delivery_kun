@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 
-import 'package:delivery_kun/components/adBanner.dart';
+import 'package:delivery_kun/components/ad_banner.dart';
 import 'package:delivery_kun/screens/announcement_screen.dart';
 import 'package:delivery_kun/screens/map_screen.dart';
 import 'package:delivery_kun/services/announcement.dart';
@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AnnouncementsListScreen extends StatelessWidget {
+  const AnnouncementsListScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     int announcementCount = context.read<Announcement>().announcements.length;

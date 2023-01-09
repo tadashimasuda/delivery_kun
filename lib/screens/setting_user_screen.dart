@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:delivery_kun/components/account_text_field.dart';
-import 'package:delivery_kun/components/adBanner.dart';
+import 'package:delivery_kun/components/ad_banner.dart';
 import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/mixins/validate_text.dart';
 import 'package:delivery_kun/screens/delete_account_screen.dart';

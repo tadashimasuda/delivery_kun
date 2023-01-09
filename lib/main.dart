@@ -10,7 +10,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:flutter/services.dart';
 
-import 'package:delivery_kun/services/todayIncentive.dart';
+import 'package:delivery_kun/services/today_incentive.dart';
 import 'package:delivery_kun/services/auth.dart';
 import 'package:delivery_kun/services/order.dart';
 import 'package:delivery_kun/services/user_status.dart';
