@@ -1,5 +1,6 @@
 import 'package:delivery_kun/screens/announcements_list_screen.dart';
 import 'package:delivery_kun/screens/setting_incentives_sheets_screen.dart';
+import 'package:delivery_kun/screens/subscription_screen.dart';
 import 'package:delivery_kun/services/announcement.dart';
 import 'package:delivery_kun/services/incentive_sheet.dart';
 import 'package:flutter/material.dart';
@@ -43,25 +44,47 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
             UserAccountsDrawerHeader(
               accountName: Text(
                 auth.user!.name,
-                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                style:
+                    const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
               ),
               accountEmail: const Text(''),
               currentAccountPicture: const CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage("images/user.png")
-              ),
+                  backgroundColor: Colors.white,
+                  backgroundImage: AssetImage("images/user.png")),
             ),
           ]),
           ListTile(
+            title: const drawerListText(title: '広告非表示'),
+            trailing: readCnt > 0
+                ? CircleAvatar(
+                    backgroundColor: Colors.red,
+                    radius: 13,
+                    child: Text(
+                      readCnt.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  )
+                : null,
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PurchaseSubscriptionScreen(),
+                  ));
+            },
+          ),
+          ListTile(
             title: const drawerListText(title: '受信トレイ'),
-            trailing:  readCnt > 0 ? CircleAvatar(
-              backgroundColor: Colors.red,
-              radius:13,
-              child:Text(
-                readCnt.toString(),
-                style: const TextStyle(color: Colors.white),
-              ),
-            ):null,
+            trailing: readCnt > 0
+                ? CircleAvatar(
+                    backgroundColor: Colors.red,
+                    radius: 13,
+                    child: Text(
+                      readCnt.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  )
+                : null,
             onTap: () {
               Navigator.push(
                   context,
@@ -74,49 +97,58 @@ class _LoggedInDrawerState extends State<LoggedInDrawer> {
             title: const drawerListText(title: '配達ステータス'),
             onTap: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const UserStatusScreen(),
-                ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserStatusScreen(),
+                  ));
             },
           ),
-          const SizedBox(height: 8,),
+          const SizedBox(
+            height: 8,
+          ),
           ListTile(
             title: const drawerListText(title: 'インセンティブシート設定'),
             onTap: () async {
               await context.read<IncentiveSheet>().getIncentives();
 
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SettingIncentivesSheets())
-              );
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SettingIncentivesSheets()));
             },
           ),
-          const SizedBox(height: 8,),
+          const SizedBox(
+            height: 8,
+          ),
           ListTile(
             title: const drawerListText(title: 'ユーザー設定'),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SettingUserScreen())
-              );
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SettingUserScreen()));
             },
           ),
-          const SizedBox(height: 8,),
+          const SizedBox(
+            height: 8,
+          ),
           ListTile(
               title: const drawerListText(title: 'アプリの使い方'),
-              onTap: _launchNoteURL
+              onTap: _launchNoteURL),
+          const SizedBox(
+            height: 8,
           ),
-          const SizedBox(height: 8,),
           ListTile(
             title: const drawerListText(title: 'ログアウト'),
             onTap: () {
               Provider.of<Auth>(context, listen: false).logout();
             },
           ),
-          const SizedBox(height: 8,),
-          ListTile(
-            title: const drawerListText(title: 'お問い合わせ'),
-            onTap: _launchURL
+          const SizedBox(
+            height: 8,
           ),
+          ListTile(
+              title: const drawerListText(title: 'お問い合わせ'), onTap: _launchURL),
         ],
       );
     });

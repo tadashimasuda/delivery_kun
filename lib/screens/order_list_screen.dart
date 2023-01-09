@@ -4,6 +4,7 @@ import 'package:delivery_kun/components/adBanner.dart';
 import 'package:delivery_kun/constants.dart';
 import 'package:delivery_kun/screens/order_update_screen.dart';
 import 'package:delivery_kun/services/order.dart';
+import 'package:delivery_kun/services/subscription.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -227,6 +228,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
   @override
   Widget build(BuildContext context) {
     reloadWidget();
+    bool _isSubscribed = context.watch<Subscription>().hasSubscribed;
+
     return Scaffold(
       appBar: AppBar(
         leading: Platform.isAndroid
@@ -241,7 +244,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
       ),
       body: Column(
         children: [
-          const AdBanner(),
+          if (!_isSubscribed) const AdBanner(),
           const SizedBox(
             height: 20,
           ),
@@ -249,16 +252,16 @@ class _OrderListScreenState extends State<OrderListScreen> {
           Consumer<OrderList>(
               builder: (context, orderList, child) => orderList.orders != null
                   ? Expanded(
-                          child: ListView.builder(
-                              itemCount: orderList.orders?.length,
-                              itemBuilder: (context, int index) {
-                                return SizedBox(
-                                  height: 55,
-                                  child: _orderItem(
-                                      orderList.orders?[index], index),
-                                );
-                              }),
-                        )
+                      child: ListView.builder(
+                          itemCount: orderList.orders?.length,
+                          itemBuilder: (context, int index) {
+                            return SizedBox(
+                              height: 55,
+                              child:
+                                  _orderItem(orderList.orders?[index], index),
+                            );
+                          }),
+                    )
                   : const Center(child: CircularProgressIndicator()))
         ],
       ),
@@ -289,8 +292,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
             ),
           ),
           Expanded(
-            child: Text(
-                getJPDate(DateTime.parse(order['order_received_at'])),
+            child: Text(getJPDate(DateTime.parse(order['order_received_at'])),
                 textAlign: TextAlign.center),
           ),
           distanceType != null
@@ -307,7 +309,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
                 textAlign: TextAlign.center),
           ),
           Expanded(
-            child: Text('¥${earningsTotal.toString()}', textAlign: TextAlign.center),
+            child: Text('¥${earningsTotal.toString()}',
+                textAlign: TextAlign.center),
           ),
         ],
       ),

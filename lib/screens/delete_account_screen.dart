@@ -19,7 +19,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
       title: const Text("削除してもよろしいですか？"),
       children: <Widget>[
         SimpleDialogOption(
-          child: Column(children: <Widget>[
+          child: Column(children: const <Widget>[
             Text('・全ての記録が削除されます。'),
             Text('・削除されたデータ、アカウントはもとに戻すことができません。'),
             Text('上記の内容を理解しました。')
@@ -39,10 +39,12 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
           child: TextButton(
             onPressed: () async {
               if (_flag) {
-                bool is_delete = await context.read<Auth>().deleteAccount();
-                if (is_delete){
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const MapScreen()));
+                bool isDelete = await context.read<Auth>().deleteAccount();
+                if (isDelete) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MapScreen()));
                 }
               }
             },

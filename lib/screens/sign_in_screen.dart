@@ -37,17 +37,17 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
           idToken: googleAuth.idToken,
         );
 
-        var user = (await FirebaseAuth.instance.signInWithCredential(
-            credential)).user;
+        var user =
+            (await FirebaseAuth.instance.signInWithCredential(credential)).user;
 
         if (user?.uid != null) {
-          bool isLogin = await Provider.of<Auth>(context, listen: false).OAuthLogin(
-              providerName:'google',
-              providerId: user!.uid,
-              UserName: user.displayName,
-              email: user.email,
-              userImg: user.photoURL
-          );
+          bool isLogin = await Provider.of<Auth>(context, listen: false)
+              .OAuthLogin(
+                  providerName: 'google',
+                  providerId: user!.uid,
+                  UserName: user.displayName,
+                  email: user.email,
+                  userImg: user.photoURL);
 
           if (isLogin) {
             return true;
@@ -75,12 +75,12 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
         ],
       );
 
-      String? UserName = appleCredential.familyName.toString() +
+      String? userName = appleCredential.familyName.toString() +
           appleCredential.givenName.toString();
 
       bool isLogin = await Provider.of<Auth>(context, listen: false).OAuthLogin(
-          providerName:'apple',
-          UserName: UserName,
+          providerName: 'apple',
+          UserName: userName,
           providerId: appleCredential.userIdentifier.toString(),
           email: appleCredential.email);
 
@@ -169,8 +169,10 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                       await Provider.of<Auth>(context, listen: false)
                           .login(creds: creds);
                   if (response) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const MapScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MapScreen()));
                   }
                 },
               ),
@@ -202,8 +204,10 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
                     setState(() {
                       isLoading = true;
                     });
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const MapScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MapScreen()));
                   } else {
                     setState(() {
                       isLoading = true;
@@ -229,59 +233,65 @@ class _SignInFormState extends State<SignInForm> with ValidateText {
               const SizedBox(
                 height: 15,
               ),
-              Platform.isIOS ? GestureDetector(
-                child: SocialSignInButton(
-                  backgroundColor: Colors.black,
-                  textColor: Colors.white,
-                  title: 'Appleでログイン',
-                  image: const DecorationImage(
-                      image: AssetImage("images/apple_login.png")),
-                ),
-                onTap: () async {
-                  setState(() {
-                    isLoading = false;
-                  });
+              Platform.isIOS
+                  ? GestureDetector(
+                      child: SocialSignInButton(
+                        backgroundColor: Colors.black,
+                        textColor: Colors.white,
+                        title: 'Appleでログイン',
+                        image: const DecorationImage(
+                            image: AssetImage("images/apple_login.png")),
+                      ),
+                      onTap: () async {
+                        setState(() {
+                          isLoading = false;
+                        });
 
-                  bool isLogin = await _handleSignInApple();
+                        bool isLogin = await _handleSignInApple();
 
-                  if (isLogin) {
-                    setState(() {
-                      isLoading = true;
-                    });
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const MapScreen()));
-                  } else {
-                    setState(() {
-                      isLoading = true;
-                    });
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CupertinoAlertDialog(
-                          title: const Text("ログインに失敗しました。"),
-                          actions: <Widget>[
-                            CupertinoDialogAction(
-                              child: const Text(
-                                "OK",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              isDestructiveAction: true,
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        );
+                        if (isLogin) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MapScreen()));
+                        } else {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: const Text("ログインに失敗しました。"),
+                                actions: <Widget>[
+                                  CupertinoDialogAction(
+                                    child: const Text(
+                                      "OK",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    isDestructiveAction: true,
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
                       },
-                    );
-                  }
-                },
-              ) : SizedBox.shrink(),
+                    )
+                  : SizedBox.shrink(),
               TextButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const SignUpForm()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpForm()));
                 },
                 child: Row(
-                  children: [
+                  children: const [
                     Text(
                       'アカウントをお持ちでない方は',
                       style: TextStyle(color: Colors.grey),
@@ -320,7 +330,7 @@ class SocialSignInButton extends StatelessWidget {
       decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               spreadRadius: 1,
