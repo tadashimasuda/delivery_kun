@@ -32,6 +32,7 @@ class AdmobLoad {
         //     ? 'ca-app-pub-3940256099942544/4411468910'
         //     : 'ca-app-pub-3940256099942544/1033173712', //test
         request: const AdRequest(),
+
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             showAd(ad);
@@ -58,6 +59,7 @@ class AdmobLoad {
         //     ? 'ca-app-pub-3940256099942544/4411468910'
         //     : 'ca-app-pub-3940256099942544/1033173712', //test
         request: const AdRequest(),
+
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             showAd(ad);
