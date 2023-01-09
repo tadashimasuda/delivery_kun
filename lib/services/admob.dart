@@ -3,20 +3,24 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+String bannerAdId = Platform.isIOS
+    ? dotenv.get("IOS_ADMOB_INTERSTITIAL_USER_STATUS")
+    : dotenv.get("ANDROID_ADMOB_INTERSTITIAL_USER_STATUS");
+String openAd = dotenv.get("IOS_ADMOB_OPEN");
+String interstitialUserStatusAdId = Platform.isIOS
+    ? dotenv.get("IOS_ADMOB_INTERSTITIAL_USER_STATUS")
+    : dotenv.get("ANDROID_ADMOB_INTERSTITIAL_USER_STATUS");
+String interstitialInsentiveSheeet = Platform.isIOS
+    ? dotenv.get("IOS_ADMOB_INTERSTITIAL_USER_STATUS")
+    : dotenv.get("ANDROID_ADMOB_INTERSTITIAL_USER_STATUS");
+
 class AdmobLoad {
   int numOfAttemptLoad = 0;
-  String interstitialUserStatusAdId = Platform.isIOS
-      ? dotenv.get("IOS_ADMOB_INTERSTITIAL_USER_STATUS")
-      : dotenv.get("ANDROID_ADMOB_INTERSTITIAL_USER_STATUS");
+
   BannerAd createBannerAd() {
     return BannerAd(
         size: AdSize.banner,
-        // adUnitId: Platform.isIOS
-        //     ? 'ca-app-pub-8624775791237653/7710222023'
-        //     : 'ca-app-pub-8624775791237653/4702574836',
-        adUnitId: Platform.isIOS
-            ? "ca-app-pub-3940256099942544/2934735716"
-            : "ca-app-pub-3940256099942544/6300978111", //test
+        adUnitId: bannerAdId,
         listener: BannerAdListener(
             onAdLoaded: (ad) {},
             onAdFailedToLoad: (ad, error) {
@@ -49,12 +53,7 @@ class AdmobLoad {
 
   void interstitialIncetiveSheeet() {
     InterstitialAd.load(
-        adUnitId: Platform.isIOS
-            ? 'ca-app-pub-8624775791237653/3889599692'
-            : 'ca-app-pub-8624775791237653/2289028823',
-        // adUnitId: Platform.isIOS
-        //     ? 'ca-app-pub-3940256099942544/4411468910'
-        //     : 'ca-app-pub-3940256099942544/1033173712', //test
+        adUnitId: interstitialInsentiveSheeet,
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
@@ -93,15 +92,12 @@ class AdmobLoad {
 }
 
 class AppOpenAdManager {
-  // String adUnitId = 'ca-app-pub-8624775791237653/2681201404'; //release
-  String adUnitId = 'ca-app-pub-3940256099942544/5662855259'; //test
-
   AppOpenAd? _appOpenAd;
   bool _isShowingAd = false;
 
   void loadAd() {
     AppOpenAd.load(
-      adUnitId: adUnitId,
+      adUnitId: openAd,
       orientation: AppOpenAd.orientationPortrait,
       request: const AdRequest(),
       adLoadCallback: AppOpenAdLoadCallback(
