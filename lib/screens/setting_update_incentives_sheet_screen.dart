@@ -29,17 +29,13 @@ class _SettingUpdateIncentivesSheetScreenState
 
   @override
   void initState() {
+    super.initState();
+
     IncentivesSheet = context.read<IncentiveSheet>().IncentivesSheet;
     titleContoller.text = IncentivesSheet.title;
     title = IncentivesSheet.title;
 
     _hasSubscribed = context.read<Subscription>().hasSubscribed;
-    if (!_hasSubscribed) {
-      AdmobLoad admobLoad = AdmobLoad();
-      admobLoad.interstitialIncetiveSheeet();
-    }
-
-    super.initState();
   }
 
   SimpleDialog ErrorDialog(BuildContext childContext) {
